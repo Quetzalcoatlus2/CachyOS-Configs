@@ -88,8 +88,8 @@
 
     "clock": {
         "interval": 1,
-        "format": "🕒 {:%H:%M:%S}",
-        "format-alt": "🗓️ {:%A, %d %b %Y}",
+        "format": "🕒 {:%H:%M:%S  %a %d %b %Y}",
+        "format-alt": "🗓️ W{:%V}  {:%a %d %b %Y}",
         "tooltip-format": "<tt><small>{calendar}</small></tt>",
         "calendar": {
             "mode": "year",
