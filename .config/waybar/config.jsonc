@@ -103,7 +103,8 @@
                 "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
             }
         }
-    }
+    },
+
  "custom/updates": {
  "format": "📦{}",
  "interval": 3600,
