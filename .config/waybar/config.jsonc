@@ -86,7 +86,7 @@
  "on-click-middle": "playerctl previous"
  },
 
- "clock": {
+    "clock": {
         "interval": 1,
         "format": "{:%H:%M:%S  %a %d %b %Y}",
         "tooltip-format": "<tt><small>{calendar}</small></tt>",
@@ -104,12 +104,6 @@
             }
         }
     }
- },
- "actions": {
- "on-click-right": "mode"
- }
- },
-
  "custom/updates": {
  "format": "📦{}",
  "interval": 3600,
