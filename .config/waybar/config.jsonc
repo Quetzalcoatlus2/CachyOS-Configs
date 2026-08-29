@@ -1,0 +1,248 @@
+{
+ "layer": "top",
+ "position": "top",
+ "height": 30,
+ "spacing": 0,
+ "modules-left": [
+ "sway/workspaces",
+ "sway/mode",
+ "sway/scratchpad",
+ "sway/window"
+ ],
+ "modules-center": [
+ "mpris",
+ "clock"
+ ],
+ "modules-right": [
+ "custom/updates",
+ "cpu",
+ "temperature",
+ "memory",
+ "disk",
+ "network",
+ "pulseaudio",
+ "pulseaudio#microphone",
+ "backlight",
+ "battery",
+ "idle_inhibitor",
+ "tray",
+ "custom/power"
+ ],
+
+ "sway/workspaces": {
+ "disable-scroll": false,
+ "all-outputs": true,
+ "format": "{name}: {icon}",
+ "tooltip": true,
+ "tooltip-format": "Workspace Navigation:\n•Active Workspace: {name}\n•Scroll / Click: Switch between virtual workspaces",
+ "format-icons": {
+ "1": "",
+ "2": "🌐",
+ "3": "",
+ "4": "📁",
+ "5": "🎵",
+ "urgent": "",
+ "focused": "",
+ "default": ""
+ }
+ },
+
+ "sway/mode": {
+ "format": "{}",
+ "tooltip": true,
+ "tooltip-format": "Sway Keybinding Mode: {}\nIndicates active modal key bindings."
+ },
+
+ "sway/scratchpad": {
+ "format": "🗃{count}",
+ "show-empty": false,
+ "tooltip": false,
+ "on-click": "swaymsg scratchpad show"
+ },
+
+ "sway/window": {
+ "format": "{}",
+ "max-length": 35,
+ "tooltip": true,
+ "tooltip-format": "Focused Application Window:\n•Window Title: {title}\n•Application ID: {app_id}"
+ },
+
+ "mpris": {
+ "format": "{player_icon} {title} - {artist}",
+ "format-paused": "{status_icon} <i>{title} - {artist}</i>",
+ "max-length": 45,
+ "tooltip": true,
+ "tooltip-format": "Media Playback Engine:\n•Source: {player} ({status})\n•Title: {title}\n•Artist: {artist}\n•Album: {album}\n•Duration: {length}\n\nInteractions:\n•Left-Click: Toggle Play / Pause\n•Right-Click: Skip to Next Track\n•Middle-Click: Return to Previous Track",
+ "player-icons": {
+ "default": "▶",
+ "spotify": "",
+ "brave": "🦁"
+ },
+ "status-icons": {
+ "paused": "⏸"
+ },
+ "on-click": "playerctl play-pause",
+ "on-click-right": "playerctl next",
+ "on-click-middle": "playerctl previous"
+ },
+
+ "clock": {
+ "interval": 1,
+ "format": "🕒{:%a %d %b %H:%M:%S}",
+ "format-alt": "📅{:%Y-%m-%d %H:%M (W%V)}",
+ "tooltip-format": "<tt><small>{calendar}</small></tt>\n\nInteraction: Right-click to toggle ISO date format.",
+ "calendar": {
+ "mode": "month",
+ "weeks-pos": "right",
+ "on-scroll": 1,
+ "format": {
+ "months": "<span color='#ffead3'><b>{}</b></span>",
+ "days": "<span color='#ecc6d9'><b>{}</b></span>",
+ "weeks": "<span color='#99ffdd'><b>W{}</b></span>",
+ "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+ "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
+ }
+ },
+ "actions": {
+ "on-click-right": "mode"
+ }
+ },
+
+ "custom/updates": {
+ "format": "📦{}",
+ "interval": 3600,
+ "exec": "checkupdates 2>/dev/null | wc -l",
+ "exec-if": "exit 0",
+ "on-click": "foot -e paru -Syu",
+ "signal": 8,
+ "tooltip": true,
+ "tooltip-format": "System Package Synchronization:\n•Available Updates: {} packages pending\n•Frequency: Checked hourly\n\nAction: Click to execute paru upgrade."
+ },
+
+ "cpu": {
+ "interval": 2,
+ "format": "⚡{usage}%",
+ "tooltip": true,
+ "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n•Core Breakdown:\n{core_frequencies}\n\nAction: Click to launch btop.",
+ "on-click": "foot -e btop"
+ },
+
+ "temperature": {
+ "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
+ "interval": 2,
+ "critical-threshold": 80,
+ "format": "🌡️{temperatureC}°C",
+ "tooltip": true,
+ "tooltip-format": "Thermal Monitoring:\n•Current Temperature: {temperatureC}°C ({temperatureF}°F)\n•Sensor Path: hwmon4/temp1_input\n•Critical Threshold: 80°C"
+ },
+
+ "memory": {
+ "interval": 2,
+ "format": "🧠{percentage}%",
+ "tooltip": true,
+ "tooltip-format": "Memory & Swap Allocation:\n•Physical RAM Used: {used:0.2f} GiB / {total:0.2f} GiB ({percentage}%)\n•Available Memory: {avail:0.2f} GiB\n•Swap Allocation: {swapUsed:0.2f} GiB / {swapTotal:0.2f} GiB ({swapPercentage}%)\n\nAction: Click to launch btop.",
+ "on-click": "foot -e btop"
+ },
+
+ "disk": {
+ "interval": 30,
+ "format": "💾{percentage_used}%",
+ "path": "/",
+ "tooltip": true,
+ "tooltip-format": "Root Storage Subvolume:\n•Mount Point: {path}\n•Space Consumed: {used} / {total} ({percentage_used}%)\n•Available Storage: {free} ({percentage_free}% remaining)"
+ },
+
+ "network": {
+ "align": 0,
+ "min-length": 50,
+ "max-length": 52,
+ "interval": 1,
+ "format-wifi": "📶{essid}({signalStrength}%)🔻{bandwidthDownBytes}🔺{bandwidthUpBytes}",
+ "format-ethernet": "🌐{ipaddr}/{cidr}🔻{bandwidthDownBytes}🔺{bandwidthUpBytes}",
+ "format-linked": "🔗{ifname} (No IP)",
+ "format-disconnected": "⚠Disconnected",
+ "tooltip": true,
+ "tooltip-format": "Network Interface Status:\n•Device: {ifname}\n•IP Address: {ipaddr}/{cidr}\n•Gateway: {gwaddr}\n•SSID: {essid}\n•Radio Frequency: {frequency} MHz\n•Signal Quality: {signalStrength}% ({signaldBm} dBm)\n•Bandwidth: In {bandwidthDownBytes} | Out {bandwidthUpBytes}\n\nAction: Click to launch nmtui.",
+ "on-click": "foot -e nmtui"
+ },
+
+ "pulseaudio": {
+ "format": "{icon}{volume}%",
+ "format-muted": "🔇Muted",
+ "format-icons": {
+ "headphone": "🎧",
+ "hands-free": "🎧",
+ "headset": "🎧",
+ "phone": "📞",
+ "portable": "📱",
+ "car": "🚗",
+ "default": ["", "", ""]
+ },
+ "scroll-step": 2,
+ "tooltip": true,
+ "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 2%",
+ "on-click": "pavucontrol",
+ "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+ },
+
+ "pulseaudio#microphone": {
+ "format": "{format_source}",
+ "format-source": "🎙️{volume}%",
+ "format-source-muted": "🎙️Muted",
+ "scroll-step": 2,
+ "tooltip": true,
+ "tooltip-format": "Microphone Input (PipeWire Sources):\n•Input Device: {desc}\n•Gain Level: {volume}%\n\nControls:\n•Left-Click: Open input devices in pavucontrol\n•Right-Click: Toggle microphone mute\n•Scroll Up/Down: Adjust capture gain by 2%",
+ "on-click": "pavucontrol -t 4",
+ "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+ },
+
+ "backlight": {
+ "device": "amdgpu_bl0",
+ "format": "🔆{percent}%",
+ "tooltip": true,
+ "tooltip-format": "Display Luminance:\n•Brightness Level: {percent}%\n•Driver: amdgpu_bl0\n\nControls:\n•Scroll Up: Increase brightness by 2%\n•Scroll Down: Decrease brightness by 2%",
+ "on-scroll-up": "brightnessctl set 2%+",
+ "on-scroll-down": "brightnessctl set 2%-"
+ },
+
+ "battery": {
+ "format-charging": "🔌{capacity}% {time}",
+ "format-time": "{H}h:{M}min",
+ "format-discharging": "🔋{capacity}% {time}",
+ "format-time": "{H}h:{M}min",
+ "interval": 10,
+ "states": {
+ "good": 95,
+ "warning": 30,
+ "critical": 15
+ },
+ "format": "🔋{capacity}%",
+ "format-charging": "🔌{capacity}% {time}",
+ "format-plugged": "🔌{capacity}%",
+ "tooltip": true,
+ "tooltip-format": "Power Subsystem Metrics:\n•Charge Level: {capacity}%\n•Estimated Runtime: {time}\n•Current Consumption: {power:.2f} W\n•Battery Health: {health}%\n•Total Charge Cycles: {cycles}"
+ },
+
+ "idle_inhibitor": {
+ "format": "{icon}",
+ "format-icons": {
+ "activated": "☕ON",
+ "deactivated": "☕OFF"
+ },
+ "tooltip": true,
+ "tooltip-format-activated": "Idle Inhibitor: Active\nPrevents display dimming and screen timeouts.\nClick: Restore normal timers.",
+ "tooltip-format-deactivated": "Idle Inhibitor: Inactive\nStandard screen timeouts are active.\nClick: Keep display permanently awake."
+ },
+
+ "tray": {
+ "icon-size": 14,
+ "spacing": 0
+ },
+
+ "custom/power": {
+ "format": "💡",
+ "tooltip": true,
+ "tooltip-format": "Power Management Options\n\nClick: Toggle power and session actions.",
+ "on-click": "$HOME/.config/waybar/scripts/power-menu.sh"
+ }
+}
