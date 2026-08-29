@@ -90,7 +90,6 @@
         "interval": 1,
         "format": "{:%H:%M:%S  %a %d %b %Y}",
         "tooltip-format": "<tt><small>{calendar}</small></tt>",
-        "on-click": "mode",
         "calendar": {
             "mode": "year",
             "mode-mon-col": 3,
@@ -103,6 +102,9 @@
                 "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
                 "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
             }
+        },
+        "actions": {
+            "on-click-left": "mode"
         }
     },
 
