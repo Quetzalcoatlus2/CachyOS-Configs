@@ -88,7 +88,8 @@
 
     "clock": {
         "interval": 1,
-        "format": "{:%H:%M:%S  %a %d %b %Y}",
+        "format": "🕒 {:%H:%M:%S}",
+        "format-alt": "🗓️ {:%A, %d %b %Y}",
         "tooltip-format": "<tt><small>{calendar}</small></tt>",
         "calendar": {
             "mode": "year",
@@ -102,9 +103,6 @@
                 "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
                 "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
             }
-        },
-        "actions": {
-            "on-click-left": "mode"
         }
     },
 
