@@ -10,13 +10,12 @@
  "sway/window"
  ],
  "modules-center": [
- "mpris",
- "clock"
+ "mpris"
  ],
  "modules-right": [
- "custom/updates",
- "cpu",
+ "custom/updates", 
  "temperature",
+ "cpu",
  "memory",
  "disk",
  "network",
@@ -24,9 +23,10 @@
  "pulseaudio#microphone",
  "backlight",
  "battery",
+ "clock",
  "idle_inhibitor",
- "tray",
- "custom/power"
+ "custom/power",
+ "tray"
  ],
 
  "sway/workspaces": {
@@ -86,25 +86,6 @@
  "on-click-middle": "playerctl previous"
  },
 
-    "clock": {
-        "interval": 1,
-        "format": "🕒 {:%H:%M:%S  %a %d %b %Y W%V}",
-        "tooltip-format": "<tt><small>{calendar}</small></tt>",
-        "calendar": {
-            "mode": "year",
-            "mode-mon-col": 3,
-            "weeks-pos": "right",
-            "on-scroll": 1,
-            "format": {
-                "months": "<span color='#ffead3'><b>{}</b></span>",
-                "days": "<span color='#ecc6d9'><b>{}</b></span>",
-                "weeks": "<span color='#99ffdd'><b>W{}</b></span>",
-                "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
-                "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
-            }
-        }
-    },
-
  "custom/updates": {
  "format": "📦{}",
  "interval": 3600,
@@ -115,15 +96,7 @@
  "tooltip": true,
  "tooltip-format": "System Package Synchronization:\n•Available Updates: {} packages pending\n•Frequency: Checked hourly\n\nAction: Click to execute paru upgrade."
  },
-
- "cpu": {
- "interval": 2,
- "format": "⚡{usage}%",
- "tooltip": true,
- "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n•Core Breakdown:\n{core_frequencies}\n\nAction: Click to launch btop.",
- "on-click": "foot -e btop"
- },
-
+ 
  "temperature": {
  "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
  "interval": 2,
@@ -131,6 +104,14 @@
  "format": "🌡️{temperatureC}°C",
  "tooltip": true,
  "tooltip-format": "Thermal Monitoring:\n•Current Temperature: {temperatureC}°C ({temperatureF}°F)\n•Sensor Path: hwmon4/temp1_input\n•Critical Threshold: 80°C"
+ },
+ 
+ "cpu": {
+ "interval": 2,
+ "format": "⚡{usage}%",
+ "tooltip": true,
+ "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n•Core Breakdown:\n{core_frequencies}\n\nAction: Click to launch btop.",
+ "on-click": "foot -e btop"
  },
 
  "memory": {
@@ -151,8 +132,8 @@
 
  "network": {
  "align": 0,
- "min-length": 50,
- "max-length": 52,
+ "min-length": 49,
+ "max-length": 49,
  "interval": 1,
  "format-wifi": "📶{essid}({signalStrength}%)🔻{bandwidthDownBytes}🔺{bandwidthUpBytes}",
  "format-ethernet": "🌐{ipaddr}/{cidr}🔻{bandwidthDownBytes}🔺{bandwidthUpBytes}",
@@ -220,6 +201,25 @@
  "tooltip-format": "Power Subsystem Metrics:\n•Charge Level: {capacity}%\n•Estimated Runtime: {time}\n•Current Consumption: {power:.2f} W\n•Battery Health: {health}%\n•Total Charge Cycles: {cycles}"
  },
 
+ "clock": {
+ "interval": 1,
+ "format": "🕒 {:%H:%M:%S  %a%d%b%YW%V}",
+ "tooltip-format": "<tt><small>{calendar}</small></tt>",
+ "calendar": {
+ "mode": "year",
+ "mode-mon-col": 3,
+ "weeks-pos": "right",
+ "on-scroll": 1,
+ "format": {
+ "months": "<span color='#ffead3'><b>{}</b></span>",
+ "days": "<span color='#ecc6d9'><b>{}</b></span>",
+ "weeks": "<span color='#99ffdd'><b>W{}</b></span>",
+ "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+ "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
+ }
+ }
+ },
+
  "idle_inhibitor": {
  "format": "{icon}",
  "format-icons": {
@@ -231,15 +231,15 @@
  "tooltip-format-deactivated": "Idle Inhibitor: Inactive\nStandard screen timeouts are active.\nClick: Keep display permanently awake."
  },
 
- "tray": {
- "icon-size": 14,
- "spacing": 0
- },
-
  "custom/power": {
  "format": "💡",
  "tooltip": true,
  "tooltip-format": "Power Management Options\n\nClick: Toggle power and session actions.",
  "on-click": "$HOME/.config/waybar/scripts/power-menu.sh"
  }
-}
+},
+
+ "tray": {
+ "icon-size": 14,
+ "spacing": 0
+ }
