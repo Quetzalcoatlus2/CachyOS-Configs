@@ -108,7 +108,7 @@
                 "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
             }
         },
-        "on-click": "mode"
+        "on-click": "tz_up"
     },
  },
  "actions": {
