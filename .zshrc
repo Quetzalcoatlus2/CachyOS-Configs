@@ -16,3 +16,4 @@ source /usr/share/cachyos-zsh-config/cachyos-config.zsh
 
 export EDITOR="micro"
 export VISUAL="micro"
+export NEWT_COLORS='root=black,black;window=black,black;border=brightblack,black;textbox=white,black;button=black,lightgray;actbutton=white,brightblack;title=white,black;listbox=white,black;actlistbox=black,brightblack'

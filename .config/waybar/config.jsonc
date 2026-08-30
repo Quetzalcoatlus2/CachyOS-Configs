@@ -141,7 +141,7 @@
  "format-disconnected": "🚫 Disconnected",
  "tooltip": true,
  "tooltip-format": "Network Interface Status:\n•Device: {ifname}\n•IP Address: {ipaddr}/{cidr}\n•Gateway: {gwaddr}\n•SSID: {essid}\n•Radio Frequency: {frequency} MHz\n•Signal Quality: {signalStrength}% ({signaldBm} dBm)\n•Bandwidth: In {bandwidthDownBytes} | Out {bandwidthUpBytes}\n\nAction: Click to launch nmtui.",
- "on-click": "foot -e nmtui"
+ "on-click": "foot env NEWT_COLORS='root=white,black;window=white,black;border=gray,black;title=white,black;textbox=white,black;label=white,black;checkbox=white,black;actcheckbox=black,cyan;entry=white,black;button=white,black;actbutton=black,cyan;compactbutton=white,black;listbox=white,black;actlistbox=black,cyan;sellistbox=white,black;actsellistbox=black,cyan;shadow=black,black;helpline=white,black;roottext=white,black' nmtui" 
  },
 
  "pulseaudio": {
