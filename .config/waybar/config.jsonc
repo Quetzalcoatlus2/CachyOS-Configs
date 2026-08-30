@@ -137,8 +137,8 @@
  "interval": 1,
  "format-wifi": "📶{essid}({signalStrength}%)🔻{bandwidthDownBytes}🔺{bandwidthUpBytes}",
  "format-ethernet": "🌐{ipaddr}/{cidr}🔻{bandwidthDownBytes}🔺{bandwidthUpBytes}",
- "format-linked": "🔗{ifname} (No IP)",
- "format-disconnected": "⚠Disconnected",
+ "format-linked": "🔗 {ifname} (No IP)",
+ "format-disconnected": "🚫 Disconnected",
  "tooltip": true,
  "tooltip-format": "Network Interface Status:\n•Device: {ifname}\n•IP Address: {ipaddr}/{cidr}\n•Gateway: {gwaddr}\n•SSID: {essid}\n•Radio Frequency: {frequency} MHz\n•Signal Quality: {signalStrength}% ({signaldBm} dBm)\n•Bandwidth: In {bandwidthDownBytes} | Out {bandwidthUpBytes}\n\nAction: Click to launch nmtui.",
  "on-click": "foot -e nmtui"
@@ -146,7 +146,7 @@
 
  "pulseaudio": {
  "format": "{icon}{volume}%",
- "format-muted": "🔇Muted",
+ "format-muted": "🔇 Muted",
  "format-icons": {
  "headphone": "🎧",
  "hands-free": "🎧",
