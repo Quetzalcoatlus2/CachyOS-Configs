@@ -159,7 +159,7 @@
  "scroll-step": 2,
  "tooltip": true,
  "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 2%",
- "on-click": "pavucontrol",
+ "on-click": "GTK_THEME=Adwaita:dark pavucontrol",
  "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
  },
 
@@ -170,7 +170,7 @@
  "scroll-step": 2,
  "tooltip": true,
  "tooltip-format": "Microphone Input (PipeWire Sources):\n•Input Device: {desc}\n•Gain Level: {volume}%\n\nControls:\n•Left-Click: Open input devices in pavucontrol\n•Right-Click: Toggle microphone mute\n•Scroll Up/Down: Adjust capture gain by 2%",
- "on-click": "pavucontrol -t 4",
+ "on-click": "GTK_THEME=Adwaita:dark pavucontrol -t 4",
  "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
  },
 
