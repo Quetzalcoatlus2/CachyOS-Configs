@@ -5,8 +5,12 @@ DOTFILES_DIR="$HOME/dotfiles"
 case "${1:-}" in
     pull)
         echo "Collecting active configs into repository..."
+        mkdir -p "$DOTFILES_DIR/home/.config/sway" "$DOTFILES_DIR/home/.config/swaylock" "$DOTFILES_DIR/home/.config/waybar" "$DOTFILES_DIR/home/.config/foot"
+        
         cp ~/.config/foot/foot.ini "$DOTFILES_DIR/home/.config/foot/"
-        cp ~/.config/waybar/config.jsonc "$DOTFILES_DIR/home/.config/waybar/"
+        cp ~/.config/sway/config "$DOTFILES_DIR/home/.config/sway/"
+        cp ~/.config/swaylock/config "$DOTFILES_DIR/home/.config/swaylock/"
+        cp -r ~/.config/waybar/* "$DOTFILES_DIR/home/.config/waybar/"
         cp ~/.zshrc "$DOTFILES_DIR/home/"
         
         sudo cp /etc/systemd/zram-generator.conf "$DOTFILES_DIR/system/etc/systemd/"
@@ -18,8 +22,12 @@ case "${1:-}" in
         ;;
     deploy)
         echo "Deploying configs to system..."
+        mkdir -p ~/.config/sway ~/.config/swaylock ~/.config/waybar ~/.config/foot
+        
         cp "$DOTFILES_DIR/home/.config/foot/foot.ini" ~/.config/foot/
-        cp "$DOTFILES_DIR/home/.config/waybar/config.jsonc" ~/.config/waybar/
+        cp "$DOTFILES_DIR/home/.config/sway/config" ~/.config/sway/
+        cp "$DOTFILES_DIR/home/.config/swaylock/config" ~/.config/swaylock/
+        cp -r "$DOTFILES_DIR/home/.config/waybar/"* ~/.config/waybar/
         cp "$DOTFILES_DIR/home/.zshrc" ~/
         
         sudo cp "$DOTFILES_DIR/system/etc/systemd/zram-generator.conf" /etc/systemd/
