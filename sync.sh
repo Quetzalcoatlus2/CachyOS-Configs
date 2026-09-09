@@ -5,7 +5,7 @@ DOTFILES_DIR="$HOME/dotfiles"
 case "${1:-}" in
     pull)
         echo "Collecting active configs into repository..."
-        mkdir -p "$DOTFILES_DIR/home/.config/sway" "$DOTFILES_DIR/home/.config/swaylock" "$DOTFILES_DIR/home/.config/waybar" "$DOTFILES_DIR/home/.config/foot"
+        mkdir -p "$DOTFILES_DIR/home/.config/sway" "$DOTFILES_DIR/home/.config/swaylock" "$DOTFILES_DIR/home/.config/waybar" "$DOTFILES_DIR/home/.config/foot" "$DOTFILES_DIR/system/etc/sysctl.d" "$DOTFILES_DIR/system/etc/tmpfiles.d"
         
         cp ~/.config/foot/foot.ini "$DOTFILES_DIR/home/.config/foot/"
         cp ~/.config/sway/config "$DOTFILES_DIR/home/.config/sway/"
@@ -15,6 +15,10 @@ case "${1:-}" in
         
         sudo cp /etc/systemd/zram-generator.conf "$DOTFILES_DIR/system/etc/systemd/"
         sudo cp /etc/systemd/sleep.conf.d/battery-hibernate.conf "$DOTFILES_DIR/system/etc/systemd/sleep.conf.d/"
+        sudo cp "$DOTFILES_DIR/system/etc/sysctl.d/99-bbr.conf" /etc/sysctl.d/
+        sudo cp "$DOTFILES_DIR/system/etc/tmpfiles.d/hibernate-image-size.conf" /etc/tmpfiles.d/
+        sudo cp /etc/sysctl.d/99-bbr.conf "$DOTFILES_DIR/system/etc/sysctl.d/"
+        sudo cp /etc/tmpfiles.d/hibernate-image-size.conf "$DOTFILES_DIR/system/etc/tmpfiles.d/"
         sudo cp /usr/local/bin/nmtui "$DOTFILES_DIR/system/usr/local/bin/"
         
         sudo chown -R "$USER:$USER" "$DOTFILES_DIR"
@@ -22,7 +26,7 @@ case "${1:-}" in
         ;;
     deploy)
         echo "Deploying configs to system..."
-        mkdir -p ~/.config/sway ~/.config/swaylock ~/.config/waybar ~/.config/foot
+        mkdir -p ~/.config/sway ~/.config/swaylock ~/.config/waybar ~/.config/foot "$DOTFILES_DIR/system/etc/sysctl.d" "$DOTFILES_DIR/system/etc/tmpfiles.d"
         
         cp "$DOTFILES_DIR/home/.config/foot/foot.ini" ~/.config/foot/
         cp "$DOTFILES_DIR/home/.config/sway/config" ~/.config/sway/
@@ -32,6 +36,10 @@ case "${1:-}" in
         
         sudo cp "$DOTFILES_DIR/system/etc/systemd/zram-generator.conf" /etc/systemd/
         sudo cp "$DOTFILES_DIR/system/etc/systemd/sleep.conf.d/battery-hibernate.conf" /etc/systemd/sleep.conf.d/
+        sudo cp "$DOTFILES_DIR/system/etc/sysctl.d/99-bbr.conf" /etc/sysctl.d/
+        sudo cp "$DOTFILES_DIR/system/etc/tmpfiles.d/hibernate-image-size.conf" /etc/tmpfiles.d/
+        sudo cp /etc/sysctl.d/99-bbr.conf "$DOTFILES_DIR/system/etc/sysctl.d/"
+        sudo cp /etc/tmpfiles.d/hibernate-image-size.conf "$DOTFILES_DIR/system/etc/tmpfiles.d/"
         sudo cp "$DOTFILES_DIR/system/usr/local/bin/nmtui" /usr/local/bin/
         
         sudo chmod +x /usr/local/bin/nmtui
