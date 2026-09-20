@@ -93,7 +93,7 @@
  "interval": 3600,
  "exec": "checkupdates 2>/dev/null | wc -l",
  "exec-if": "exit 0",
- "on-click": "foot -e bash -c 'paru -Syu; read -p \"Update complete. Press Enter to close...\"'",
+ "on-click": "foot -e bash -c \"paru -Syu; echo; echo 'Update complete. Press any key to close...'; read -n 1 -s -r\"",
  "signal": 8,
  "tooltip": true,
  "tooltip-format": "System Package Synchronization:\n•Available Updates: {} packages pending\n•Frequency: Checked hourly\n\nAction: Click to execute paru upgrade."
