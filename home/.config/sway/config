@@ -273,12 +273,14 @@ client.focused_inactive #000000 #000000 #888888 #111111 #111111
 client.unfocused        #000000 #000000 #555555 #000000 #000000
 client.urgent           #000000 #000000 #ff5555 #000000 #000000
 
+# Auto-float, strip borders, and snap PiP to exact bottom-right corner (16:9 ratio)
+for_window [title="(?i)picture in picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 810
+for_window [title="(?i)picture-in-picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 810
+
 # Set default wmenu runner colors
 set $menu wmenu-run -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff
-
-
-
 
 # Power Management Dropdown Modal (Docked beneath top bar on the right)
 
 # Power Management Dropdown Modal
+
