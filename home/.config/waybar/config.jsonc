@@ -83,7 +83,9 @@
  },
  "on-click": "playerctl play-pause",
  "on-click-right": "playerctl next",
- "on-click-middle": "playerctl previous"
+ "on-click-middle": "playerctl previous",
+ "on-scroll-up": "playerctl next",
+ "on-scroll-down": "playerctl previous"
  },
 
  "custom/updates": {
@@ -91,7 +93,7 @@
  "interval": 3600,
  "exec": "checkupdates 2>/dev/null | wc -l",
  "exec-if": "exit 0",
- "on-click": "foot -e paru -Syu",
+ "on-click": "foot -e bash -c \"paru -Syu; echo; echo 'Update complete. Press any key to close...'; read -n 1 -s -r\"",
  "signal": 8,
  "tooltip": true,
  "tooltip-format": "System Package Synchronization:\n•Available Updates: {} packages pending\n•Frequency: Checked hourly\n\nAction: Click to execute paru upgrade."
