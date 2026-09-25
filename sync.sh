@@ -13,7 +13,8 @@ case "${1:-}" in
                  "$DOTFILES_DIR/system/etc/systemd/sleep.conf.d" \
                  "$DOTFILES_DIR/system/etc/sysctl.d" \
                  "$DOTFILES_DIR/system/etc/tmpfiles.d" \
-                 "$DOTFILES_DIR/system/usr/local/bin"
+                 "$DOTFILES_DIR/system/usr/local/bin" \
+                 "$DOTFILES_DIR/system/etc/modules-load.d"
 
         # User configurations
         cp ~/.config/foot/foot.ini "$DOTFILES_DIR/home/.config/foot/"
@@ -30,6 +31,7 @@ case "${1:-}" in
         sudo cp /etc/sysctl.d/99-bbr.conf "$DOTFILES_DIR/system/etc/sysctl.d/"
         sudo cp /etc/tmpfiles.d/hibernate-image-size.conf "$DOTFILES_DIR/system/etc/tmpfiles.d/"
         sudo cp /usr/local/bin/nmtui "$DOTFILES_DIR/system/usr/local/bin/"
+        sudo cp /etc/modules-load.d/cake.conf "$DOTFILES_DIR/system/etc/modules-load.d/"
 
         sudo chown -R "$USER:$USER" "$DOTFILES_DIR"
         echo "Done. Run 'git diff' or 'git status' to review changes."
@@ -37,7 +39,7 @@ case "${1:-}" in
 
     deploy)
         echo "Deploying configs to system..."
-        mkdir -p ~/.config/sway ~/.config/swaylock ~/.config/waybar ~/.config/foot ~/.config/micro
+        mkdir -p ~/.config/sway ~/.config/swaylock ~/.config/waybar ~/.config/foot ~/.config/micro /etc/modules-load.d
         sudo mkdir -p /etc/systemd/sleep.conf.d /etc/sysctl.d /etc/tmpfiles.d /usr/local/bin
 
         # User configurations
@@ -55,6 +57,7 @@ case "${1:-}" in
         sudo cp "$DOTFILES_DIR/system/etc/sysctl.d/99-bbr.conf" /etc/sysctl.d/
         sudo cp "$DOTFILES_DIR/system/etc/tmpfiles.d/hibernate-image-size.conf" /etc/tmpfiles.d/
         sudo cp "$DOTFILES_DIR/system/usr/local/bin/nmtui" /usr/local/bin/
+        sudo cp "$DOTFILES_DIR/system/etc/modules-load.d/cake.conf" /etc/modules-load.d/
 
         sudo chmod +x /usr/local/bin/nmtui
         sudo systemctl daemon-reload
