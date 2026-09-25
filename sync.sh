@@ -41,7 +41,7 @@ case "${1:-}" in
 
     deploy)
         echo "Deploying configs to system..."
-        mkdir -p ~/.config/sway ~/.config/swaylock ~/.config/waybar ~/.config/foot ~/.config/micro /etc/modules-load.d
+        mkdir -p ~/.config/sway ~/.config/swaylock ~/.config/waybar ~/.config/foot ~/.config/micro
         sudo mkdir -p /etc/systemd/sleep.conf.d /etc/sysctl.d /etc/tmpfiles.d /usr/local/bin /etc/modules-load.d /etc/NetworkManager/dispatcher.d
 
         # User configurations
