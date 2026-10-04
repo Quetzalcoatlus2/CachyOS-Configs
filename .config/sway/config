@@ -273,6 +273,18 @@ client.focused_inactive #000000 #000000 #888888 #111111 #111111
 client.unfocused        #000000 #000000 #555555 #000000 #000000
 client.urgent           #000000 #000000 #ff5555 #000000 #000000
 
+# Remove borders and titlebars and eliminate corner rounding globally for all tiled and floating windows
+corner_radius 0
+default_border none
+default_floating_border none
+
+# Disable borders and corner rounding for all Brave windows and PWAs
+for_window [app_id="(?i).*brave.*"] border none
+for_window [class="(?i).*brave.*"] border none
+
+# Automatically hide borders when a workspace contains only one window
+#smart_borders on
+
 # Auto-float, strip borders, and center vertically on the right edge
 for_window [title="(?i)picture[- ]in[- ]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 405
 
