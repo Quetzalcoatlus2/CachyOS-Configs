@@ -34,3 +34,19 @@ window#waybar {
     text-shadow: none;
     box-shadow: none;
 }
+
+#battery.warning:not(.charging) {
+    background-color: #fab387;
+    color: #11111b;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f38ba8;
+    color: #11111b;
+}
+
+#battery.danger:not(.charging) {
+    background-color: #e64553;
+    color: #ffffff;
+    animation: blink 0.5s steps(12) infinite alternate;
+}
