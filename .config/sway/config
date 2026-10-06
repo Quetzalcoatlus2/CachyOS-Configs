@@ -222,6 +222,7 @@ bindsym $mod+r mode "resize"
     bindsym Shift+Print exec sh -c 'REGION=$(slurp) && [ -n "$REGION" ] && mkdir -p ~/Pictures/Screenshots && grim -g "$REGION" - | tee ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png | wl-copy -t image/png'
     bindsym $mod+Shift+s exec sh -c 'REGION=$(slurp) && [ -n "$REGION" ] && grim -g "$REGION" - | wl-copy -t image/png'
     bindsym $mod+Print exec sh -c 'pkill -x swappy; REGION=$(slurp) && [ -n "$REGION" ] && grim -g "$REGION" - | swappy -f -'
+    bindsym Ctrl+Print exec grim - | wl-copy -t image/png
 #
 # Gestures:
 #
