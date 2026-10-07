@@ -50,3 +50,81 @@ window#waybar {
     color: #ffffff;
     animation: blink 0.5s steps(12) infinite alternate;
 }
+
+/* --- High-Visibility System Alert Styles --- */
+
+/* Blink animation for critical/danger alerts */
+@keyframes blink {
+    to {
+        background-color: transparent;
+        color: #ffffff;
+    }
+}
+
+/* Battery Alerts */
+#battery.warning:not(.charging) {
+    background-color: #fab387;
+    color: #11111b;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f38ba8;
+    color: #11111b;
+}
+
+#battery.danger:not(.charging) {
+    background-color: #e64553;
+    color: #ffffff;
+    animation: blink 0.5s steps(12) infinite alternate;
+}
+
+/* Battery 90%+ Target (Notice to unplug) */
+#battery.full,
+#battery.full.charging,
+#battery.full.plugged {
+    background-color: #a6e3a1;
+    color: #11111b;
+    font-weight: bold;
+}
+
+/* CPU Alerts */
+#cpu.warning {
+    background-color: #fab387;
+    color: #11111b;
+}
+
+#cpu.critical {
+    background-color: #f38ba8;
+    color: #11111b;
+    animation: blink 0.6s steps(12) infinite alternate;
+}
+
+/* Memory Alerts */
+#memory.warning {
+    background-color: #fab387;
+    color: #11111b;
+}
+
+#memory.critical {
+    background-color: #f38ba8;
+    color: #11111b;
+    animation: blink 0.6s steps(12) infinite alternate;
+}
+
+/* Thermal Alerts */
+#temperature.critical {
+    background-color: #e64553;
+    color: #ffffff;
+    animation: blink 0.5s steps(12) infinite alternate;
+}
+
+/* Disk Alerts */
+#disk.warning {
+    background-color: #fab387;
+    color: #11111b;
+}
+
+#disk.critical {
+    background-color: #f38ba8;
+    color: #11111b;
+}
