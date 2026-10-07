@@ -274,7 +274,7 @@ client.focused_inactive #000000 #000000 #888888 #111111 #111111
 client.unfocused        #000000 #000000 #555555 #000000 #000000
 client.urgent           #000000 #000000 #ff5555 #000000 #000000
 
-# Remove borders and titlebars and eliminate corner rounding globally for all tiled and floating windows
+# Set borders and titlebars and eliminate corner rounding globally for all tiled and floating windows
 corner_radius 0
 default_border normal 2
 default_floating_border normal 2
