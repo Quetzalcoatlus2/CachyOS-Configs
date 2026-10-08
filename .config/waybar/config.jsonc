@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 30,
+  "height": 34,
   "spacing": 0,
   "modules-left": [
     "sway/workspaces",
@@ -18,12 +18,12 @@
     "cpu",
     "memory",
     "disk",
-    "network",
     "pulseaudio",
     "pulseaudio#microphone",
     "backlight",
     "battery",
     "clock",
+    "custom/calendar",
     "idle_inhibitor",
     "custom/power",
     "tray"
@@ -234,7 +234,13 @@
       }
     }
   },
-
+"custom/calendar": {
+    "format": "{}",
+    "interval": 1,
+    "exec": "python3 $HOME/.config/waybar/scripts/calendar-belgium.py",
+    "return-type": "json",
+    "tooltip": true
+  },
   "idle_inhibitor": {
     "format": "{icon}",
     "format-icons": {
@@ -258,3 +264,4 @@
     "spacing": 0
   }
 }
+
