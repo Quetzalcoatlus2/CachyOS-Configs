@@ -113,6 +113,39 @@ window#waybar {
     }
 }
 
+@keyframes pulse-updates-low {
+    0%, 100% {
+        background-color: #89b4fa;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(137, 180, 250, 0.2);
+        color: #cdd6f4;
+    }
+}
+
+@keyframes pulse-updates-medium {
+    0%, 100% {
+        background-color: #fab387;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(250, 179, 135, 0.2);
+        color: #cdd6f4;
+    }
+}
+
+@keyframes pulse-updates-high {
+    0%, 100% {
+        background-color: #f38ba8;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(243, 139, 168, 0.2);
+        color: #ffffff;
+    }
+}
+
 /* Battery Alerts */
 #battery.warning:not(.charging) {
     animation: pulse-warning 2s ease-in-out infinite;
@@ -163,4 +196,50 @@ window#waybar {
 
 #disk.critical {
     animation: pulse-critical 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-updates-low {
+    0%, 100% {
+        background-color: #89b4fa;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(137, 180, 250, 0.2);
+        color: #cdd6f4;
+    }
+}
+
+@keyframes pulse-updates-medium {
+    0%, 100% {
+        background-color: #fab387;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(250, 179, 135, 0.2);
+        color: #cdd6f4;
+    }
+}
+
+@keyframes pulse-updates-high {
+    0%, 100% {
+        background-color: #f38ba8;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(243, 139, 168, 0.2);
+        color: #ffffff;
+    }
+}
+
+#custom-updates.low {
+    animation: pulse-updates-low 3s ease-in-out infinite;
+}
+
+#custom-updates.medium {
+    animation: pulse-updates-medium 1.4s ease-in-out infinite;
+}
+
+#custom-updates.high {
+    animation: pulse-updates-high 0.6s ease-in-out infinite;
+    font-weight: bold;
 }
