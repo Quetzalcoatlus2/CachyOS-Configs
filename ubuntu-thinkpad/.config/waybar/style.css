@@ -1,0 +1,191 @@
+* {
+    font-family: monospace;
+    font-size: 13px;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+#workspaces button {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0 2px;
+    margin: 0px 0px;
+    border: 1px solid #222222;
+}
+
+#workspaces button.focused {
+    background-color: #111111;
+    border: 1px solid #444444;
+}
+
+#battery, #cpu, #custom-memory, #custom-disk, #temperature, #custom-netspeed, #pulseaudio, #backlight, #custom-updates, #mpris, #custom-clock, #idle_inhibitor, #tray, #custom-power, #sway-window, #sway-mode, #sway-scratchpad {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0 1px;
+    margin: 2px 0px;
+    border: 1px solid #222222;
+    border-radius: 3px;
+    font-weight: normal;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+/* Slightly under the widest speed text; only extreme peaks widen it. */
+#custom-netspeed {
+    min-width: 368px;
+}
+
+#battery.warning:not(.charging) {
+    background-color: #fab387;
+    color: #11111b;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f38ba8;
+    color: #11111b;
+}
+
+#battery.danger:not(.charging) {
+    background-color: #e64553;
+    color: #ffffff;
+    animation: blink 0.5s steps(12) infinite alternate;
+}
+
+/* --- Dynamic Pulsing Alert Animations --- */
+
+@keyframes pulse-warning {
+    0% {
+        background-color: #fab387;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(250, 179, 135, 0.25);
+        color: #cdd6f4;
+    }
+    100% {
+        background-color: #fab387;
+        color: #11111b;
+    }
+}
+
+@keyframes pulse-critical {
+    0% {
+        background-color: #f38ba8;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(243, 139, 168, 0.25);
+        color: #cdd6f4;
+    }
+    100% {
+        background-color: #f38ba8;
+        color: #11111b;
+    }
+}
+
+@keyframes pulse-danger {
+    0% {
+        background-color: #e64553;
+        color: #ffffff;
+    }
+    50% {
+        background-color: rgba(230, 69, 83, 0.2);
+        color: #ffffff;
+    }
+    100% {
+        background-color: #e64553;
+        color: #ffffff;
+    }
+}
+
+@keyframes pulse-full {
+    0% {
+        background-color: #a6e3a1;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(166, 227, 161, 0.25);
+        color: #cdd6f4;
+    }
+    100% {
+        background-color: #a6e3a1;
+        color: #11111b;
+    }
+}
+
+/* Battery Alerts */
+#battery.warning:not(.charging) {
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+#battery.critical:not(.charging) {
+    animation: pulse-critical 1.2s ease-in-out infinite;
+}
+
+#battery.danger:not(.charging) {
+    animation: pulse-danger 0.6s ease-in-out infinite;
+}
+
+#battery.full,
+#battery.full.charging,
+#battery.full.plugged {
+    animation: pulse-full 2.5s ease-in-out infinite;
+    font-weight: bold;
+}
+
+/* CPU Alerts */
+#cpu.warning {
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+#cpu.critical {
+    animation: pulse-critical 1s ease-in-out infinite;
+}
+
+/* Memory Alerts */
+#custom-memory.warning {
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+#custom-memory.critical {
+    animation: pulse-critical 1s ease-in-out infinite;
+}
+
+/* Updates Alert */
+@keyframes pulse-updates {
+    0% {
+        background-color: #89b4fa;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(137, 180, 250, 0.25);
+        color: #cdd6f4;
+    }
+    100% {
+        background-color: #89b4fa;
+        color: #11111b;
+    }
+}
+
+#custom-updates.pending {
+    animation: pulse-updates 2s ease-in-out infinite;
+}
+
+/* Thermal Alerts */
+#temperature.critical {
+    animation: pulse-danger 0.8s ease-in-out infinite;
+}
+
+/* Disk Alerts */
+#custom-disk.warning {
+    animation: pulse-warning 3s ease-in-out infinite;
+}
+
+#custom-disk.critical {
+    animation: pulse-critical 1.2s ease-in-out infinite;
+}

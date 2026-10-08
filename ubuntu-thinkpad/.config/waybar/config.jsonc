@@ -1,0 +1,188 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 30,
+  "spacing": 0,
+  "modules-left": [
+    "sway/workspaces",
+    "sway/mode",
+    "sway/window"
+  ],
+  "modules-center": [],
+  "modules-right": [
+    "custom/updates",
+    "temperature",
+    "cpu",
+    "custom/memory",
+    "custom/disk",
+    "custom/netspeed",
+    "pulseaudio",
+    "pulseaudio#microphone",
+    "backlight",
+    "battery",
+    "custom/clock",
+    "idle_inhibitor",
+    "custom/power",
+    "tray"
+  ],
+  "sway/workspaces": {
+    "disable-scroll": false,
+    "all-outputs": true,
+    "format": "{name}: {icon}",
+    "tooltip": true,
+    "tooltip-format": "Workspace Navigation:\n•Active Workspace: {name}\n•Scroll / Click: Switch between virtual workspaces",
+    "format-icons": {
+      "1": "",
+      "2": "🌐",
+      "3": "",
+      "4": "📁",
+      "5": "🎵",
+      "urgent": "",
+      "focused": "",
+      "default": ""
+    }
+  },
+  "sway/mode": {
+    "format": "{}",
+    "tooltip": true,
+    "tooltip-format": "Sway Keybinding Mode: {}\nIndicates active modal key bindings."
+  },
+  "sway/window": {
+    "format": "{}",
+    "max-length": 35,
+    "tooltip": true,
+    "tooltip-format": "Focused Application Window:\n•Window Title: {title}\n•Application ID: {app_id}"
+  },
+  "custom/updates": {
+    "exec": "$HOME/.config/waybar/scripts/updates.sh",
+    "interval": 3600,
+    "signal": 8,
+    "return-type": "json",
+    "tooltip": true,
+    "on-click": "foot -e sh -c 'sudo apt update && sudo apt upgrade; echo Done; read _; pkill -42 -x waybar'"
+  },
+  "temperature": {
+    "interval": 2,
+    "critical-threshold": 85,
+    "format": "🌡️{temperatureC}°C",
+    "format-critical": "🔥{temperatureC}°C",
+    "tooltip": true,
+    "tooltip-format": "Thermal Monitoring:\n•Current Temperature: {temperatureC}°C ({temperatureF}°F)\n•Sensor Path: thermal-zone11 (x86_pkg_temp)\n•Critical Threshold: 85°C",
+    "thermal-zone": 11
+  },
+  "cpu": {
+    "interval": 2,
+    "format": "⚡{usage}%",
+    "states": {
+      "warning": 70,
+      "critical": 90
+    },
+    "tooltip": true,
+    "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n\nAction: Click to launch btop.",
+    "on-click": "foot -e btop"
+  },
+  "custom/memory": {
+    "exec": "$HOME/.config/waybar/scripts/memory.sh",
+    "interval": 2,
+    "return-type": "json",
+    "tooltip": true,
+    "on-click": "foot -e btop"
+  },
+  "custom/disk": {
+    "exec": "$HOME/.config/waybar/scripts/disk.sh",
+    "interval": 30,
+    "return-type": "json",
+    "tooltip": true
+  },
+  "custom/netspeed": {
+    "exec": "$HOME/.config/waybar/scripts/netspeed.sh",
+    "return-type": "json",
+    "align": 0,
+    "tooltip": true,
+    "on-click": "foot $HOME/.local/bin/nmtui"
+  },
+  "pulseaudio": {
+    "format": "{icon}{volume}%",
+    "max-volume": 100,
+    "format-muted": "🔇 Muted",
+    "format-icons": {
+      "headphone": "🎧",
+      "hands-free": "🎧",
+      "headset": "🎧",
+      "phone": "📞",
+      "portable": "📱",
+      "car": "🚗",
+      "default": ["🔈", "🔉", "🔊"],
+      "unused-pua-glyphs": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "tooltip": true,
+    "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 5%",
+    "on-click": "GTK_THEME=Adwaita:dark pavucontrol",
+    "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-scroll-up": "$HOME/.config/waybar/scripts/volume.sh up",
+    "on-scroll-down": "$HOME/.config/waybar/scripts/volume.sh down"
+  },
+  "pulseaudio#microphone": {
+    "format": "{format_source}",
+    "format-source": "🎙️{volume}%",
+    "format-source-muted": "🎙️Muted",
+    "scroll-step": 2,
+    "tooltip": true,
+    "tooltip-format": "Microphone Input (PipeWire Sources):\n•Input Device: {desc}\n•Gain Level: {volume}%\n\nControls:\n•Left-Click: Open input devices in pavucontrol\n•Right-Click: Toggle microphone mute\n•Scroll Up/Down: Adjust capture gain by 2%",
+    "on-click": "GTK_THEME=Adwaita:dark pavucontrol -t 4",
+    "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+  },
+  "backlight": {
+    "format": "🔆{percent}%",
+    "tooltip": true,
+    "tooltip-format": "Display Luminance:\n•Brightness Level: {percent}%\n•Driver: default backlight\n\nControls:\n•Scroll Up: Increase brightness by 2%\n•Scroll Down: Decrease brightness by 2%",
+    "on-scroll-up": "sg video -c 'brightnessctl set 2%+'",
+    "on-scroll-down": "sg video -c 'brightnessctl set 2%-'"
+  },
+  "battery": {
+    "interval": 10,
+    "full-at": 90,
+    "states": {
+      "warning": 25,
+      "critical": 20,
+      "danger": 15
+    },
+    "format": "🔋{capacity}%",
+    "format-charging": "🔌{capacity}% {time}",
+    "format-plugged": "🔌{capacity}%",
+    "format-full": "🔋{capacity}% (FULL)",
+    "format-time": "{H}h:{M}min",
+    "tooltip": true,
+    "tooltip-format": "Power Subsystem Metrics:\n•Charge Level: {capacity}%\n•Estimated Runtime: {time}"
+  },
+  "custom/clock": {
+    "exec": "$HOME/.config/waybar/scripts/clock.sh",
+    "interval": 1,
+    "return-type": "json",
+    "tooltip": true
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "☕ON",
+      "deactivated": "☕OFF"
+    },
+    "tooltip": true,
+    "tooltip-format-activated": "Idle Inhibitor: Active\nPrevents display dimming and screen timeouts.\nClick: Restore normal timers.",
+    "tooltip-format-deactivated": "Idle Inhibitor: Inactive\nStandard screen timeouts are active.\nClick: Keep display permanently awake."
+  },
+  "custom/power": {
+    "format": "💡",
+    "tooltip": true,
+    "tooltip-format": "Power Management Options\n\nClick: Toggle power and session actions.",
+    "on-click": "$HOME/.config/waybar/scripts/power-menu.sh"
+  },
+  "tray": {
+    "icon-size": 14,
+    "spacing": 0
+  }
+}
