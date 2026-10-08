@@ -24,6 +24,7 @@
     "backlight",
     "battery",
     "clock",
+    "custom/calendar",
     "idle_inhibitor",
     "custom/power",
     "tray"
@@ -234,7 +235,13 @@
       }
     }
   },
-
+"custom/calendar": {
+    "format": "{}",
+    "interval": 1,
+    "exec": "python3 $HOME/.config/waybar/scripts/calendar-belgium.py",
+    "return-type": "json",
+    "tooltip": true
+  },
   "idle_inhibitor": {
     "format": "{icon}",
     "format-icons": {
@@ -258,3 +265,4 @@
     "spacing": 0
   }
 }
+
