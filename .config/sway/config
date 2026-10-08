@@ -296,4 +296,4 @@ set $menu wmenu-run -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff
 
 # Power Management Dropdown Modal
 
-exec batsignal -w 25 -c 20 -d 15
+exec batsignal -w 25 -c 20 -d 15 -f 90

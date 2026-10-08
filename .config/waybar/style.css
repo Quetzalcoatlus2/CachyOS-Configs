@@ -51,80 +51,116 @@ window#waybar {
     animation: blink 0.5s steps(12) infinite alternate;
 }
 
-/* --- High-Visibility System Alert Styles --- */
+/* --- Dynamic Pulsing Alert Animations --- */
 
-/* Blink animation for critical/danger alerts */
-@keyframes blink {
-    to {
-        background-color: transparent;
+@keyframes pulse-warning {
+    0% {
+        background-color: #fab387;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(250, 179, 135, 0.25);
+        color: #cdd6f4;
+    }
+    100% {
+        background-color: #fab387;
+        color: #11111b;
+    }
+}
+
+@keyframes pulse-critical {
+    0% {
+        background-color: #f38ba8;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(243, 139, 168, 0.25);
+        color: #cdd6f4;
+    }
+    100% {
+        background-color: #f38ba8;
+        color: #11111b;
+    }
+}
+
+@keyframes pulse-danger {
+    0% {
+        background-color: #e64553;
         color: #ffffff;
+    }
+    50% {
+        background-color: rgba(230, 69, 83, 0.2);
+        color: #ffffff;
+    }
+    100% {
+        background-color: #e64553;
+        color: #ffffff;
+    }
+}
+
+@keyframes pulse-full {
+    0% {
+        background-color: #a6e3a1;
+        color: #11111b;
+    }
+    50% {
+        background-color: rgba(166, 227, 161, 0.25);
+        color: #cdd6f4;
+    }
+    100% {
+        background-color: #a6e3a1;
+        color: #11111b;
     }
 }
 
 /* Battery Alerts */
 #battery.warning:not(.charging) {
-    background-color: #fab387;
-    color: #11111b;
+    animation: pulse-warning 2s ease-in-out infinite;
 }
 
 #battery.critical:not(.charging) {
-    background-color: #f38ba8;
-    color: #11111b;
+    animation: pulse-critical 1.2s ease-in-out infinite;
 }
 
 #battery.danger:not(.charging) {
-    background-color: #e64553;
-    color: #ffffff;
-    animation: blink 0.5s steps(12) infinite alternate;
+    animation: pulse-danger 0.6s ease-in-out infinite;
 }
 
-/* Battery 90%+ Target (Notice to unplug) */
 #battery.full,
 #battery.full.charging,
 #battery.full.plugged {
-    background-color: #a6e3a1;
-    color: #11111b;
+    animation: pulse-full 2.5s ease-in-out infinite;
     font-weight: bold;
 }
 
 /* CPU Alerts */
 #cpu.warning {
-    background-color: #fab387;
-    color: #11111b;
+    animation: pulse-warning 2s ease-in-out infinite;
 }
 
 #cpu.critical {
-    background-color: #f38ba8;
-    color: #11111b;
-    animation: blink 0.6s steps(12) infinite alternate;
+    animation: pulse-critical 1s ease-in-out infinite;
 }
 
 /* Memory Alerts */
 #memory.warning {
-    background-color: #fab387;
-    color: #11111b;
+    animation: pulse-warning 2s ease-in-out infinite;
 }
 
 #memory.critical {
-    background-color: #f38ba8;
-    color: #11111b;
-    animation: blink 0.6s steps(12) infinite alternate;
+    animation: pulse-critical 1s ease-in-out infinite;
 }
 
 /* Thermal Alerts */
 #temperature.critical {
-    background-color: #e64553;
-    color: #ffffff;
-    animation: blink 0.5s steps(12) infinite alternate;
+    animation: pulse-danger 0.8s ease-in-out infinite;
 }
 
 /* Disk Alerts */
 #disk.warning {
-    background-color: #fab387;
-    color: #11111b;
+    animation: pulse-warning 3s ease-in-out infinite;
 }
 
 #disk.critical {
-    background-color: #f38ba8;
-    color: #11111b;
+    animation: pulse-critical 1.2s ease-in-out infinite;
 }
