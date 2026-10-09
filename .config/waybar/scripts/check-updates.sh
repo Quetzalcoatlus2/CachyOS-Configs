@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
-count=$(checkupdates 2>/dev/null | wc -l)
 
-if [ "$count" -eq 0 ]; then
-    echo '{"text":"0","tooltip":"System is fully up to date","class":"synced"}'
-    exit 0
-fi
+ARCH=$(checkupdates 2>/dev/null | wc -l)
+AUR=$(paru -Qum 2>/dev/null | wc -l)
+TOTAL=$(( ARCH + AUR ))
 
-if [ "$count" -le 10 ]; then
-    tier="low"
-elif [ "$count" -le 35 ]; then
-    tier="medium"
+if [ "$TOTAL" -eq 0 ]; then
+    CLASS="synced"
+elif [ "$TOTAL" -le 10 ]; then
+    CLASS="low"
+elif [ "$TOTAL" -le 35 ]; then
+    CLASS="medium"
 else
-    tier="high"
+    CLASS="high"
 fi
 
-echo "{\"text\":\"$count\",\"tooltip\":\"$count packages pending synchronization. Click to execute paru upgrade.\",\"class\":\"$tier\"}"
+printf '{"text": "%s", "class": "%s", "tooltip": "System Package Synchronization:\\n• Available Updates: %s pending (%s repo, %s AUR)\\n• Frequency: Checked hourly\\n\\nAction: Click to execute paru upgrade."}\n' \
+    "$TOTAL" "$CLASS" "$TOTAL" "$ARCH" "$AUR"

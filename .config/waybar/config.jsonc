@@ -88,17 +88,16 @@
     "on-scroll-down": "playerctl previous"
   },
 
-  "custom/updates": {
+ "custom/updates": {
     "format": "📦{}",
     "interval": 3600,
-    "exec": "checkupdates 2>/dev/null | wc -l",
-    "exec-if": "exit 0",
+    "exec": "/home/quetzal/.config/waybar/scripts/check-updates.sh",
+    "return-type": "json",
     "on-click": "foot -e bash -c \"paru -Syu; echo; echo 'Update complete. Press any key to close...'; read -n 1 -s -r\"",
     "signal": 8,
-    "tooltip": true,
-    "tooltip-format": "System Package Synchronization:\n•Available Updates: {} packages pending\n•Frequency: Checked hourly\n\nAction: Click to execute paru upgrade."
+    "tooltip": true
   },
-
+  
   "temperature": {
     "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
     "interval": 2,
@@ -216,8 +215,8 @@
   "custom/calendar": {
     "format": "{}",
     "align": 1,
-    "min-length": 21,
-    "max-length": 21,
+    "min-length": 20,
+    "max-length": 20,
     "interval": 1,
     "exec": "python3 $HOME/.config/waybar/scripts/calendar-belgium.py",
     "return-type": "json",
