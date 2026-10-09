@@ -119,7 +119,7 @@ lines.append("")
 lines.append("<span color='#99ffdd'>■</span> Holiday   <span color='#ff6699'>■</span> Today")
 
 tooltip_markup = "<tt><small>" + "\n".join(lines) + "</small></tt>"
-display_text = f"🕒{now.strftime('%H:%M:%S')} {now.strftime('%a%d%b')}W{now.isocalendar()[1]}"
+display_text = f"<span font_features='tnum'>🕒{now.strftime('%H:%M:%S')} {now.strftime('%a%d%b')}W{now.isocalendar()[1]}</span>"
 
 print(json.dumps({
     "text": display_text,

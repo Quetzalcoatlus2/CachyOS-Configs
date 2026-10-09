@@ -32,21 +32,23 @@
   "sway/workspaces": {
     "disable-scroll": false,
     "all-outputs": true,
-    "format": "{name}: {icon}",
+    "format": "{name} {windows}",
+    "format-window-separator": " ",
+    "window-rewrite-default": "🪟",
+    "window-rewrite": {
+      "class<foot>": "",
+      "class<brave-browser.*>": "🦁",
+      "class<code-insiders>": "💻",
+      "class<code.*>": "💻",
+      "class<thunar>": "📁",
+      "class<org.gnome.Nautilus>": "📁",
+      "class<pavucontrol>": "🎛️",
+      "class<spotify>": "🎵"
+      },
     "tooltip": true,
-    "tooltip-format": "Workspace Navigation:\n•Active Workspace: {name}\n•Scroll / Click: Switch between virtual workspaces",
-    "format-icons": {
-      "1": "",
-      "2": "🌐",
-      "3": "",
-      "4": "📁",
-      "5": "🎵",
-      "urgent": "",
-      "focused": "",
-      "default": ""
-    }
-  },
-
+    "tooltip-format": "Workspace Navigation:\n•Active Workspace: {name}\n•Scroll / Click: Switch between virtual workspaces"
+    },
+    
   "sway/mode": {
     "format": "{}",
     "tooltip": true,
