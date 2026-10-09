@@ -18,11 +18,11 @@
     "cpu",
     "memory",
     "disk",
+    "custom/network",
     "pulseaudio",
     "pulseaudio#microphone",
     "backlight",
     "battery",
-    "clock",
     "custom/calendar",
     "idle_inhibitor",
     "custom/power",
@@ -145,31 +145,28 @@
     "tooltip-format": "Root Storage Subvolume:\n•Mount Point: {path}\n•Space Consumed: {used} / {total} ({percentage_used}%)\n•Available Storage: {free} ({percentage_free}% remaining)"
   },
 
-  "network": {
-    "align": 0,
-    "min-length": 49,
-    "max-length": 49,
-    "interval": 1,
-    "format-wifi": "📶{essid}({signalStrength}%)🔻{bandwidthDownBytes}🔺{bandwidthUpBytes}",
-    "format-ethernet": "🌐{ipaddr}/{cidr}🔻{bandwidthDownBytes}🔺{bandwidthUpBytes}",
-    "format-linked": "🔗 {ifname} (No IP)",
-    "format-disconnected": "🚫 Disconnected",
-    "tooltip": true,
-    "tooltip-format": "Network Interface Status:\n•Device: {ifname}\n•IP Address: {ipaddr}/{cidr}\n•Gateway: {gwaddr}\n•SSID: {essid}\n•Radio Frequency: {frequency} MHz\n•Signal Quality: {signalStrength}% ({signaldBm} dBm)\n•Bandwidth: In {bandwidthDownBytes} | Out {bandwidthUpBytes}\n\nAction: Click to launch nmtui.",
-    "on-click": "foot nmtui"
-  },
-
+  "custom/network": {
+      "align": 0,
+      "min-length": 42,
+      "max-length": 42,
+      "interval": 1,
+      "exec": "python3 /home/quetzal/.config/waybar/scripts/network-traffic.py",
+      "return-type": "json",
+      "tooltip": true,
+      "on-click": "foot nmtui"
+    },
+  
   "pulseaudio": {
-    "format": "{icon}{volume}%",
+    "format": "{icon} {volume}%",
     "format-muted": "🔇 Muted",
     "format-icons": {
-      "headphone": "🎧",
-      "hands-free": "🎧",
-      "headset": "🎧",
-      "phone": "📞",
-      "portable": "📱",
-      "car": "🚗",
-      "default": ["", "", ""]
+      "headphone": ["🎧🔈", "🎧🔉", "🎧🔊", "🎧📢"],
+      "hands-free": ["🎧🔈", "🎧🔉", "🎧🔊", "🎧📢"],
+      "headset": ["🎧🔈", "🎧🔉", "🎧🔊", "🎧📢"],
+      "phone": ["📞🔈", "📞🔉", "📞🔊", "📞📢"],
+      "portable": ["📱🔈", "📱🔉", "📱🔊", "📱📢"],
+      "car": ["🚗🔈", "🚗🔉", "🚗🔊", "🚗📢"],
+      "default": ["🔈", "🔉", "🔊", "📢"]
     },
     "tooltip": true,
     "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 5%",
@@ -178,7 +175,7 @@
     "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
     "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
   },
-
+  
   "pulseaudio#microphone": {
     "format": "{format_source}",
     "format-source": "🎙️{volume}%",
@@ -216,31 +213,17 @@
     "tooltip-format": "Power Subsystem Metrics:\n•Charge Level: {capacity}%\n•Estimated Runtime: {time}\n•Current Consumption: {power:.2f} W\n•Battery Health: {health}%\n•Total Charge Cycles: {cycles}"
   },
 
-  "clock": {
-    "interval": 1,
-    "format": "🕒{:%H:%M:%S %a%d%bW%V}",
-    "tooltip-format": "<tt><small>{calendar}</small></tt>",
-    "calendar": {
-      "mode": "year",
-      "mode-mon-col": 3,
-      "weeks-pos": "right",
-      "on-scroll": 1,
-      "format": {
-        "months": "<span color='#ffead3'><b>{}</b></span>",
-        "days": "<span color='#ecc6d9'><b>{}</b></span>",
-        "weeks": "<span color='#99ffdd'><b>W{}</b></span>",
-        "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
-        "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
-      }
-    }
-  },
-"custom/calendar": {
+  "custom/calendar": {
     "format": "{}",
+    "align": 1,
+    "min-length": 21,
+    "max-length": 21,
     "interval": 1,
     "exec": "python3 $HOME/.config/waybar/scripts/calendar-belgium.py",
     "return-type": "json",
     "tooltip": true
   },
+  
   "idle_inhibitor": {
     "format": "{icon}",
     "format-icons": {
