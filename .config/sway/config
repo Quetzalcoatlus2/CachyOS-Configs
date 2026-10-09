@@ -297,3 +297,13 @@ set $menu wmenu-run -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff
 # Power Management Dropdown Modal
 
 exec batsignal -w 25 -c 20 -d 15 -f 90
+
+# Session environment registration
+exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway
+
+# Power and idle management
+exec swayidle -w timeout 600 'swaylock -f -c 000000' timeout 900 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' before-sleep 'swaylock -f -c 000000'
+
+# Power menu and lock bindings
+bindsym $mod+Shift+Escape exec ~/.config/waybar/scripts/power-menu.sh
+bindsym $mod+Ctrl+l exec swaylock -f -c 000000
