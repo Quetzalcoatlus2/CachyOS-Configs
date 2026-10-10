@@ -114,10 +114,7 @@
       "car": "🚗",
       "default": ["🔈", "🔉", "🔊"],
       "unused-pua-glyphs": [
-        "",
-        "",
-        ""
-      ]
+        "", "", ""]
     },
     "tooltip": true,
     "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 5%",
@@ -151,7 +148,7 @@
       "critical": 20,
       "danger": 15
     },
-    "format": "🔋{capacity}%",
+    "format": "🔋{capacity}% {time}",
     "format-charging": "🔌{capacity}% {time}",
     "format-plugged": "🔌{capacity}%",
     "format-full": "🔋{capacity}% (FULL)",
@@ -160,7 +157,7 @@
     "tooltip-format": "Power Subsystem Metrics:\n•Charge Level: {capacity}%\n•Estimated Runtime: {time}"
   },
   "custom/clock": {
-    "exec": "$HOME/.config/waybar/scripts/clock.sh",
+    "exec": "python3 $HOME/.config/waybar/scripts/calendar-belgium.py",
     "interval": 1,
     "return-type": "json",
     "tooltip": true
