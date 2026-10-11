@@ -23,3 +23,4 @@ alias xdg-mime='nocorrect xdg-mime'
 setopt autocd
 setopt interactivecomments
 alias ll='ls -lah'
+export COLORTERM=truecolor
