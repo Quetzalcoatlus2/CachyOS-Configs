@@ -85,7 +85,7 @@ for row in range(4):
                 formatted_days = []
                 for d in days:
                     if d == 0:
-                        formatted_days.append("<span color='#45475a'>..</span>")
+                        formatted_days.append("<span color='#45475a'>  </span>")
                     else:
                         d_date = datetime.date(year, m, d)
                         if d_date == today:
