@@ -24,3 +24,12 @@ setopt autocd
 setopt interactivecomments
 alias ll='ls -lah'
 export COLORTERM=truecolor
+
+unalias update 2>/dev/null
+
+function update {
+  command sudo bash -c '
+    LC_ALL=C pacman --color never -Syu \
+      2> >(sed -u -E "/^warning: .*: local \(.*\) is newer than .*$/d" >&2)
+  ' && command paru -Sua
+}

@@ -95,7 +95,7 @@
     "interval": 3600,
     "exec": "/home/quetzal/.config/waybar/scripts/check-updates.sh",
     "return-type": "json",
-    "on-click": "foot -e bash -c \"paru -Syu; echo; echo 'Update complete. Press any key to close...'; read -n 1 -s -r\"",
+    "on-click": "foot -e zsh -ic 'update; rc=$?; printf \"\\nUpdate complete. Press any key to close...\"; read -r -s -k 1; exit \"$rc\"'",
     "signal": 8,
     "tooltip": true
   },
