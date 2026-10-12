@@ -283,6 +283,9 @@ default_floating_border normal 2
 for_window [app_id="^brave"] border normal 2
 for_window [class="^[bB]rave"] border normal 2
 
+popup_during_fullscreen smart
+for_window [app_id="^brave.*"] inhibit_idle fullscreen
+
 # Automatically hide borders when a workspace contains only one window
 smart_borders on
 

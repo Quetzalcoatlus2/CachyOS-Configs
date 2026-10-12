@@ -47,57 +47,76 @@ month_names = [
 ]
 
 lines = []
-# Total line width is 78 characters (3 columns of 24 chars + 2 separators of 3 spaces)
+# Total line width is 78 characters (3 columns of 26: 24-char grid plus a 1-char edge each side)
 lines.append(f"<span color='#ffead3'><b>{'Year ' + str(year):^78}</b></span>")
 lines.append("")
+
+BOX_COLOR = "#00e5ff"
+weekday_header = "<span color='#99ffdd'>Wk</span>  <span color='#ffcc66'>Mo Tu We Th Fr Sa Su</span>"
+
+
+def frame(content, is_current):
+    edge = f"<span color='{BOX_COLOR}'>│</span>" if is_current else " "
+    return edge + content + edge
+
+
+def rule(left, right, is_current):
+    if not is_current:
+        return " " * 26
+    return f"<span color='{BOX_COLOR}'>{left}{'─' * 24}{right}</span>"
+
 
 for row in range(4):
     m_start = row * 3 + 1
     months = [m_start, m_start + 1, m_start + 2]
-
-    # Month header row
-    title_cols = [f"<span color='#ffead3'><b>{month_names[m]:^24}</b></span>" for m in months]
-    lines.append("   ".join(title_cols))
-
-    # Day-of-week header row (Wk + Mo to Su)
-    weekday_col = "<span color='#99ffdd'>Wk</span>  <span color='#ffcc66'>Mo Tu We Th Fr Sa Su</span>"
-    lines.append(f"{weekday_col}   {weekday_col}   {weekday_col}")
-
-    # Week matrix per month
     month_weeks = [calendar.monthcalendar(year, m) for m in months]
     max_weeks = max(len(w) for w in month_weeks)
 
-    for w_idx in range(max_weeks):
-        row_segments = []
-        for m_idx, m in enumerate(months):
-            weeks = month_weeks[m_idx]
-            if w_idx < len(weeks):
-                days = weeks[w_idx]
-                first_day = next(d for d in days if d != 0)
-                w_num = datetime.date(year, m, first_day).isocalendar()[1]
+    # Each month is a column; the current month is boxed
+    columns = []
+    for m_idx, m in enumerate(months):
+        is_current = year == today.year and m == today.month
+        column = [
+            rule("┌", "┐", is_current),
+            frame(f"<span color='#ffead3'><b>{month_names[m]:^24}</b></span>", is_current),
+            frame(weekday_header, is_current),
+        ]
 
-                # Highlight the current active week
-                if year == today.year and m == today.month and w_num == current_iso_week:
-                    w_tag = f"<span color='#ff6699'><b>W{w_num:02d}</b></span> "
-                else:
-                    w_tag = f"<span color='#99ffdd'>W{w_num:02d}</span> "
+        weeks = month_weeks[m_idx]
+        for w_idx in range(max_weeks):
+            if w_idx >= len(weeks):
+                column.append(frame(" " * 24, is_current))
+                continue
 
-                formatted_days = []
-                for d in days:
-                    if d == 0:
-                        formatted_days.append("<span color='#45475a'>..</span>")
-                    else:
-                        d_date = datetime.date(year, m, d)
-                        if d_date == today:
-                            formatted_days.append(f"<span color='#ff6699'><b><u>{d:02d}</u></b></span>")
-                        elif d_date in holidays:
-                            formatted_days.append(f"<span color='#99ffdd'><b>{d:02d}</b></span>")
-                        else:
-                            formatted_days.append(f"<span color='#ecc6d9'>{d:02d}</span>")
-                row_segments.append(w_tag + " ".join(formatted_days))
+            days = weeks[w_idx]
+            first_day = next(d for d in days if d != 0)
+            w_num = datetime.date(year, m, first_day).isocalendar()[1]
+
+            # Highlight the current active week
+            if is_current and w_num == current_iso_week:
+                w_tag = f"<span color='#ff6699'><b>W{w_num:02d}</b></span> "
             else:
-                row_segments.append(" " * 24)
-        lines.append("   ".join(row_segments))
+                w_tag = f"<span color='#99ffdd'>W{w_num:02d}</span> "
+
+            formatted_days = []
+            for d in days:
+                if d == 0:
+                    formatted_days.append("<span color='#45475a'>..</span>")
+                else:
+                    d_date = datetime.date(year, m, d)
+                    if d_date == today:
+                        formatted_days.append(f"<span color='#ff6699'><b><u>{d:02d}</u></b></span>")
+                    elif d_date in holidays:
+                        formatted_days.append(f"<span color='#99ffdd'><b>{d:02d}</b></span>")
+                    else:
+                        formatted_days.append(f"<span color='#ecc6d9'>{d:02d}</span>")
+            column.append(frame(w_tag + " ".join(formatted_days), is_current))
+
+        column.append(rule("└", "┘", is_current))
+        columns.append(column)
+
+    for line_idx in range(len(columns[0])):
+        lines.append("".join(column[line_idx] for column in columns))
     lines.append("")
 
 # Belgian public holidays list

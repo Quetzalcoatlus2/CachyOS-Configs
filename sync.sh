@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-DOTFILES_DIR="$HOME/dotfiles"
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)}"
 
 case "${1:-}" in
     pull)

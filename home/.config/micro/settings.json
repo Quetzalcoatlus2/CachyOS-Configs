@@ -1,5 +1,3 @@
 {
-    "clipboard": "external",
-    "mouse": false,
-    "colorscheme": "pureblack"
+    "colorscheme": "monokai-black"
 }

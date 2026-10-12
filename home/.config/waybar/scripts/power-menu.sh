@@ -20,7 +20,7 @@ DETAILS="
     • Power Draw: Active idle state at login display manager; frees all user-space physical RAM allocations and GPU buffers.     │    • Power Draw: Draws ~0.8W during initial RAM sleep phase, dropping to absolute 0.0W once written to swap partition on disk.
     • Use Case  : Switching user profiles, applying desktop shell configuration changes, or concluding the daily work session.   │    • Use Case  : Overnight laptop sleep without battery drain risk while retaining the exact state of all open workspaces.
                                                                                                                                  │
- 3. ⏻ SHUTDOWN (systemctl poweroff)                                                                                              │ 7. 💾 HIBERNATE (Suspend-to-Disk / ACPI S4)
+ 3. 🔌 SHUTDOWN (systemctl poweroff)                                                                                             │ 7. 💾 HIBERNATE (Suspend-to-Disk / ACPI S4)
     • Mechanism : Flushes kernel I/O queues, commits Btrfs journals, unmounts subvolumes cleanly, and commands ACPI S5/G3.       │    • Mechanism : Serializes physical memory image into /swap/swapfile, verifies disk image integrity, and powers off hardware.
     • Power Draw: Absolute 0.0W hardware cutoff; completely isolates motherboard power rails and flushes volatile memory.        │    • Power Draw: Absolute 0.0W draw; preserves battery indefinitely with zero parasitic drain, standby heat, or wear.
     • Use Case  : Packing laptop in transit bags, hardware servicing, electrical storm safety, or end-of-day system powerdown.   │    • Use Case  : Multi-day storage, long-distance flights, or transport where exact application sessions must remain untouched.
@@ -33,7 +33,7 @@ DETAILS="
 
 printf '%s\n' "$DETAILS" | exec swaynag \
     --edge top \
-    --layer top \
+    --layer bottom \
     --font "monospace 9" \
     --background 000000 \
     --border 222222 \

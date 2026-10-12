@@ -222,6 +222,7 @@ bindsym $mod+r mode "resize"
     bindsym Shift+Print exec sh -c 'REGION=$(slurp) && [ -n "$REGION" ] && mkdir -p ~/Pictures/Screenshots && grim -g "$REGION" - | tee ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png | wl-copy -t image/png'
     bindsym $mod+Shift+s exec sh -c 'REGION=$(slurp) && [ -n "$REGION" ] && grim -g "$REGION" - | wl-copy -t image/png'
     bindsym $mod+Print exec sh -c 'pkill -x swappy; REGION=$(slurp) && [ -n "$REGION" ] && grim -g "$REGION" - | swappy -f -'
+    bindsym Ctrl+Print exec grim - | wl-copy -t image/png
 #
 # Gestures:
 #
@@ -273,6 +274,21 @@ client.focused_inactive #000000 #000000 #888888 #111111 #111111
 client.unfocused        #000000 #000000 #555555 #000000 #000000
 client.urgent           #000000 #000000 #ff5555 #000000 #000000
 
+# Set borders and titlebars and eliminate corner rounding globally for all tiled and floating windows
+corner_radius 0
+default_border normal 2
+default_floating_border normal 2
+
+# Disable borders and corner rounding for all Brave windows and PWAs
+for_window [app_id="^brave"] border normal 2
+for_window [class="^[bB]rave"] border normal 2
+
+popup_during_fullscreen smart
+for_window [app_id="^brave.*"] inhibit_idle fullscreen
+
+# Automatically hide borders when a workspace contains only one window
+smart_borders on
+
 # Auto-float, strip borders, and center vertically on the right edge
 for_window [title="(?i)picture[- ]in[- ]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 405
 
@@ -283,3 +299,14 @@ set $menu wmenu-run -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff
 
 # Power Management Dropdown Modal
 
+exec batsignal -w 25 -c 20 -d 15 -f 90
+
+# Session environment registration
+exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway
+
+# Power and idle management
+exec swayidle -w timeout 600 'swaylock -f -c 000000' timeout 900 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' before-sleep 'swaylock -f -c 000000'
+
+# Power menu and lock bindings
+bindsym $mod+Shift+Escape exec ~/.config/waybar/scripts/power-menu.sh
+bindsym $mod+Ctrl+l exec swaylock -f -c 000000
