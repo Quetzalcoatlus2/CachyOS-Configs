@@ -33,8 +33,6 @@ function update {
 
 unalias micro 2>/dev/null
 
-unalias micro 2>/dev/null
-
 function micro {
   command foot \
     --override=key-bindings.clipboard-copy=none \
