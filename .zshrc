@@ -28,8 +28,17 @@ export COLORTERM=truecolor
 unalias update 2>/dev/null
 
 function update {
-  command sudo bash -c '
-    LC_ALL=C pacman --color never -Syu \
-      2> >(sed -u -E "/^warning: .*: local \(.*\) is newer than .*$/d" >&2)
-  ' && command paru -Sua
+  command paru --pacman /usr/local/bin/pacman-filtered -Syu
+}
+
+unalias micro 2>/dev/null
+
+unalias micro 2>/dev/null
+
+function micro {
+  command foot \
+    --override=key-bindings.clipboard-copy=none \
+    --override=key-bindings.clipboard-paste=none \
+    -e /usr/bin/micro -clipboard external "$@" \
+    2> >(sed -u '/compositor does not implement the xdg-toplevel-icon protocol/d' >&2)
 }
