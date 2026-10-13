@@ -40,3 +40,4 @@ function micro {
     -e /usr/bin/micro -clipboard external "$@" \
     2> >(sed -u '/compositor does not implement the xdg-toplevel-icon protocol/d' >&2)
 }
+eval "$(atuin init zsh)"
