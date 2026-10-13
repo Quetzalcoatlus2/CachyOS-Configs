@@ -42,7 +42,7 @@ def _patched_dumps(obj, *args, **kwargs):
             ("Honolulu", "Pacific/Honolulu"), ("Los Angeles", "America/Los_Angeles"),
             ("Chicago", "America/Chicago"), ("New York", "America/New_York"),
             ("Buenos Aires", "America/Argentina/Buenos_Aires"), ("São Paulo", "America/Sao_Paulo"),
-            ("Lagos", "Africa/Lagos"), ("London", "Europe/London"),
+            ("Lisbon", "Europe/Lisbon"), ("London", "Europe/London"),
             ("Brussels", "Europe/Brussels"), ("Bucharest", "Europe/Bucharest"),
             ("Cairo", "Africa/Cairo"), ("Istanbul", "Europe/Istanbul"),
             ("Dubai", "Asia/Dubai"), ("Mumbai", "Asia/Kolkata"),
