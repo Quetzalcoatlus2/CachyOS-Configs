@@ -17,12 +17,11 @@ set $right l
 set $term foot
 exec foot --server
 # Your preferred application launcher
-set $menu wmenu-run
+set $menu wmenu-run -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff
 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # Example configuration:
 #
@@ -261,7 +260,6 @@ input "type:touchpad" {
 }
 
 # Lock Screen shortcut
-bindsym $mod+Shift+l exec swaylock -f
 
 # Hardware Power Button toggle
 
@@ -280,7 +278,7 @@ default_border normal 2
 default_floating_border normal 2
 
 # Disable borders and corner rounding for all Brave windows and PWAs
-for_window [class="^[bB]rave"] border normal 2
+for_window [class="^[bB]rave.*"] border none, inhibit_idle fullscreen
 
 popup_during_fullscreen smart
 for_window [app_id="^brave.*"] border none, inhibit_idle fullscreen
@@ -292,7 +290,6 @@ smart_borders on
 for_window [title="(?i)picture[- ]in[- ]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 405
 
 # Set default wmenu runner colors
-set $menu wmenu-run -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff
 
 # Power Management Dropdown Modal (Docked beneath top bar on the right)
 

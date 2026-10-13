@@ -135,6 +135,7 @@ default_border normal 2
 default_floating_border normal 2
 smart_borders on
 
-for_window [app_id="^brave"] border normal 2
-for_window [class="^[bB]rave"] border normal 2
+popup_during_fullscreen smart
+for_window [app_id="^brave.*"] border none, inhibit_idle fullscreen
+for_window [class="^[bB]rave.*"] border none, inhibit_idle fullscreen
 for_window [title="(?i)picture[ -]in[ -]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 465
