@@ -33,8 +33,6 @@ function update {
 
 unalias micro 2>/dev/null
 
-unalias micro 2>/dev/null
-
 function micro {
   command foot \
     --override=key-bindings.clipboard-copy=none \
@@ -42,3 +40,4 @@ function micro {
     -e /usr/bin/micro -clipboard external "$@" \
     2> >(sed -u '/compositor does not implement the xdg-toplevel-icon protocol/d' >&2)
 }
+eval "$(atuin init zsh)"

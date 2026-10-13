@@ -280,7 +280,6 @@ default_border normal 2
 default_floating_border normal 2
 
 # Disable borders and corner rounding for all Brave windows and PWAs
-for_window [app_id="^brave"] border normal 2
 for_window [class="^[bB]rave"] border normal 2
 
 popup_during_fullscreen smart
