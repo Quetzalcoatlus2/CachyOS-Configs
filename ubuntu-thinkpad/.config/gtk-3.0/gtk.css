@@ -1,0 +1,44 @@
+@define-color theme_bg_color #000000;
+@define-color theme_base_color #000000;
+@define-color theme_fg_color #ffffff;
+@define-color theme_text_color #ffffff;
+@define-color theme_selected_bg_color #333333;
+@define-color theme_selected_fg_color #ffffff;
+@define-color theme_unfocused_bg_color #000000;
+@define-color theme_unfocused_base_color #000000;
+@define-color theme_unfocused_fg_color #ffffff;
+@define-color theme_unfocused_text_color #ffffff;
+@define-color theme_unfocused_selected_bg_color #222222;
+@define-color theme_unfocused_selected_fg_color #ffffff;
+@define-color content_view_bg #000000;
+@define-color text_view_bg #000000;
+@define-color borders #333333;
+@define-color unfocused_borders #222222;
+
+/* Yaru hardcodes #2c2c2c / #272727 on these selectors, so the named colours above do not reach them. */
+.background,
+.background:backdrop,
+.gtkstyle-fallback,
+.view,
+iconview,
+.view text,
+iconview text,
+textview text,
+.view:backdrop,
+iconview:backdrop,
+.view text:backdrop,
+iconview text:backdrop,
+textview text:backdrop,
+.view:disabled,
+iconview:disabled,
+entry,
+treeview entry,
+treeview entry.flat,
+toolbar,
+menubar,
+menu,
+headerbar,
+.sidebar {
+  background-color: #000000;
+  background-image: none;
+}
