@@ -31,13 +31,4 @@ function update {
   command paru --pacman /usr/local/bin/pacman-filtered -Syu
 }
 
-unalias micro 2>/dev/null
-
-function micro {
-  command foot \
-    --override=key-bindings.clipboard-copy=none \
-    --override=key-bindings.clipboard-paste=none \
-    -e /usr/bin/micro -clipboard external "$@" \
-    2> >(sed -u '/compositor does not implement the xdg-toplevel-icon protocol/d' >&2)
-}
 eval "$(atuin init zsh)"
