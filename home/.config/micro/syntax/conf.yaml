@@ -1,0 +1,14 @@
+filetype: conf
+
+detect:
+    filename: '(\.(cfg|properties)$|(^|/)\.config/.*\.conf$|^/etc/[^/]+\.conf$)'
+
+rules:
+    - comment: '^\s*[#;].*$'
+    - type: '^\s*\[[^\]]*\]\s*$'
+    - identifier: '^\s*[A-Za-z_][A-Za-z0-9_.-]*'
+    - symbol: '='
+    - constant.number: '\b[0-9]+(\.[0-9]+)?\b'
+    - constant: '\b(true|false|yes|no|on|off|enabled|disabled)\b'
+    - constant.string: '"[^"]*"'
+    - constant.string: "'[^']*'"
