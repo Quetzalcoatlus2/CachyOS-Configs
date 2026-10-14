@@ -1,7 +1,7 @@
 filetype: conf
 
 detect:
-    filename: '(\.(cfg|properties)$|(^|/)\.config/.*\.conf$)'
+    filename: '(\.(cfg|properties)$|(^|/)\.config/.*\.conf$|^/etc/[^/]+\.conf$)'
 
 rules:
     - comment: '^\s*[#;].*$'
