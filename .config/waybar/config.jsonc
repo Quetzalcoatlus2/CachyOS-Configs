@@ -179,7 +179,7 @@
       "min-length": 43,
       "max-length": 43,
       "interval": 1,
-      "exec": "python3 /home/quetzal/.config/waybar/scripts/network-traffic.py",
+      "exec": "/home/quetzal/.config/waybar/scripts/network-traffic.py",
       "return-type": "json",
       "tooltip": true,
       "on-click": "foot nmtui"

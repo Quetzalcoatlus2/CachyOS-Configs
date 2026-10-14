@@ -1,148 +1,123 @@
-#!/usr/bin/env python3
-import json
-import os
-import subprocess
-import time
+#!/usr/bin/env bash
 
-STATE_FILE = "/dev/shm/waybar_net_state"
+STATE_FILE="/dev/shm/waybar_net_state"
+META_FILE="/dev/shm/waybar_net_meta"
 
-def format_rate(bytes_per_sec):
-    if bytes_per_sec < 1024:
-        return f"{int(bytes_per_sec)}B"
-    elif bytes_per_sec < 1024 * 1024:
-        return f"{bytes_per_sec / 1024:.1f}KB"
-    elif bytes_per_sec < 1024 * 1024 * 1024:
-        return f"{bytes_per_sec / (1024 * 1024):.1f}MB"
-    return f"{bytes_per_sec / (1024 * 1024 * 1024):.1f}GB"
-
-def get_default_route():
-    iface, gw = None, None
-    try:
-        with open("/proc/net/route", "r") as f:
-            for line in f.readlines()[1:]:
-                fields = line.strip().split()
-                if fields[1] == "00000000" and int(fields[3], 16) & 2:
-                    iface = fields[0]
-                    gw_hex = fields[2]
-                    gw = ".".join(str(int(gw_hex[i:i+2], 16)) for i in (6, 4, 2, 0))
-                    break
-    except Exception:
-        pass
-    return iface, gw
-
-iface, gw = get_default_route()
-now = time.time()
-
-# Fallback: check for any active non-loopback interface if no default route
-if not iface:
-    try:
-        candidates = [d for d in os.listdir("/sys/class/net") if d != "lo"]
-        for c in candidates:
-            with open(f"/sys/class/net/{c}/operstate", "r") as f:
-                if f.read().strip() == "up":
-                    iface = c
-                    break
-    except Exception:
-        pass
-
-if not iface:
-    payload = {
-        "text": "🚫 Disconnected",
-        "tooltip": "Network Interface Status:\n•Status: Disconnected",
-        "class": "disconnected"
-    }
-    print(json.dumps(payload))
-    exit(0)
-
-# Check IP address and subnet
-ip_addr = ""
-cidr = ""
-try:
-    addr_out = subprocess.check_output(["ip", "-4", "-o", "addr", "show", "dev", iface], text=True)
-    for line in addr_out.strip().splitlines():
-        parts = line.split()
-        if len(parts) >= 4 and "/" in parts[3]:
-            ip_addr, cidr = parts[3].split("/", 1)
-            break
-except Exception:
-    pass
-
-# Physical link without an assigned IP
-if not ip_addr:
-    payload = {
-        "text": f"🔗 {iface} (No IP)",
-        "tooltip": f"Network Interface Status:\n•Device: {iface}\n•Status: Connected (No IP)",
-        "class": "linked"
-    }
-    print(json.dumps(payload))
-    exit(0)
-
-# Byte rate calculation
-rx_path = f"/sys/class/net/{iface}/statistics/rx_bytes"
-tx_path = f"/sys/class/net/{iface}/statistics/tx_bytes"
-down_rate = 0.0
-up_rate = 0.0
-
-try:
-    with open(rx_path, "r") as f:
-        rx_bytes = int(f.read().strip())
-    with open(tx_path, "r") as f:
-        tx_bytes = int(f.read().strip())
-
-    if os.path.exists(STATE_FILE):
-        with open(STATE_FILE, "r") as f:
-            prev_iface, prev_time, prev_rx, prev_tx = f.read().split()
-            dt = now - float(prev_time)
-            if prev_iface == iface and dt > 0:
-                down_rate = max(0.0, (rx_bytes - int(prev_rx)) / dt)
-                up_rate = max(0.0, (tx_bytes - int(prev_tx)) / dt)
-except Exception:
-    rx_bytes, tx_bytes = 0, 0
-
-try:
-    with open(STATE_FILE, "w") as f:
-        f.write(f"{iface} {now} {rx_bytes} {tx_bytes}")
-except Exception:
-    pass
-
-down_str = format_rate(down_rate)
-up_str = format_rate(up_rate)
-is_wifi = os.path.exists(f"/sys/class/net/{iface}/wireless")
-
-if is_wifi:
-    ssid = "Wi-Fi"
-    signal = 0
-    try:
-        wifi_out = subprocess.check_output(
-            ["nmcli", "-t", "-f", "active,ssid,signal", "dev", "wifi"],
-            text=True
-        )
-        for line in wifi_out.strip().splitlines():
-            if line.startswith("yes:"):
-                parts = line.split(":")
-                ssid = parts[1] if len(parts) > 1 else ssid
-                signal = int(parts[2]) if len(parts) > 2 else 0
-                break
-    except Exception:
-        pass
-    text = f"📶{ssid}({signal}%)🔻{down_str}🔺{up_str}"
-else:
-    text = f"🌐{ip_addr}/{cidr}🔻{down_str}🔺{up_str}"
-
-tooltip_lines = [
-    "Network Interface Status:",
-    f"•Device: {iface}",
-    f"•IP Address: {ip_addr}/{cidr}"
-]
-if gw:
-    tooltip_lines.append(f"•Gateway: {gw}")
-tooltip_lines.append(f"•Download: {down_str}")
-tooltip_lines.append(f"•Upload: {up_str}")
-
-payload = {
-    "text": text,
-    "tooltip": "\n".join(tooltip_lines),
-    "class": "network-traffic"
+format_rate() {
+    local bps=$1
+    if (( bps < 1024 )); then
+        printf "%dB" "$bps"
+    elif (( bps < 1048576 )); then
+        local kb=$(( bps * 10 / 1024 ))
+        printf "%d.%dKB" $(( kb / 10 )) $(( kb % 10 ))
+    elif (( bps < 1073741824 )); then
+        local mb=$(( bps * 10 / 1048576 ))
+        printf "%d.%dMB" $(( mb / 10 )) $(( mb % 10 ))
+    else
+        local gb=$(( bps * 10 / 1073741824 ))
+        printf "%d.%dGB" $(( gb / 10 )) $(( gb % 10 ))
+    fi
 }
 
-print(json.dumps(payload))
+iface=""
+gw=""
+while read -r r_iface r_dest r_gw r_flags _; do
+    if [[ "$r_dest" == "00000000" ]] && (( (16#$r_flags & 2) != 0 )); then
+        iface="$r_iface"
+        gw="$(( 16#${r_gw:6:2} )).$(( 16#${r_gw:4:2} )).$(( 16#${r_gw:2:2} )).$(( 16#${r_gw:0:2} ))"
+        break
+    fi
+done < /proc/net/route
+
+if [[ -z "$iface" ]]; then
+    for devpath in /sys/class/net/*; do
+        dev="${devpath##*/}"
+        [[ "$dev" == "lo" ]] && continue
+        read -r state < "$devpath/operstate" 2>/dev/null
+        if [[ "$state" == "up" ]]; then
+            iface="$dev"
+            break
+        fi
+    done
+fi
+
+if [[ -z "$iface" ]]; then
+    printf '{"text":"🚫 Disconnected","tooltip":"Network Interface Status:\\n•Status: Disconnected","class":"disconnected"}\n'
+    exit 0
+fi
+
+read -r up_str _ < /proc/uptime
+now_cs="${up_str/./}"
+now_sec="${up_str%.*}"
+
+ip_addr=""
+cidr=""
+ssid="Wi-Fi"
+if [[ -f "$META_FILE" ]]; then
+    IFS='|' read -r m_iface m_time m_ip m_cidr m_ssid < "$META_FILE"
+    if [[ "$m_iface" == "$iface" ]] && (( now_sec - m_time < 15 )) && [[ -n "$m_ip" ]]; then
+        ip_addr="$m_ip"
+        cidr="$m_cidr"
+        ssid="$m_ssid"
+    fi
+fi
+
+if [[ -z "$ip_addr" ]]; then
+    while read -r _ _ _ addr_cidr _; do
+        if [[ "$addr_cidr" == */* ]]; then
+            ip_addr="${addr_cidr%/*}"
+            cidr="${addr_cidr#*/}"
+            break
+        fi
+    done < <(ip -4 -o addr show dev "$iface" 2>/dev/null)
+
+    if [[ -d "/sys/class/net/$iface/wireless" ]]; then
+        ssid_out=$(nmcli -g GENERAL.CONNECTION dev show "$iface" 2>/dev/null)
+        [[ -n "$ssid_out" ]] && ssid="$ssid_out"
+    fi
+    printf "%s|%s|%s|%s|%s\n" "$iface" "$now_sec" "$ip_addr" "$cidr" "$ssid" > "$META_FILE"
+fi
+
+if [[ -z "$ip_addr" ]]; then
+    printf '{"text":"🔗 %s (No IP)","tooltip":"Network Interface Status:\\n•Device: %s\\n•Status: Connected (No IP)","class":"linked"}\n' "$iface" "$iface"
+    exit 0
+fi
+
+read -r rx_bytes < "/sys/class/net/$iface/statistics/rx_bytes"
+read -r tx_bytes < "/sys/class/net/$iface/statistics/tx_bytes"
+down_rate=0
+up_rate=0
+
+if [[ -f "$STATE_FILE" ]]; then
+    read -r p_iface p_cs p_rx p_tx < "$STATE_FILE"
+    p_cs="${p_cs//./}"; dt_cs=$(( now_cs - p_cs ))
+    if [[ "$p_iface" == "$iface" ]] && (( dt_cs > 0 )); then
+        (( rx_bytes >= p_rx )) && down_rate=$(( (rx_bytes - p_rx) * 100 / dt_cs ))
+        (( tx_bytes >= p_tx )) && up_rate=$(( (tx_bytes - p_tx) * 100 / dt_cs ))
+    fi
+fi
+printf "%s %s %s %s\n" "$iface" "$now_cs" "$rx_bytes" "$tx_bytes" > "$STATE_FILE"
+
+down_str=$(format_rate "$down_rate")
+up_str=$(format_rate "$up_rate")
+
+if [[ -d "/sys/class/net/$iface/wireless" ]]; then
+    signal=0
+    while read -r w_iface _ w_link _; do
+        if [[ "${w_iface%:}" == "$iface" ]]; then
+            link_int="${w_link%.*}"
+            signal=$(( link_int * 100 / 70 ))
+            (( signal > 100 )) && signal=100
+            break
+        fi
+    done < /proc/net/wireless
+    text="📶${ssid}(${signal}%)🔻${down_str}🔺${up_str}"
+else
+    text="🌐${ip_addr}/${cidr}🔻${down_str}🔺${up_str}"
+fi
+
+tooltip="Network Interface Status:\\n•Device: ${iface}\\n•IP Address: ${ip_addr}/${cidr}"
+[[ -n "$gw" ]] && tooltip="${tooltip}\\n•Gateway: ${gw}"
+tooltip="${tooltip}\\n•Download: ${down_str}\\n•Upload: ${up_str}"
+
+printf '{"text":"%s","tooltip":"%s","class":"network-traffic"}\n' "$text" "$tooltip"
