@@ -1,0 +1,13 @@
+filetype: sway
+
+detect:
+    filename: '(^|/)(sway|i3)/config$'
+
+rules:
+    - statement: '\b(set|bindsym|bindcode|bindswitch|bindgesture|exec|exec_always|bar|output|input|seat|workspace|assign|for_window|floating_modifier|font|mode|include|default_border|default_floating_border|gaps|focus|move|split|layout|client|fullscreen|kill|reload|restart|exit|scratchpad|resize|border|status_command|swaybar_command|position|colors|tray_output|binding_mode_indicator|hide_edge_borders|smart_gaps|smart_borders|titlebar_padding|workspace_auto_back_and_forth|focus_follows_mouse|mouse_warping|new_window|new_float|no_focus|sticky|mark|unmark|show)\b'
+    - special: '\b(Mod1|Mod2|Mod3|Mod4|Mod5|Shift|Control|Ctrl|Alt|Super|left|right|up|down|top|bottom|home|end|normal|pixel|none|toggle)\b'
+    - identifier: '\$[A-Za-z_][A-Za-z0-9_]*'
+    - constant.number: '\b[0-9]+(\.[0-9]+)?\b'
+    - constant: '#[0-9A-Fa-f]{6,8}\b'
+    - constant.string: '"[^"]*"'
+    - comment: '^\s*#.*$'

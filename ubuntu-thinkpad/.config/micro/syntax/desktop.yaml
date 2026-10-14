@@ -1,0 +1,13 @@
+filetype: desktop
+
+detect:
+    filename: '\.desktop$'
+
+rules:
+    - comment: '^\s*#.*$'
+    - type: '^\s*\[[^\]]*\]\s*$'
+    - identifier: '^[A-Za-z][A-Za-z0-9_@.\[\]-]*'
+    - symbol: '='
+    - special: '%[fFuUdDnNickvm]'
+    - constant: '\b(true|false)\b'
+    - constant.number: '\b[0-9]+(\.[0-9]+)?\b'
