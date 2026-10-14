@@ -3,8 +3,8 @@ PREF="/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly/Default/Preferen
 if [ -f "$PREF" ] && ! pgrep -f "brave-nightly/brave" > /dev/null; then
   jq '.browser.custom_chrome = false' "$PREF" > "${PREF}.tmp" && mv "${PREF}.tmp" "$PREF"
 fi
-exec /usr/bin/brave-nightly \
+exec /opt/brave.com/brave-nightly/brave-browser \
   --ozone-platform=wayland \
-  --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1 \
+  --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1,WaylandWindowDecorations \
   --user-data-dir=/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly \
   "$@"

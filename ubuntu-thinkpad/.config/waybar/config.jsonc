@@ -1,38 +1,42 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 30,
+  "height": 20,
   "spacing": 0,
   "modules-left": [
     "sway/workspaces",
     "sway/mode",
+    "sway/scratchpad",
     "sway/window"
   ],
-  "modules-center": [],
+  "modules-center": [
+    "mpris"
+  ],
   "modules-right": [
     "custom/updates",
     "temperature",
     "cpu",
-    "custom/memory",
-    "custom/disk",
-    "custom/netspeed",
+    "memory",
+    "disk",
+    "custom/network",
     "pulseaudio",
     "pulseaudio#microphone",
     "backlight",
     "battery",
-    "custom/clock",
+    "custom/calendar",
     "idle_inhibitor",
     "custom/power",
     "tray"
   ],
+
   "sway/workspaces": {
     "disable-scroll": false,
     "all-outputs": true,
-    "format": "{name}{windows}",
-    "format-window-separator": "",
+    "format": "{name} {windows}",
+    "format-window-separator": " ",
     "window-rewrite-default": "🪟",
     "window-rewrite": {
-      "class<foot>": "\uf120",
+      "class<foot>": "",
       "class<brave-browser.*>": "🦁",
       "class<code-insiders>": "💻",
       "class<code.*>": "💻",
@@ -66,50 +70,74 @@
       "class<org.gnome.Calculator>": "🔢",
       "class<org.gnome.DiskUtility>": "💽",
       "class<org.gnome.FileRoller>": "🗜️",
-      "class<(Gnome-terminal|com.gexperts.Tilix)>": "\uf120",
-      "title<Simulink": "📈"
-    },
+      "class<(Gnome-terminal|com.gexperts.Tilix)>": "",
+      "title<.*Simulink.*>": "📈"
+      },
     "tooltip": true,
-    "tooltip-format": "Workspace Navigation:\n•Active Workspace: {name}\n•Scroll / Click: Switch between virtual workspaces",
-    "format-icons": {
-      "1": "",
-      "2": "🌐",
-      "3": "",
-      "4": "📁",
-      "5": "🎵",
-      "urgent": "",
-      "focused": "",
-      "default": ""
-    }
-  },
+    "tooltip-format": "Workspace Navigation:\n•Active Workspace: {name}\n•Scroll / Click: Switch between virtual workspaces"
+    },
+    
   "sway/mode": {
     "format": "{}",
     "tooltip": true,
     "tooltip-format": "Sway Keybinding Mode: {}\nIndicates active modal key bindings."
   },
+
+  "sway/scratchpad": {
+    "format": "🗃{count}",
+    "show-empty": false,
+    "tooltip": false,
+    "on-click": "swaymsg scratchpad show"
+  },
+
   "sway/window": {
     "format": "{}",
     "max-length": 35,
     "tooltip": true,
     "tooltip-format": "Focused Application Window:\n•Window Title: {title}\n•Application ID: {app_id}"
   },
-  "custom/updates": {
-    "exec": "$HOME/.config/waybar/scripts/updates.sh",
-    "interval": 3600,
-    "signal": 8,
-    "return-type": "json",
+
+  "mpris": {
+    "format": "{player_icon} {title} - {artist}",
+    "format-paused": "{status_icon} {title} - {artist}",
+    "max-length": 45,
     "tooltip": true,
-    "on-click": "foot -e sh -c 'sudo apt update && sudo apt upgrade; echo Done; read _; pkill -42 -x waybar'"
+    "tooltip-format": "Media Playback Engine:\n•Source: {player} ({status})\n•Title: {title}\n•Artist: {artist}\n•Album: {album}\n•Duration: {length}\n\nInteractions:\n•Left-Click: Toggle Play / Pause\n•Right-Click: Skip to Next Track\n•Middle-Click: Return to Previous Track",
+    "player-icons": {
+      "default": "▶",
+      "spotify": "",
+      "brave": "🦁"
+    },
+    "status-icons": {
+      "paused": ""
+    },
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click-middle": "playerctl previous",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous"
   },
+
+ "custom/updates": {
+    "format": "📦{}",
+    "interval": 3600,
+    "exec": "/home/quetzal/.config/waybar/scripts/check-updates.sh",
+    "return-type": "json",
+    "on-click": "foot -e zsh -ic 'update; rc=$?; printf \"\\nUpdate complete. Press any key to close...\"; read -r -s -k 1; exit \"$rc\"'",
+    "signal": 8,
+    "tooltip": true
+  },
+  
   "temperature": {
+    "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
     "interval": 2,
     "critical-threshold": 85,
     "format": "🌡️{temperatureC}°C",
     "format-critical": "🔥{temperatureC}°C",
     "tooltip": true,
-    "tooltip-format": "Thermal Monitoring:\n•Current Temperature: {temperatureC}°C ({temperatureF}°F)\n•Sensor Path: thermal-zone11 (x86_pkg_temp)\n•Critical Threshold: 85°C",
-    "thermal-zone": 11
+    "tooltip-format": "Thermal Monitoring:\n•Current Temperature: {temperatureC}°C ({temperatureF}°F)\n•Sensor Path: hwmon4/temp1_input\n•Critical Threshold: 85°C"
   },
+
   "cpu": {
     "interval": 2,
     "format": "⚡{usage}%",
@@ -118,51 +146,66 @@
       "critical": 90
     },
     "tooltip": true,
-    "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n\nAction: Click to launch btop.",
+    "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n•Core Breakdown:\n{core_frequencies}\n\nAction: Click to launch btop.",
     "on-click": "foot -e btop"
   },
-  "custom/memory": {
-    "exec": "$HOME/.config/waybar/scripts/memory.sh",
+
+  "memory": {
     "interval": 2,
-    "return-type": "json",
+    "format": "🧠{percentage}%",
+    "states": {
+      "warning": 75,
+      "critical": 90
+    },
     "tooltip": true,
+    "tooltip-format": "Memory & Swap Allocation:\n•Physical RAM Used: {used:0.2f} GiB / {total:0.2f} GiB ({percentage}%)\n•Available Memory: {avail:0.2f} GiB\n•Swap Allocation: {swapUsed:0.2f} GiB / {swapTotal:0.2f} GiB ({swapPercentage}%)\n\nAction: Click to launch btop.",
     "on-click": "foot -e btop"
   },
-  "custom/disk": {
-    "exec": "$HOME/.config/waybar/scripts/disk.sh",
+
+  "disk": {
     "interval": 30,
-    "return-type": "json",
-    "tooltip": true
-  },
-  "custom/netspeed": {
-    "exec": "$HOME/.config/waybar/scripts/netspeed.sh",
-    "return-type": "json",
-    "align": 0,
+    "format": "💾{percentage_used}%",
+    "path": "/",
+    "states": {
+      "warning": 80,
+      "critical": 90
+    },
     "tooltip": true,
-    "on-click": "foot $HOME/.local/bin/nmtui"
+    "tooltip-format": "Root Storage Subvolume:\n•Mount Point: {path}\n•Space Consumed: {used} / {total} ({percentage_used}%)\n•Available Storage: {free} ({percentage_free}% remaining)"
   },
+
+  "custom/network": {
+      "align": 0,
+      "min-length": 43,
+      "max-length": 43,
+      "interval": 1,
+      "exec": "/home/quetzal/.config/waybar/scripts/network-traffic.py",
+      "return-type": "json",
+      "tooltip": true,
+      "on-click": "foot nmtui"
+    },
+  
   "pulseaudio": {
-    "format": "{icon}{volume}%",
     "max-volume": 100,
+    "format": "{icon} {volume}%",
     "format-muted": "🔇 Muted",
     "format-icons": {
-      "headphone": "🎧",
-      "hands-free": "🎧",
-      "headset": "🎧",
-      "phone": "📞",
-      "portable": "📱",
-      "car": "🚗",
-      "default": ["🔈", "🔉", "🔊"],
-      "unused-pua-glyphs": [
-        "", "", ""]
+      "headphone": ["🎧🔈", "🎧🔉", "🎧🔊", "🎧📢"],
+      "hands-free": ["🎧🔈", "🎧🔉", "🎧🔊", "🎧📢"],
+      "headset": ["🎧🔈", "🎧🔉", "🎧🔊", "🎧📢"],
+      "phone": ["📞🔈", "📞🔉", "📞🔊", "📞📢"],
+      "portable": ["📱🔈", "📱🔉", "📱🔊", "📱📢"],
+      "car": ["🚗🔈", "🚗🔉", "🚗🔊", "🚗📢"],
+      "default": ["🔈", "🔉", "🔊", "📢"]
     },
     "tooltip": true,
     "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 5%",
     "on-click": "GTK_THEME=Adwaita:dark pavucontrol",
-    "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-    "on-scroll-up": "$HOME/.config/waybar/scripts/volume.sh up",
-    "on-scroll-down": "$HOME/.config/waybar/scripts/volume.sh down"
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
+    "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
   },
+  
   "pulseaudio#microphone": {
     "format": "{format_source}",
     "format-source": "🎙️{volume}%",
@@ -171,15 +214,18 @@
     "tooltip": true,
     "tooltip-format": "Microphone Input (PipeWire Sources):\n•Input Device: {desc}\n•Gain Level: {volume}%\n\nControls:\n•Left-Click: Open input devices in pavucontrol\n•Right-Click: Toggle microphone mute\n•Scroll Up/Down: Adjust capture gain by 2%",
     "on-click": "GTK_THEME=Adwaita:dark pavucontrol -t 4",
-    "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
   },
+
   "backlight": {
+    "device": "amdgpu_bl0",
     "format": "🔆{percent}%",
     "tooltip": true,
-    "tooltip-format": "Display Luminance:\n•Brightness Level: {percent}%\n•Driver: default backlight\n\nControls:\n•Scroll Up: Increase brightness by 2%\n•Scroll Down: Decrease brightness by 2%",
-    "on-scroll-up": "sg video -c 'brightnessctl set 2%+'",
-    "on-scroll-down": "sg video -c 'brightnessctl set 2%-'"
+    "tooltip-format": "Display Luminance:\n•Brightness Level: {percent}%\n•Driver: amdgpu_bl0\n\nControls:\n•Scroll Up: Increase brightness by 2%\n•Scroll Down: Decrease brightness by 2%",
+    "on-scroll-up": "brightnessctl set 2%+",
+    "on-scroll-down": "brightnessctl set 2%-"
   },
+
   "battery": {
     "interval": 10,
     "full-at": 90,
@@ -188,20 +234,28 @@
       "critical": 20,
       "danger": 15
     },
-    "format": "🔋{capacity}% {time}",
-    "format-charging": "🔌{capacity}% {time}",
+    "format": "🔋{icon}{capacity}% ({time})",
+    "format-discharging": "🔋{icon}{capacity}% ({time})",
+    "format-charging": "⚡{capacity}% ({time})",
     "format-plugged": "🔌{capacity}%",
     "format-full": "🔋{capacity}% (FULL)",
+    "format-alt": "🔋{icon} {time}",
     "format-time": "{H}h:{M}min",
     "tooltip": true,
-    "tooltip-format": "Power Subsystem Metrics:\n•Charge Level: {capacity}%\n•Estimated Runtime: {time}"
+    "tooltip-format": "Power Subsystem Metrics:\n•Charge Level: {capacity}%\n•Estimated Runtime: {time}\n•Current Consumption: {power:.2f} W\n•Battery Health: {health}%\n•Total Charge Cycles: {cycles}"
   },
-  "custom/clock": {
-    "exec": "python3 $HOME/.config/waybar/scripts/calendar-belgium.py",
+
+  "custom/calendar": {
+    "format": "{}",
+    "align": 1,
+    "min-length": 21,
+    "max-length": 21,
     "interval": 1,
+    "exec": "python3 $HOME/.config/waybar/scripts/calendar-belgium.py",
     "return-type": "json",
     "tooltip": true
   },
+  
   "idle_inhibitor": {
     "format": "{icon}",
     "format-icons": {
@@ -212,14 +266,17 @@
     "tooltip-format-activated": "Idle Inhibitor: Active\nPrevents display dimming and screen timeouts.\nClick: Restore normal timers.",
     "tooltip-format-deactivated": "Idle Inhibitor: Inactive\nStandard screen timeouts are active.\nClick: Keep display permanently awake."
   },
+
   "custom/power": {
     "format": "💡",
     "tooltip": true,
     "tooltip-format": "Power Management Options\n\nClick: Toggle power and session actions.",
     "on-click": "$HOME/.config/waybar/scripts/power-menu.sh"
   },
+
   "tray": {
     "icon-size": 14,
     "spacing": 0
   }
 }
+
