@@ -45,7 +45,7 @@ def _patched_dumps(obj, *args, **kwargs):
             ("Lisbon", "Europe/Lisbon"), ("London", "Europe/London"),
             ("Brussels", "Europe/Brussels"), ("Bucharest", "Europe/Bucharest"),
             ("Cairo", "Africa/Cairo"), ("Istanbul", "Europe/Istanbul"),
-            ("Dubai", "Asia/Dubai"), ("Katachi", "Asia/Karachi"),
+            ("Dubai", "Asia/Dubai"), ("Karachi", "Asia/Karachi"),
             ("Bangkok", "Asia/Bangkok"), ("Jakarta", "Asia/Jakarta"),
             ("Beijing", "Asia/Shanghai"), ("Hong Kong", "Asia/Hong_Kong"),
             ("Perth", "Australia/Perth"), ("Singapore", "Asia/Singapore"),
@@ -193,7 +193,7 @@ for row in range(3):
             formatted_days = []
             for d in days:
                 if d == 0:
-                    formatted_days.append("<span color='#45475a'>..</span>")
+                    formatted_days.append("  ")
                 else:
                     d_date = datetime.date(year, m, d)
                     if d_date == today:
