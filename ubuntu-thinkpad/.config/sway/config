@@ -7,8 +7,8 @@ set $term foot
 set $menu wofi --show drun
 
 output * bg #000000 solid_color
-output eDP-1 pos 0 0
-output "Eizo Nanao Corporation EV2316W 75500038" pos 1920 0
+output eDP-1 pos 0 1080
+output "Eizo Nanao Corporation EV2316W 75500038" pos 0 0
 
 focus_follows_mouse yes
 
@@ -31,6 +31,13 @@ bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
+
+bindsym Ctrl+Up focus output "Eizo Nanao Corporation EV2316W 75500038"
+bindsym Ctrl+Down focus output eDP-1
+bindsym Ctrl+Shift+Up move container to output "Eizo Nanao Corporation EV2316W 75500038"
+bindsym Ctrl+Shift+Down move container to output eDP-1
+bindsym $mod+Ctrl+Shift+Up move workspace to output "Eizo Nanao Corporation EV2316W 75500038"
+bindsym $mod+Ctrl+Shift+Down move workspace to output eDP-1
 
 bindsym $mod+Shift+$left move left
 bindsym $mod+Shift+$down move down

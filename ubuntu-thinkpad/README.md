@@ -41,4 +41,27 @@ The launcher resolves the Intel device before constructing the colon-delimited
 DRM list and detects the connected DisplayLink DVI connector rather than assuming
 a fixed EVDI card number. GLES2 renders on Intel; `--unsupported-gpu` acknowledges
 Sway's DisplayLink support-policy warning. The config places the external monitor
-to the right of the laptop panel using its stable monitor identity.
+above the laptop panel using its stable monitor identity. Move the pointer through
+the laptop's top edge to reach the monitor, or the monitor's bottom edge to return.
+
+## Display shortcuts
+
+`Mod` is the Super/Windows key. Up always targets the external monitor; Down
+always targets the laptop, even when that display is already focused.
+
+| Shortcut | Action |
+| --- | --- |
+| Ctrl+Up / Ctrl+Down | Focus monitor / laptop |
+| Ctrl+Shift+Up / Ctrl+Shift+Down | Move focused window or container to monitor / laptop |
+| Mod+Ctrl+Shift+Up / Mod+Ctrl+Shift+Down | Move current workspace to monitor / laptop |
+| Mod+1 through Mod+0 | Switch to workspace 1 through 10 |
+| Mod+Shift+1 through Mod+Shift+0 | Move focused window to workspace 1 through 10 |
+| Mod+arrow | Focus a neighboring window |
+| Mod+Shift+arrow | Move a window within the layout |
+
+Each display shows its own workspace. Workspace numbers are shared across the
+session: selecting a workspace already visible on another display focuses it
+there. Moving a workspace transfers all its windows together. If a parent
+container is selected, the window-move shortcut moves that entire container.
+These global Ctrl+arrow bindings override application shortcuts using the same
+keys. Reload the configuration with Mod+Shift+C after changing it.
