@@ -99,7 +99,7 @@
 
   "mpris": {
     "format": "{player_icon} {title} - {artist}",
-    "format-paused": "{status_icon} <i>{title} - {artist}</i>",
+    "format-paused": "{status_icon} {title} - {artist}",
     "max-length": 45,
     "tooltip": true,
     "tooltip-format": "Media Playback Engine:\n•Source: {player} ({status})\n•Title: {title}\n•Artist: {artist}\n•Album: {album}\n•Duration: {length}\n\nInteractions:\n•Left-Click: Toggle Play / Pause\n•Right-Click: Skip to Next Track\n•Middle-Click: Return to Previous Track",
@@ -109,7 +109,7 @@
       "brave": "🦁"
     },
     "status-icons": {
-      "paused": "⏸"
+      "paused": ""
     },
     "on-click": "playerctl play-pause",
     "on-click-right": "playerctl next",

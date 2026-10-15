@@ -189,3 +189,13 @@ window#waybar {
 #custom-disk.critical {
     animation: pulse-critical 1.2s ease-in-out infinite;
 }
+
+/* Waybar vertical height lock across playback states */
+window#waybar > box, #mpris, #mpris.playing, #mpris.paused, #window, #pulseaudio {
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    min-height: 0;
+    font-style: normal;
+}

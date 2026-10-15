@@ -1,3 +1,10 @@
 {
-    "colorscheme": "monokai-black"
+  "colorscheme": "monokai-black",
+  "clipboard": "external",
+  "*.ini": {
+    "filetype": "conf"
+  },
+  "*.jsonc": {
+    "filetype": "json"
+  }
 }

@@ -1,0 +1,11 @@
+filetype: txt
+
+detect:
+    filename: '\.txt$'
+
+rules:
+    - constant.number: '\b[0-9]+(\.[0-9]+)?\b'
+    - identifier: '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+    - underlined: '\b(https?|ftp|file)://[^\s<>"]+'
+    - todo: '\b(TODO|FIXME|XXX|NOTE|HACK|WARNING)\b'
+    - constant.string: '"[^"]*"'

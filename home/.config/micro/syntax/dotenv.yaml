@@ -1,0 +1,13 @@
+filetype: dotenv
+
+detect:
+    filename: '(^|/)\.env(\.[^/]*)?$|\.env$'
+
+rules:
+    - comment: '^\s*#.*$'
+    - identifier: '^\s*(export\s+)?[A-Za-z_][A-Za-z0-9_.]*'
+    - symbol: '='
+    - constant.number: '\b[0-9]+(\.[0-9]+)?\b'
+    - constant: '\b(true|false|yes|no|on|off)\b'
+    - constant.string: '"[^"]*"'
+    - constant.string: "'[^']*'"

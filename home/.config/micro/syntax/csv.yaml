@@ -1,0 +1,10 @@
+filetype: csv
+
+detect:
+    filename: '\.csv$'
+
+rules:
+    - symbol: '[,;]'
+    - constant.number: '\b-?[0-9]+(\.[0-9]+)?\b'
+    - constant: '\b(true|false|null|NULL|NA)\b'
+    - constant.string: '"([^"]|"")*"'
