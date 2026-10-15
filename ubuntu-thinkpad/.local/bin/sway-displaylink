@@ -1,0 +1,21 @@
+#!/bin/sh
+
+prefix="$HOME/.local/opt/sway-1.12"
+state="$HOME/.local/state/sway-displaylink-debug"
+intel_device=$(readlink -f /dev/dri/by-path/pci-0000:00:02.0-card) || exit 1
+export WLR_DRM_DEVICES="$intel_device"
+for connector in /sys/class/drm/card*-DVI*; do
+	[ -r "$connector/status" ] || continue
+	[ "$(cat "$connector/status")" = connected ] || continue
+	connector_name=${connector##*/}
+	export WLR_DRM_DEVICES="$intel_device:/dev/dri/${connector_name%%-*}"
+	break
+done
+export PATH="$prefix/bin:$PATH"
+export LD_LIBRARY_PATH="$prefix/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export WLR_RENDER_DRM_DEVICE=/dev/dri/by-path/pci-0000:00:02.0-render
+export WLR_RENDERER=gles2
+unset WLR_RENDERER_ALLOW_SOFTWARE
+
+mkdir -p "$state" || exit 1
+exec "$prefix/bin/sway" --unsupported-gpu "$@" 2>>"$state/session.log"

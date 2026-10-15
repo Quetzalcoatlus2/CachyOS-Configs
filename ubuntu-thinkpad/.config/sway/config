@@ -7,6 +7,8 @@ set $term foot
 set $menu wofi --show drun
 
 output * bg #000000 solid_color
+output eDP-1 pos 0 0
+output "Eizo Nanao Corporation EV2316W 75500038" pos 1920 0
 
 focus_follows_mouse yes
 
@@ -123,7 +125,7 @@ input "type:touchpad" {
 }
 
 bar {
-    swaybar_command waybar
+    swaybar_command /home/ABO4198/.local/bin/waybar
 }
 
 client.focused          #000000 #000000 #ffffff #333333 #222222
