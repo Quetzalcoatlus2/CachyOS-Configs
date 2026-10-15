@@ -193,7 +193,7 @@ for row in range(3):
             formatted_days = []
             for d in days:
                 if d == 0:
-                    formatted_days.append("<span color='#45475a'>..</span>")
+                    formatted_days.append("  ")
                 else:
                     d_date = datetime.date(year, m, d)
                     if d_date == today:
