@@ -38,6 +38,44 @@ sleep. Sway's `exec` startup commands do not restart on config reload: after cha
 the idle command, restart that daemon once or start a new session, avoiding duplicate
 instances. The updated daemon was already started manually in the current session.
 
+## Shell and editor
+
+The zsh config explicitly adds `$HOME/.local/bin` to `PATH` before initializing
+Atuin, so terminals do not depend on inheriting that path from another shell.
+Ctrl+R searches Atuin history in both vi insert and command modes. Open a new
+terminal or run `source ~/.zshrc` after installing the updated config.
+
+Micro uses the terminal clipboard, the monokai-black theme, comment shortcuts,
+and Ctrl+Home/End navigation. The custom conf syntax also recognizes files under
+`/etc/default/`. Root's Micro configuration is separate and was not readable during
+this sync; these user settings do not prove that `sudo micro` has the same colors.
+Prefer `sudoedit` with `EDITOR=micro` to edit privileged files using the user editor.
+Shell/editor histories, Micro backups, and Atuin databases are not part of this sync.
+
+## Hibernation
+
+Suspend-then-hibernate successfully restored the session in the user's manual test
+on 2026-10-15, after increasing the swap logical volume to 32 GiB and enabling
+hibernation permission for the active local user. Both logind capability checks
+then returned `yes`. Direct hibernation was not separately verified in this sync.
+
+Ubuntu's vendor policy disables hibernation by default. The local override used at
+`/etc/polkit-1/localauthority/50-local.d/90-enable-hibernate.pkla` is:
+
+```ini
+[Allow hibernation for active local user]
+Identity=unix-user:ABO4198
+Action=org.freedesktop.login1.hibernate
+ResultAny=no
+ResultInactive=no
+ResultActive=yes
+```
+
+This is machine-specific administrator configuration, not deployed by copying the
+user config directory. Preserve the vendor policy and other users' session and
+inhibitor protections. A runtime resume device of `0:0` alone is not proof that
+hibernation is unavailable; permission checks and an actual restore test matter.
+
 ## Session
 
 Install `.config/sway/config` and the executable `.local/bin/sway-displaylink`
