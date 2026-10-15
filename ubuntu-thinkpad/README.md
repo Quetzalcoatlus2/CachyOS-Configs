@@ -16,6 +16,28 @@ It uses the system Mesa libraries and XWayland 22.1.1. DisplayLink driver
 Build artifacts, private build tools, crash dumps, and diagnostic logs are not
 included here. Installing these configs alone does not build their prerequisites.
 
+## Locking and idle
+
+This session also requires swaylock 1.8.6 (commit
+`44b82de635c3bc66b0093abd1cf8cc1c8b1b9c0f`) and swayidle 1.9.0 (commit
+`a959e59c64b55dd17a974dda4c4b71dff520af3a`) installed under the same
+`$HOME/.local/opt/sway-1.12` prefix. Build them against that prefix's Wayland
+libraries and protocols using `PATH`, `PKG_CONFIG_PATH`, and `LD_LIBRARY_PATH`.
+Ubuntu's swaylock 1.5 uses the obsolete input-inhibitor protocol, and its old
+swayidle uses an idle protocol no longer supported by this compositor. Changing
+lock command flags does not resolve that protocol mismatch.
+
+Keep the system swaylock package and `/etc/pam.d/swaylock` for PAM authentication.
+A PAM file installed inside the private prefix does not replace the system PAM
+policy. Do not bypass authentication or protocol safety checks.
+
+The config and Waybar power menu explicitly select the private executables and
+library path. Super+Ctrl+L locks immediately; idle handling locks after 600 seconds,
+powers displays off after 900 seconds, restores power on activity, and locks before
+sleep. Sway's `exec` startup commands do not restart on config reload: after changing
+the idle command, restart that daemon once or start a new session, avoiding duplicate
+instances. The updated daemon was already started manually in the current session.
+
 ## Session
 
 Install `.config/sway/config` and the executable `.local/bin/sway-displaylink`

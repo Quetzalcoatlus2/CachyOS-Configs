@@ -14,7 +14,7 @@ focus_follows_mouse yes
 
 exec foot --server
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway
-exec swayidle -w timeout 600 'swaylock -f -c 000000' timeout 900 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' before-sleep 'swaylock -f -c 000000'
+exec env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swayidle -w timeout 600 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000' timeout 900 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' before-sleep 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000'
 
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+q kill
@@ -116,7 +116,7 @@ bindsym $mod+Print exec sh -c 'mkdir -p "$HOME/Pictures/Screenshots"; file="$HOM
 bindsym Ctrl+Print exec grim - | wl-copy -t image/png
 
 
-bindsym $mod+Ctrl+l exec swaylock -f -c 000000
+bindsym $mod+Ctrl+l exec env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -c 000000
 bindsym $mod+Shift+Escape exec sh -c '$HOME/.config/waybar/scripts/power-menu.sh'
 
 input "type:touchpad" {

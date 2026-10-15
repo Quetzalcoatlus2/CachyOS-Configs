@@ -49,11 +49,11 @@ printf '%s\n' "$DETAILS" | exec swaynag \
     -L "📖 Instructions" \
     -l \
     -s "✖ Cancel" \
-    -Z "🔄 Hybrid-Sleep" "systemctl hybrid-sleep" \
-    -Z "💾 Hibernate" "systemctl hibernate" \
-    -Z "⏳ Suspend-Then-Hibernate" "systemctl suspend-then-hibernate" \
+    -Z "🔄 Hybrid-Sleep" "systemctl hybrid-sleep || notify-send -u critical 'Hybrid-Sleep failed' 'Not available: no resume device configured or swap too small'" \
+    -Z "💾 Hibernate" "systemctl hibernate || notify-send -u critical 'Hibernate failed' 'Not available: no resume device configured or swap too small'" \
+    -Z "⏳ Suspend-Then-Hibernate" "systemctl suspend-then-hibernate || notify-send -u critical 'Suspend-Then-Hibernate failed' 'Not available: no resume device configured or swap too small'" \
     -Z "🌙 Suspend" "systemctl suspend" \
     -Z "🔁 Reboot" "systemctl reboot" \
     -Z "⏻ Shutdown" "systemctl poweroff" \
     -Z "🚪 Logout" "swaymsg exit" \
-    -Z "🔒 Lock" "swaylock -c 000000"
+    -Z "🔒 Lock" "env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -c 000000"
