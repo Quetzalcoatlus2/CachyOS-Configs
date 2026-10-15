@@ -40,8 +40,9 @@ instances. The updated daemon was already started manually in the current sessio
 
 ## Shell and editor
 
-The zsh config explicitly adds `$HOME/.local/bin` to `PATH` before initializing
-Atuin, so terminals do not depend on inheriting that path from another shell.
+The zsh config explicitly adds `$HOME/.local/bin` to `PATH` before running
+fastfetch or initializing Atuin, so terminals do not depend on inheriting that
+path from another shell.
 Ctrl+R searches Atuin history in both vi insert and command modes. Open a new
 terminal or run `source ~/.zshrc` after installing the updated config.
 
