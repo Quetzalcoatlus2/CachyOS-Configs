@@ -4,8 +4,13 @@ export LC_ALL=C
 n=$(apt-get -s upgrade 2>/dev/null | grep -c '^Inst')
 [ -n "$n" ] || n=0
 tip="System Package Synchronization:\\n•Available Updates: $n packages pending\\n•Frequency: Checked hourly\\n\\nAction: Click to run sudo apt update and sudo apt upgrade."
-if [ "$n" -gt 0 ]; then
-    printf '{"text": "📦%s", "class": "pending", "tooltip": "%s"}\n' "$n" "$tip"
+if [ "$n" -eq 0 ]; then
+    class=updated
+elif [ "$n" -le 10 ]; then
+    class=low
+elif [ "$n" -le 35 ]; then
+    class=medium
 else
-    printf '{"text": "📦%s", "class": "updated", "tooltip": "%s"}\n' "$n" "$tip"
+    class=high
 fi
+printf '{"text": "📦%s", "class": "%s", "tooltip": "%s"}\n' "$n" "$class" "$tip"

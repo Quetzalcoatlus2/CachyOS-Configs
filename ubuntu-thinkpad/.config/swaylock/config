@@ -1,0 +1,16 @@
+color=000000
+inside-color=00000000
+inside-clear-color=00000000
+inside-ver-color=00000000
+inside-wrong-color=00000000
+ring-color=333333
+ring-clear-color=ffffff
+ring-ver-color=ffffff
+ring-wrong-color=ff5555
+line-color=00000000
+text-color=ffffff
+text-clear-color=ffffff
+text-ver-color=ffffff
+text-wrong-color=ff5555
+key-hl-color=ffffff
+bs-hl-color=ff5555

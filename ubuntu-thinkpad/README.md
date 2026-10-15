@@ -53,6 +53,49 @@ this sync; these user settings do not prove that `sudo micro` has the same color
 Prefer `sudoedit` with `EDITOR=micro` to edit privileged files using the user editor.
 Shell/editor histories, Micro backups, and Atuin databases are not part of this sync.
 
+## Notifications
+
+The Sway config starts Mako and batsignal from `$HOME/.local/bin`. The verified
+Mako version is Ubuntu's mako-notifier 1.6-2; its `mako` binary and `makoctl` helper
+were extracted from the Ubuntu package into that directory. `makoctl` needs busctl
+and jq. Batsignal 1.8.0 was built from commit
+`77e34ce13d639c5e51e5c3ea5403a50f7a1e64e3` against libnotify and installed there.
+These executables are separate prerequisites, not included in this repository.
+Sounds use canberra-gtk-play and the freedesktop sound theme.
+
+Normal popups last 15 seconds. Recognized Teams app names and critical alerts
+remain until dismissed; Teams and critical alerts also play a sound. Popups use
+the overlay layer so fullscreen applications do not hide them. Battery notices
+remain visible too: batsignal warns at 25% and 20%, and reports charging to 90%.
+Its danger command is disabled; this does not add automatic sleep actions.
+
+- Super+N or left-click the bar's bell: recall the most recently closed alert.
+- Super+Shift+N or right-click the bell: dismiss all visible alerts.
+- Middle-click the bell: choose an action on the newest alert, when available.
+- Left-click a popup: invoke its default action; right-click: dismiss it.
+
+The bell counts active notifications, not unread Teams messages. Mako retains up
+to 100 closed notifications in memory; history is lost when Mako exits or the
+session ends. Desktop delivery, sticky rules, and recall were verified with test
+notifications, not a real incoming Teams message. Enable native/desktop banners
+and sound in Teams, check its Do Not Disturb settings, and allow notifications in
+the browser if using web Teams. The daemon cannot recover messages the app never
+sent. Notification content may be visible to people looking at an unlocked screen.
+
+## Desktop Ports
+
+The Ubuntu bar includes MPRIS media controls, a clickable scratchpad indicator,
+and the corrected Simulink window matcher. Apt update badges use low (1-10),
+medium (11-35), and high (36+) severity styles without replacing apt with Arch
+package commands. Existing Ubuntu memory/disk/network modules are preserved.
+The tracked swaylock theme matches the black/white/red live theme.
+
+Micro retains the terminal clipboard and adds INI/conf and JSONC/JSON mappings.
+Foot 1.11 rejects `scrollback-home` and `scrollback-end`, so F1/F2 retain the
+compatible page-scroll behavior rather than copying unsupported newer actions.
+Personal AMD paths, zram hooks, newer systemd options, and interface-specific
+network tuning are deliberately not copied.
+
 ## Hibernation
 
 Suspend-then-hibernate successfully restored the session in the user's manual test

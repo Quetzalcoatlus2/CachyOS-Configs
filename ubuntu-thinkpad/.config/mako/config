@@ -1,0 +1,43 @@
+font=monospace 11
+background-color=#171717
+text-color=#ffffff
+border-color=#777777
+border-size=2
+border-radius=4
+width=380
+height=220
+margin=40,12,12
+padding=12
+anchor=top-right
+layer=overlay
+markup=0
+max-visible=5
+max-history=100
+history=1
+default-timeout=15000
+ignore-timeout=1
+on-button-left=invoke-default-action
+on-button-right=dismiss
+
+[app-name=teams-for-linux]
+default-timeout=0
+border-color=#56b4e9
+on-notify=exec canberra-gtk-play -i message-new-instant
+
+[app-name="Microsoft Teams"]
+default-timeout=0
+border-color=#56b4e9
+on-notify=exec canberra-gtk-play -i message-new-instant
+
+[app-name="Teams for Linux"]
+default-timeout=0
+border-color=#56b4e9
+on-notify=exec canberra-gtk-play -i message-new-instant
+
+[app-name=batsignal]
+default-timeout=0
+
+[urgency=critical]
+default-timeout=0
+border-color=#ff6655
+on-notify=exec canberra-gtk-play -i dialog-warning

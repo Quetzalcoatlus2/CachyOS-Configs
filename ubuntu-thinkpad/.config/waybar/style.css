@@ -172,8 +172,22 @@ window#waybar {
     }
 }
 
-#custom-updates.pending {
+#custom-updates.low {
     animation: pulse-updates 2s ease-in-out infinite;
+}
+
+#custom-updates.medium {
+    animation: pulse-warning 1.4s ease-in-out infinite;
+}
+
+#custom-updates.high {
+    animation: pulse-critical 0.6s ease-in-out infinite;
+    font-weight: bold;
+}
+
+#custom-notifications {
+    padding: 0 4px;
+    color: #56b4e9;
 }
 
 /* Thermal Alerts */

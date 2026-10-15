@@ -1,4 +1,10 @@
 {
     "clipboard": "terminal",
-    "colorscheme": "monokai-black"
+    "colorscheme": "monokai-black",
+    "*.ini": {
+        "filetype": "conf"
+    },
+    "*.jsonc": {
+        "filetype": "json"
+    }
 }
