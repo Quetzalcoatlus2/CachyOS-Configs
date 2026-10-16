@@ -100,7 +100,7 @@
     "format-paused": "{status_icon} {title} - {artist}",
     "max-length": 30,
     "player-icons": {"default": "▶", "spotify": "🎵"},
-    "status-icons": {"paused": "⏸"},
+    "status-icons": {"paused": "\uf04c"},
     "tooltip-format": "{player}: {title} - {artist}",
     "on-click": "playerctl play-pause",
     "on-click-right": "playerctl next",
