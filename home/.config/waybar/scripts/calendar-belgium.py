@@ -7,6 +7,16 @@ from zoneinfo import ZoneInfo as _ZoneInfo
 _orig_dumps = _json_mod.dumps
 def _patched_dumps(obj, *args, **kwargs):
     if isinstance(obj, dict) and "tooltip" in obj and "WORLD CLOCK" not in obj["tooltip"]:
+        _cache_file = "/dev/shm/waybar_cal_tooltip_cache"
+        _min_key = _dt_cls.now().strftime("%Y-%m-%d %H:%M")
+        try:
+            with open(_cache_file, "r") as _cf:
+                _cached_key, _cached_tip = _cf.read().split("\n", 1)
+                if _cached_key == _min_key:
+                    obj["tooltip"] = _cached_tip
+                    return _orig_dumps(obj, *args, **kwargs)
+        except Exception:
+            pass
         _vis_len = lambda s: len(_re_mod.sub(r"<[^>]+>", "", s))
         _t_lines = obj["tooltip"].split("\n")
 
@@ -89,6 +99,11 @@ def _patched_dumps(obj, *args, **kwargs):
             obj["tooltip"] = obj["tooltip"][:-13] + _block + "</small></tt>"
         else:
             obj["tooltip"] += _block
+        try:
+            with open(_cache_file, "w") as _cf:
+                _cf.write(_min_key + "\n" + obj["tooltip"])
+        except Exception:
+            pass
     return _orig_dumps(obj, *args, **kwargs)
 _json_mod.dumps = _patched_dumps
 import calendar

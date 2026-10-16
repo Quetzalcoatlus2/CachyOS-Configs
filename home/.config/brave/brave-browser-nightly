@@ -1,11 +1,24 @@
 #!/usr/bin/env bash
 PREF="/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly/Default/Preferences"
+STATE="/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly/Local State"
 if [ -f "$PREF" ] && ! pgrep -f "brave-nightly/brave" > /dev/null; then
-  jq '.browser.custom_chrome = false | .brave.web_view_rounded_corners = false' "$PREF" > "${PREF}.tmp" && mv "${PREF}.tmp" "$PREF"
+  jq '.browser.custom_chrome = false
+    | .brave.web_view_rounded_corners = false
+    | .brave.ai_chat.enabled = false
+    | .brave.today.opted_in = false
+    | .brave.rewards.enabled = false' "$PREF" > "${PREF}.tmp" && mv "${PREF}.tmp" "$PREF"
+fi
+if [ -f "$STATE" ] && ! pgrep -f "brave-nightly/brave" > /dev/null; then
+  jq '.performance_tuning.high_efficiency_mode.state = 2
+    | .performance_tuning.high_efficiency_mode.aggressiveness = 2
+    | .performance_tuning.high_efficiency_mode.time_before_discard_in_minutes = 5' "$STATE" > "${STATE}.tmp" && mv "${STATE}.tmp" "$STATE"
 fi
 exec /opt/brave.com/brave-nightly/brave-browser \
   --ozone-platform=wayland \
-  --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1,WaylandWindowDecorations,BraveWebViewRoundedCorners \
+  --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1,WaylandWindowDecorations,BraveWebViewRoundedCorners,HistoryEmbeddings,BraveAIChat,BraveRewards,BraveWallet \
+  --enable-features=HighEfficiencyModeAvailable,BatterySaverModeAvailable \
+  --process-per-site \
+  --renderer-process-limit=6 \
   --disable-gpu-vsync \
   --user-data-dir=/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly \
   "$@"
