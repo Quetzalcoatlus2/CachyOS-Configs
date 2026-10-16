@@ -334,3 +334,89 @@ tooltip {
     background-color: #000000;
     border: 1px solid #333333;
 }
+
+/* Progressive Notification Pulse */
+@keyframes pulse-notif-low {
+    0% { color: #3a6b88; opacity: 0.45; }
+    100% { color: #56b4e9; opacity: 1.0; text-shadow: 0 0 4px #56b4e9; }
+}
+@keyframes pulse-notif-med {
+    0% { color: #447755; opacity: 0.4; }
+    100% { color: #00e5ff; opacity: 1.0; text-shadow: 0 0 6px #00e5ff; }
+}
+@keyframes pulse-notif-high {
+    0% { color: #775522; opacity: 0.35; }
+    100% { color: #ffcc00; opacity: 1.0; text-shadow: 0 0 8px #ffcc00; }
+}
+@keyframes pulse-notif-crit {
+    0% { color: #551111; opacity: 0.3; }
+    100% { color: #ff3333; opacity: 1.0; text-shadow: 0 0 10px #ff3333; }
+}
+
+#custom-notifications {
+    padding: 0 4px;
+    color: #666666;
+}
+#custom-notifications.notif-0 {
+    color: #666666;
+    animation: none;
+}
+#custom-notifications.notif-1 {
+    animation-name: pulse-notif-low;
+    animation-duration: 2.4s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+#custom-notifications.notif-2 {
+    animation-name: pulse-notif-low;
+    animation-duration: 1.8s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+#custom-notifications.notif-3 {
+    animation-name: pulse-notif-med;
+    animation-duration: 1.35s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+#custom-notifications.notif-4 {
+    animation-name: pulse-notif-med;
+    animation-duration: 1.0s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+#custom-notifications.notif-5 {
+    animation-name: pulse-notif-high;
+    animation-duration: 0.75s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+#custom-notifications.notif-6 {
+    animation-name: pulse-notif-high;
+    animation-duration: 0.55s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    font-weight: bold;
+}
+#custom-notifications.notif-7 {
+    animation-name: pulse-notif-crit;
+    animation-duration: 0.42s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    font-weight: bold;
+}
+#custom-notifications.notif-8 {
+    animation-name: pulse-notif-crit;
+    animation-duration: 0.28s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    font-weight: bold;
+}
