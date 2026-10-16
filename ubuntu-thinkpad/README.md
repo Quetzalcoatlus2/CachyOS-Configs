@@ -53,6 +53,21 @@ this sync; these user settings do not prove that `sudo micro` has the same color
 Prefer `sudoedit` with `EDITOR=micro` to edit privileged files using the user editor.
 Shell/editor histories, Micro backups, and Atuin databases are not part of this sync.
 
+## GlobalProtect
+
+The user desktop entry at `.local/share/applications/globalprotect.desktop`
+overrides the vendor launcher for Super+D. It starts the installed PanGPUI with
+`QT_QPA_PLATFORM=xcb` and without `LD_LIBRARY_PATH`: the older Qt5 GUI otherwise
+tries an unavailable Wayland plugin, and the private compositor libraries can
+also cause it to crash. This isolation applies only to GlobalProtect.
+
+Sway starts the same GUI command at login so its StatusNotifier tray icon is
+available in Waybar. Desktop-entry validation, GUI survival, repeat launching,
+and tray re-registration after a Waybar restart were verified. The VPN daemon,
+connection settings, and authentication callback desktop entry are unchanged.
+The Palo Alto client must already be installed under
+`/opt/paloaltonetworks/globalprotect`.
+
 ## Notifications
 
 The Sway config starts Mako and batsignal from `$HOME/.local/bin`. The verified

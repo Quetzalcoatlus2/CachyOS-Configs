@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=GlobalProtect
+Comment=GlobalProtect UI
+Exec=env -u LD_LIBRARY_PATH QT_QPA_PLATFORM=xcb /opt/paloaltonetworks/globalprotect/PanGPUI
+Icon=/usr/share/icons/hicolor/48x48/apps/globalprotect.png
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Network;
+Keywords=network;vpn;
