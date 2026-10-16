@@ -5,6 +5,7 @@ if [ -f "$PREF" ] && ! pgrep -f "brave-nightly/brave" > /dev/null; then
 fi
 exec /opt/brave.com/brave-nightly/brave-browser \
   --ozone-platform=wayland \
-  --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1,WaylandWindowDecorations \
+  --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1 \
+  --disable-gpu-vsync \
   --user-data-dir=/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly \
   "$@"

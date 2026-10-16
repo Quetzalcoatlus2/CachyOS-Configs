@@ -278,10 +278,10 @@ default_border normal 2
 default_floating_border normal 2
 
 # Disable borders and corner rounding for all Brave windows and PWAs
-for_window [class="^[bB]rave.*"] border none, inhibit_idle fullscreen
+for_window [class="^[bB]rave.*"] border pixel 0, inhibit_idle fullscreen
 
 popup_during_fullscreen smart
-for_window [app_id="^brave.*"] border none, inhibit_idle fullscreen
+for_window [app_id="^brave.*"] border pixel 0, inhibit_idle fullscreen
 
 # Automatically hide borders when a workspace contains only one window
 smart_borders on
