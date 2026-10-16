@@ -310,3 +310,4 @@ bindsym $mod+Ctrl+l exec swaylock -f -c 000000
 exec mako
 bindsym $mod+n exec makoctl restore
 bindsym $mod+Shift+n exec makoctl dismiss -a
+exec ~/.config/waybar/scripts/sway-brave-fullscreen.sh

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 PREF="/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly/Default/Preferences"
 if [ -f "$PREF" ] && ! pgrep -f "brave-nightly/brave" > /dev/null; then
-  jq '.browser.custom_chrome = false' "$PREF" > "${PREF}.tmp" && mv "${PREF}.tmp" "$PREF"
+  jq '.browser.custom_chrome = false | .brave.web_view_rounded_corners = false' "$PREF" > "${PREF}.tmp" && mv "${PREF}.tmp" "$PREF"
 fi
 exec /opt/brave.com/brave-nightly/brave-browser \
   --ozone-platform=wayland \
-  --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1 \
+  --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1,WaylandWindowDecorations,BraveWebViewRoundedCorners \
   --disable-gpu-vsync \
   --user-data-dir=/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly \
   "$@"
