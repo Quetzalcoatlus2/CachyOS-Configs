@@ -1,7 +1,6 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 20,
   "spacing": 0,
   "modules-left": [
     "sway/workspaces",
@@ -294,7 +293,7 @@
     "spacing": 0
   },
   "custom/notifications": {
-    "format": "🔔 {text}",
+    "format": "🔔{text}",
     "exec": "(makoctl list -j 2>/dev/null || makoctl list 2>/dev/null) | jq -Rsc 'try (fromjson | if type==\"array\" then length elif type==\"object\" then (.data[0] | length) else 0 end) catch ([splits(\"\\n\") | select(startswith(\"Notification \"))] | length) | {text: tostring}'",
     "return-type": "json",
     "interval": 2,
