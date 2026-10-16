@@ -24,11 +24,11 @@
     "backlight",
     "battery",
     "custom/calendar",
+    "custom/notifications",
     "idle_inhibitor",
     "custom/power",
     "tray"
   ],
-
   "sway/workspaces": {
     "disable-scroll": false,
     "all-outputs": true,
@@ -72,53 +72,46 @@
       "class<org.gnome.FileRoller>": "🗜️",
       "class<(Gnome-terminal|com.gexperts.Tilix)>": "",
       "title<.*Simulink.*>": "📈"
-      },
+    },
     "tooltip": true,
     "tooltip-format": "Workspace Navigation:\n•Active Workspace: {name}\n•Scroll / Click: Switch between virtual workspaces"
-    },
-    
+  },
   "sway/mode": {
     "format": "{}",
     "tooltip": true,
     "tooltip-format": "Sway Keybinding Mode: {}\nIndicates active modal key bindings."
   },
-
   "sway/scratchpad": {
     "format": "🗃{count}",
     "show-empty": false,
     "tooltip": false,
     "on-click": "swaymsg scratchpad show"
   },
-
   "sway/window": {
     "format": "{}",
     "max-length": 35,
     "tooltip": true,
     "tooltip-format": "Focused Application Window:\n•Window Title: {title}\n•Application ID: {app_id}"
   },
-
   "mpris": {
     "format": "{player_icon} {title} - {artist}",
     "format-paused": "{status_icon} {title} - {artist}",
-    "max-length": 45,
-    "tooltip": true,
-    "tooltip-format": "Media Playback Engine:\n•Source: {player} ({status})\n•Title: {title}\n•Artist: {artist}\n•Album: {album}\n•Duration: {length}\n\nInteractions:\n•Left-Click: Toggle Play / Pause\n•Right-Click: Skip to Next Track\n•Middle-Click: Return to Previous Track",
+    "max-length": 30,
     "player-icons": {
       "default": "▶",
-      "spotify": "",
-      "brave": "🦁"
+      "spotify": "🎵"
     },
     "status-icons": {
       "paused": ""
     },
+    "tooltip-format": "{player}: {title} - {artist}",
     "on-click": "playerctl play-pause",
     "on-click-right": "playerctl next",
     "on-click-middle": "playerctl previous",
     "on-scroll-up": "playerctl next",
     "on-scroll-down": "playerctl previous"
   },
-
- "custom/updates": {
+  "custom/updates": {
     "format": "📦{}",
     "interval": 3600,
     "exec": "/home/quetzal/.config/waybar/scripts/check-updates.sh",
@@ -127,7 +120,6 @@
     "signal": 8,
     "tooltip": true
   },
-  
   "temperature": {
     "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
     "interval": 2,
@@ -137,7 +129,6 @@
     "tooltip": true,
     "tooltip-format": "Thermal Monitoring:\n•Current Temperature: {temperatureC}°C ({temperatureF}°F)\n•Sensor Path: hwmon4/temp1_input\n•Critical Threshold: 85°C"
   },
-
   "cpu": {
     "interval": 2,
     "format": "⚡{usage}%",
@@ -149,7 +140,6 @@
     "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n•Core Breakdown:\n{core_frequencies}\n\nAction: Click to launch btop.",
     "on-click": "foot -e btop"
   },
-
   "memory": {
     "interval": 2,
     "format": "🧠{percentage}%",
@@ -161,7 +151,6 @@
     "tooltip-format": "Memory & Swap Allocation:\n•Physical RAM Used: {used:0.2f} GiB / {total:0.2f} GiB ({percentage}%)\n•Available Memory: {avail:0.2f} GiB\n•Swap Allocation: {swapUsed:0.2f} GiB / {swapTotal:0.2f} GiB ({swapPercentage}%)\n\nAction: Click to launch btop.",
     "on-click": "foot -e btop"
   },
-
   "disk": {
     "interval": 30,
     "format": "💾{percentage_used}%",
@@ -173,30 +162,63 @@
     "tooltip": true,
     "tooltip-format": "Root Storage Subvolume:\n•Mount Point: {path}\n•Space Consumed: {used} / {total} ({percentage_used}%)\n•Available Storage: {free} ({percentage_free}% remaining)"
   },
-
   "custom/network": {
-      "align": 0,
-      "min-length": 43,
-      "max-length": 43,
-      "interval": 1,
-      "exec": "/home/quetzal/.config/waybar/scripts/network-traffic.py",
-      "return-type": "json",
-      "tooltip": true,
-      "on-click": "foot nmtui"
-    },
-  
+    "align": 0,
+    "min-length": 43,
+    "max-length": 43,
+    "interval": 1,
+    "exec": "/home/quetzal/.config/waybar/scripts/network-traffic.py",
+    "return-type": "json",
+    "tooltip": true,
+    "on-click": "foot nmtui"
+  },
   "pulseaudio": {
     "max-volume": 100,
     "format": "{icon} {volume}%",
     "format-muted": "🔇 Muted",
     "format-icons": {
-      "headphone": ["🎧🔈", "🎧🔉", "🎧🔊", "🎧📢"],
-      "hands-free": ["🎧🔈", "🎧🔉", "🎧🔊", "🎧📢"],
-      "headset": ["🎧🔈", "🎧🔉", "🎧🔊", "🎧📢"],
-      "phone": ["📞🔈", "📞🔉", "📞🔊", "📞📢"],
-      "portable": ["📱🔈", "📱🔉", "📱🔊", "📱📢"],
-      "car": ["🚗🔈", "🚗🔉", "🚗🔊", "🚗📢"],
-      "default": ["🔈", "🔉", "🔊", "📢"]
+      "headphone": [
+        "🎧🔈",
+        "🎧🔉",
+        "🎧🔊",
+        "🎧📢"
+      ],
+      "hands-free": [
+        "🎧🔈",
+        "🎧🔉",
+        "🎧🔊",
+        "🎧📢"
+      ],
+      "headset": [
+        "🎧🔈",
+        "🎧🔉",
+        "🎧🔊",
+        "🎧📢"
+      ],
+      "phone": [
+        "📞🔈",
+        "📞🔉",
+        "📞🔊",
+        "📞📢"
+      ],
+      "portable": [
+        "📱🔈",
+        "📱🔉",
+        "📱🔊",
+        "📱📢"
+      ],
+      "car": [
+        "🚗🔈",
+        "🚗🔉",
+        "🚗🔊",
+        "🚗📢"
+      ],
+      "default": [
+        "🔈",
+        "🔉",
+        "🔊",
+        "📢"
+      ]
     },
     "tooltip": true,
     "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 5%",
@@ -205,7 +227,6 @@
     "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
     "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
   },
-  
   "pulseaudio#microphone": {
     "format": "{format_source}",
     "format-source": "🎙️{volume}%",
@@ -216,7 +237,6 @@
     "on-click": "GTK_THEME=Adwaita:dark pavucontrol -t 4",
     "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
   },
-
   "backlight": {
     "device": "amdgpu_bl0",
     "format": "🔆{percent}%",
@@ -225,7 +245,6 @@
     "on-scroll-up": "brightnessctl set 2%+",
     "on-scroll-down": "brightnessctl set 2%-"
   },
-
   "battery": {
     "interval": 10,
     "full-at": 90,
@@ -244,7 +263,6 @@
     "tooltip": true,
     "tooltip-format": "Power Subsystem Metrics:\n•Charge Level: {capacity}%\n•Estimated Runtime: {time}\n•Current Consumption: {power:.2f} W\n•Battery Health: {health}%\n•Total Charge Cycles: {cycles}"
   },
-
   "custom/calendar": {
     "format": "{}",
     "align": 1,
@@ -255,7 +273,6 @@
     "return-type": "json",
     "tooltip": true
   },
-  
   "idle_inhibitor": {
     "format": "{icon}",
     "format-icons": {
@@ -266,17 +283,24 @@
     "tooltip-format-activated": "Idle Inhibitor: Active\nPrevents display dimming and screen timeouts.\nClick: Restore normal timers.",
     "tooltip-format-deactivated": "Idle Inhibitor: Inactive\nStandard screen timeouts are active.\nClick: Keep display permanently awake."
   },
-
   "custom/power": {
     "format": "💡",
     "tooltip": true,
     "tooltip-format": "Power Management Options\n\nClick: Toggle power and session actions.",
     "on-click": "$HOME/.config/waybar/scripts/power-menu.sh"
   },
-
   "tray": {
     "icon-size": 14,
     "spacing": 0
+  },
+  "custom/notifications": {
+    "format": "🔔 {text}",
+    "exec": "(makoctl list -j 2>/dev/null || makoctl list 2>/dev/null) | jq -Rsc 'try (fromjson | if type==\"array\" then length elif type==\"object\" then (.data[0] | length) else 0 end) catch ([splits(\"\\n\") | select(startswith(\"Notification \"))] | length) | {text: tostring}'",
+    "return-type": "json",
+    "interval": 2,
+    "tooltip-format": "Active notifications: {text}",
+    "on-click": "makoctl restore",
+    "on-click-right": "makoctl dismiss -a",
+    "on-click-middle": "makoctl menu -- wmenu -p 'Notification:'"
   }
 }
-

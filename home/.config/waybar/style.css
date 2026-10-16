@@ -238,3 +238,8 @@ window#waybar > box {
     min-height: 0;
     font-style: normal;
 }
+
+#custom-notifications {
+    padding: 0 4px;
+    color: #56b4e9;
+}

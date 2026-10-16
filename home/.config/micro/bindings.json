@@ -1,4 +1,8 @@
 {
+    "Alt-/": "lua:comment.comment",
+    "CtrlUnderscore": "lua:comment.comment",
+    "CtrlC": "Copy",
     "Ctrl-c": "Copy",
-    "CtrlC": "Copy"
+    "CtrlHome": "CursorStart",
+    "CtrlEnd": "CursorEnd"
 }

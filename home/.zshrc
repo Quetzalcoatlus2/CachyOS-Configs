@@ -1,3 +1,4 @@
+export PATH="$HOME/.local/bin:$PATH"
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 FORCE_COLOR=1 fastfetch 2>/dev/null
@@ -32,3 +33,4 @@ function update {
 }
 
 eval "$(atuin init zsh)"
+bindkey -M vicmd '^R' atuin-search
