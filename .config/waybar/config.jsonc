@@ -23,8 +23,8 @@
     "backlight",
     "battery",
     "custom/calendar",
-    "custom/notifications",
     "idle_inhibitor",
+    "custom/notifications",
     "custom/power",
     "tray"
   ],
@@ -293,8 +293,8 @@
     "spacing": 0
   },
   "custom/notifications": {
-    "format": "🔔{text}",
-    "exec": "(makoctl list -j 2>/dev/null || makoctl list 2>/dev/null) | jq -Rsc 'try (fromjson | if type==\"array\" then length elif type==\"object\" then (.data[0] | length) else 0 end) catch ([splits(\"\\n\") | select(startswith(\"Notification \"))] | length) | {text: tostring}'",
+    "format": "🔔 {text}",
+    "exec": "(makoctl list -j 2>/dev/null || makoctl list 2>/dev/null) | jq -Rsc 'try (fromjson | if type==\"array\" then length elif type==\"object\" then (.data[0] | length) else 0 end) catch ([splits(\"\\n\") | select(startswith(\"Notification \"))] | length) | . as $n | {text: ($n | tostring), class: (if $n == 0 then \"notif-0\" elif $n >= 8 then \"notif-8\" else \"notif-\\($n)\" end)}'",
     "return-type": "json",
     "interval": 2,
     "tooltip-format": "Active notifications: {text}",
