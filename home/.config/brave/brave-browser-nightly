@@ -16,9 +16,9 @@ fi
 exec /opt/brave.com/brave-nightly/brave-browser \
   --ozone-platform=wayland \
   --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1,WaylandWindowDecorations,BraveWebViewRoundedCorners,HistoryEmbeddings,BraveAIChat,BraveRewards,BraveWallet \
-  --enable-features=HighEfficiencyModeAvailable,BatterySaverModeAvailable \
+  --enable-features=HighEfficiencyModeAvailable,BatterySaverModeAvailable,VaapiVideoDecoder,VaapiIgnoreDriverChecks,AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL \
   --process-per-site \
   --renderer-process-limit=6 \
   --disable-gpu-vsync \
   --user-data-dir=/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly \
-  "$@"
+  "$@" >/dev/null 2>&1
