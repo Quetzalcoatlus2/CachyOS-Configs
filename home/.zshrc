@@ -36,3 +36,36 @@ eval "$(atuin init zsh)"
 bindkey -M vicmd '^R' atuin-search
 unsetopt correct_all
 unsetopt correct
+
+# Format man pages with bat syntax highlighting
+if command -v bat >/dev/null 2>&1; then
+    export MANROFFOPT="-c"
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
+
+# CachyOS directory, process, and package telemetry aliases
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza -al --color=always --group-directories-first --icons'
+    alias la='eza -a --color=always --group-directories-first --icons'
+    alias ll='eza -l --color=always --group-directories-first --icons'
+    alias lt='eza -aT --color=always --group-directories-first --icons'
+    alias l.="eza -a | grep -e '^\.'"
+fi
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias tarnow='tar -acf '
+alias untar='tar -zxvf '
+alias wget='wget -c '
+alias psmem='ps auxf | sort -nr -k 4'
+alias psmem10='ps auxf | sort -nr -k 4 | head -10'
+alias big="expac -H M '%m\t%n' | sort -h | nl"
+alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+alias gitpkg='pacman -Q | grep -i "\-git" | wc -l'
+alias mirror='sudo cachyos-rate-mirrors'
+alias fixpacman='sudo rm /var/lib/pacman/db.lck'
+alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
+alias jctl='journalctl -p 3 -xb'
+alias tb='nc termbin.com 9999'
