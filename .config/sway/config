@@ -16,12 +16,15 @@ set $right l
 # Your preferred terminal emulator
 set $term foot
 exec foot --server
+# Automatically choose split direction when autotiling is installed.
+exec sh -c 'command -v autotiling >/dev/null 2>&1 && exec autotiling'
 # Your preferred application launcher
-set $menu wmenu-run -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff
+set $menu wmenu-run
 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # Example configuration:
 #
@@ -207,7 +210,7 @@ bindsym $mod+r mode "resize"
 
     # Special keys to control media via playerctl
     bindsym --locked XF86AudioPlay exec playerctl play-pause
-    bindsym --locked XF86AudioPause exec playerctl play-pause
+    bindsym --locked XF86AudioPause exec playerctl pause
     bindsym --locked XF86AudioPrev exec playerctl previous
     bindsym --locked XF86AudioNext exec playerctl next
     bindsym --locked XF86AudioStop exec playerctl stop
@@ -260,6 +263,7 @@ input "type:touchpad" {
 }
 
 # Lock Screen shortcut
+bindsym $mod+Shift+l exec swaylock -f
 
 # Hardware Power Button toggle
 
@@ -278,10 +282,11 @@ default_border normal 2
 default_floating_border normal 2
 
 # Disable borders and corner rounding for all Brave windows and PWAs
-for_window [class="^[bB]rave.*"] border pixel 0, inhibit_idle fullscreen
+for_window [app_id="^brave"] border normal 2
+for_window [class="^[bB]rave"] border normal 2
 
 popup_during_fullscreen smart
-for_window [app_id="^brave.*"] border pixel 0, inhibit_idle fullscreen
+for_window [app_id="^brave.*"] inhibit_idle fullscreen
 
 # Automatically hide borders when a workspace contains only one window
 smart_borders on
@@ -290,12 +295,13 @@ smart_borders on
 for_window [title="(?i)picture[- ]in[- ]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 405
 
 # Set default wmenu runner colors
+set $menu wmenu-run -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff
 
 # Power Management Dropdown Modal (Docked beneath top bar on the right)
 
 # Power Management Dropdown Modal
 
-exec batsignal -w 25 -c 20 -d 0 -f 90
+exec batsignal -w 25 -c 20 -d 15 -f 90
 
 # Session environment registration
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway
@@ -306,8 +312,3 @@ exec swayidle -w timeout 600 'swaylock -f -c 000000' timeout 900 'swaymsg "outpu
 # Power menu and lock bindings
 bindsym $mod+Shift+Escape exec ~/.config/waybar/scripts/power-menu.sh
 bindsym $mod+Ctrl+l exec swaylock -f -c 000000
-
-exec mako
-bindsym $mod+n exec makoctl restore
-bindsym $mod+Shift+n exec makoctl dismiss -a
-exec ~/.config/waybar/scripts/sway-brave-fullscreen.sh
