@@ -34,3 +34,5 @@ function update {
 
 eval "$(atuin init zsh)"
 bindkey -M vicmd '^R' atuin-search
+unsetopt correct_all
+unsetopt correct
