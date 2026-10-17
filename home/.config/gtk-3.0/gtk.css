@@ -42,3 +42,327 @@ headerbar,
   background-color: #000000;
   background-image: none;
 }
+
+/* BEGIN THUNAR CONTRAST FIX */
+
+/* Preserve black surfaces while making foreground colours explicit. */
+.thunar,
+.thunar label,
+.thunar .view,
+.thunar .view text,
+.thunar .sidebar {
+    color: #ffffff;
+    text-shadow: none;
+}
+
+.thunar .standard-view,
+.thunar .standard-view .view,
+.thunar .standard-view widget.view,
+.thunar .standard-view treeview.view,
+.thunar .sidebar,
+.thunar .sidebar .view {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+}
+
+/* Text renderers must not paint opaque rectangles over their parents. */
+.thunar .standard-view .view text,
+.thunar .standard-view .view label {
+    background-color: transparent;
+    color: #ffffff;
+}
+
+/* Explicit selected colours, including keyboard focus and inactive windows. */
+.thunar .view:selected,
+.thunar .view:selected:focus,
+.thunar .view:selected:backdrop,
+.thunar .standard-view widget.view:selected,
+.thunar .standard-view treeview.view:selected,
+.thunar .sidebar row:selected,
+.thunar .sidebar row:selected:backdrop {
+    background-color: #303030;
+    background-image: none;
+    color: #ffffff;
+    text-shadow: none;
+}
+
+.thunar .view:selected label,
+.thunar .view:selected text,
+.thunar .sidebar row:selected label {
+    background-color: transparent;
+    color: #ffffff;
+}
+
+/* Drag-selection rectangle: translucent, not an opaque black sheet. */
+.thunar rubberband,
+.thunar .rubberband,
+.thunar .view rubberband,
+.thunar .view .rubberband {
+    background-color: rgba(255, 255, 255, 0.12);
+    background-image: none;
+    border: 1px solid #aaaaaa;
+    box-shadow: none;
+}
+
+/* Keep rename/search selections readable. */
+.thunar entry selection,
+.thunar textview text selection {
+    background-color: #444444;
+    color: #ffffff;
+}
+
+.thunar label:disabled {
+    color: #888888;
+}
+
+/* END THUNAR CONTRAST FIX */
+
+/* BEGIN BLACK INPUTS TABS RUBBERBAND FIX */
+
+/* Existing global CSS already paints entries black.
+   Explicitly provide readable text and cursor colours too. */
+entry,
+entry:focus,
+entry:backdrop,
+entry.flat,
+entry.search {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+    caret-color: #ffffff;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+entry {
+    border-color: #555555;
+}
+
+entry:focus {
+    border-color: #aaaaaa;
+}
+
+entry image {
+    color: #dddddd;
+}
+
+entry:disabled {
+    color: #888888;
+}
+
+entry selection,
+entry:focus selection,
+entry:backdrop selection,
+.thunar entry selection {
+    background-color: #444444;
+    color: #ffffff;
+    text-shadow: none;
+}
+
+/* Thunar notebook strip: black in every focus state. */
+.thunar notebook,
+.thunar notebook > header,
+.thunar notebook > header:backdrop,
+.thunar notebook > header > tabs,
+.thunar notebook > header > tabs:backdrop,
+.thunar notebook > header > tabs > tab,
+.thunar notebook > header > tabs > tab:hover,
+.thunar notebook > header > tabs > tab:checked,
+.thunar notebook > header > tabs > tab:backdrop {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+    text-shadow: none;
+    box-shadow: none;
+    border-color: #444444;
+}
+
+/* White underline identifies the active tab without a light fill. */
+.thunar notebook > header > tabs > tab:checked {
+    box-shadow: inset 0 -2px #ffffff;
+}
+
+.thunar notebook > header > tabs > tab label {
+    background-color: transparent;
+    color: #bbbbbb;
+    text-shadow: none;
+}
+
+.thunar notebook > header > tabs > tab:checked label {
+    color: #ffffff;
+}
+
+.thunar notebook > header > tabs > tab button,
+.thunar notebook > header > tabs > tab button:hover {
+    background-color: transparent;
+    background-image: none;
+    color: #ffffff;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+/* Outline-only drag selection.
+   These narrow global selectors also cover detached style contexts. */
+rubberband,
+rubberband:backdrop,
+.rubberband,
+.rubberband:backdrop,
+.view.rubberband,
+.view.rubberband:selected,
+.thunar rubberband,
+.thunar .rubberband,
+.thunar .view rubberband,
+.thunar .view .rubberband,
+.thunar .view.rubberband,
+.thunar .standard-view .view.rubberband {
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid #aaaaaa;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* END BLACK INPUTS TABS RUBBERBAND FIX */
+
+/* BEGIN BLACK COMMON WIDGET FIX */
+
+/* Windows and separate dialogs, including Properties. */
+window.background,
+window.background:backdrop,
+dialog,
+.dialog-vbox,
+.dialog-action-area,
+popover,
+popover.background,
+popover > contents {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+    text-shadow: none;
+}
+
+/* Dialog text must remain readable even without Thunar's main-window class. */
+.background label,
+menu,
+menuitem,
+popover,
+popover label {
+    color: #ffffff;
+    text-shadow: none;
+}
+
+/* Lists in dialogs, including Configure Toolbar.
+   Keep these selectors less specific than the existing selection rules. */
+.view,
+treeview.view,
+treeview.view:backdrop,
+list,
+listbox {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+    text-shadow: none;
+}
+
+/* Buttons, breadcrumb buttons, and toolbar controls. */
+button,
+button:backdrop,
+button:hover,
+button:active,
+button:checked {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+    text-shadow: none;
+    box-shadow: none;
+    border-color: #555555;
+}
+
+button:hover,
+button:focus {
+    border-color: #aaaaaa;
+}
+
+button:checked,
+button:active {
+    border-color: #ffffff;
+}
+
+button label,
+button image {
+    color: inherit;
+    text-shadow: none;
+}
+
+/* Breadcrumb/location-bar containers. */
+.thunar .location-toolbar,
+.thunar .path-bar,
+.thunar .pathbar,
+.thunar .linked {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+}
+
+/* Notebook headers in separate dialogs as well as the main window. */
+notebook > header,
+notebook > header > tabs,
+notebook > header > tabs > tab,
+notebook > header > tabs > tab:hover,
+notebook > header > tabs > tab:checked {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+    border-color: #444444;
+}
+
+notebook > header > tabs > tab:checked {
+    box-shadow: inset 0 -2px #ffffff;
+}
+
+/* File-list column headings and sorting controls. */
+treeview.view > header > button,
+treeview.view > header > button:hover,
+treeview.view > header > button:backdrop,
+treeview.view > header > button label,
+treeview.view > header > button image {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+/* Disabled controls remain distinguishable, but not black-on-black. */
+button:disabled,
+button:disabled label,
+button:disabled image,
+.background label:disabled,
+checkbutton:disabled,
+checkbutton:disabled label {
+    color: #888888;
+    text-shadow: none;
+}
+
+/* END BLACK COMMON WIDGET FIX */
+
+/* BEGIN BLACK NOTEBOOK CONTENT FIX */
+
+/* Notebook page surfaces, including Thunar Properties.
+   Do not paint every descendant: selections must stay transparent. */
+notebook.frame > stack,
+notebook.frame > stack:backdrop,
+window.background notebook > stack,
+window.background notebook > stack:backdrop,
+window.background notebook > stack > box,
+window.background notebook > stack > grid,
+window.background notebook > stack > scrolledwindow,
+window.background notebook > stack > scrolledwindow > viewport {
+    background-color: #000000;
+    background-image: none;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+/* END BLACK NOTEBOOK CONTENT FIX */
