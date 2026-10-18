@@ -23,7 +23,6 @@ alias xdg-mime='nocorrect xdg-mime'
 # Shell workflow enhancements
 setopt autocd
 setopt interactivecomments
-alias ll='ls -lah'
 export COLORTERM=truecolor
 
 unalias update 2>/dev/null

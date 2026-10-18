@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-PREF="/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly/Default/Preferences"
-STATE="/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly/Local State"
+PROFILE_DIR="${HOME}/.config/BraveSoftware/Brave-Browser-Nightly"
+PREF="$PROFILE_DIR/Default/Preferences"
+STATE="$PROFILE_DIR/Local State"
+
 if [ -f "$PREF" ] && ! pgrep -f "brave-nightly/brave" > /dev/null; then
   jq '.browser.custom_chrome = false
     | .brave.web_view_rounded_corners = false
@@ -13,6 +15,10 @@ if [ -f "$STATE" ] && ! pgrep -f "brave-nightly/brave" > /dev/null; then
     | .performance_tuning.high_efficiency_mode.aggressiveness = 2
     | .performance_tuning.high_efficiency_mode.time_before_discard_in_minutes = 5' "$STATE" > "${STATE}.tmp" && mv "${STATE}.tmp" "$STATE"
 fi
+
+# stderr is intentionally NOT redirected: VA-API and GPU-driver failures are
+# only visible in the journal, so suppressing it hides exactly the problems
+# the flags below are meant to surface.
 exec /opt/brave.com/brave-nightly/brave-browser \
   --ozone-platform=wayland \
   --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1,WaylandWindowDecorations,BraveWebViewRoundedCorners,HistoryEmbeddings,BraveAIChat,BraveRewards,BraveWallet \
@@ -20,5 +26,5 @@ exec /opt/brave.com/brave-nightly/brave-browser \
   --process-per-site \
   --renderer-process-limit=6 \
   --disable-gpu-vsync \
-  --user-data-dir=/home/quetzal/.config/BraveSoftware/Brave-Browser-Nightly \
-  "$@" >/dev/null 2>&1
+  --user-data-dir="$PROFILE_DIR" \
+  "$@"

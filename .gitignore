@@ -1,3 +1,11 @@
 **/micro/backups/
 **/micro/buffers/
 **/micro/plug/
+
+# Editor backup / swap files
+*~
+*.bak
+*.orig
+*.swp
+.*.sw?
+.*.swn
