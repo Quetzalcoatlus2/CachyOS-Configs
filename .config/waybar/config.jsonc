@@ -38,7 +38,6 @@
         "class<foot>": "",
         "class<(Gnome-terminal|com.gexperts.Tilix)>": "",
         "title<OpenCode>": "🤖",
-        "title<OpenCode>": "🤖",
         "class<brave-browser.*>": "🦁",
         "class<com.microsoft.VSCode>": "💻",
         "class<code-insiders>": "💻",
@@ -122,6 +121,8 @@
     "tooltip": true
   },
   "temperature": {
+    "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
+    "input-filename": "temp1_input",
     "interval": 2,
     "critical-threshold": 85,
     "format": "🌡️{temperatureC}°C",
