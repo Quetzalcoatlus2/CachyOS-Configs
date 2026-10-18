@@ -16,13 +16,12 @@ if [ -f "$STATE" ] && ! pgrep -f "brave-nightly/brave" > /dev/null; then
     | .performance_tuning.high_efficiency_mode.time_before_discard_in_minutes = 5' "$STATE" > "${STATE}.tmp" && mv "${STATE}.tmp" "$STATE"
 fi
 
-# stderr is intentionally NOT redirected: VA-API and GPU-driver failures are
-# only visible in the journal, so suppressing it hides exactly the problems
-# the flags below are meant to surface.
+# Keep stderr available to the launching terminal or session logger.
+# Hardware decoding already works without forced VA-API feature overrides.
 exec /opt/brave.com/brave-nightly/brave-browser \
   --ozone-platform=wayland \
   --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1,WaylandWindowDecorations,BraveWebViewRoundedCorners,HistoryEmbeddings,BraveAIChat,BraveRewards,BraveWallet \
-  --enable-features=HighEfficiencyModeAvailable,BatterySaverModeAvailable,VaapiVideoDecoder,VaapiIgnoreDriverChecks,AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL \
+  --enable-features=HighEfficiencyModeAvailable,BatterySaverModeAvailable \
   --process-per-site \
   --renderer-process-limit=6 \
   --disable-gpu-vsync \
