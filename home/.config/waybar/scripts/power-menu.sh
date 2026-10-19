@@ -56,8 +56,8 @@ from gi.repository import Pango, PangoCairo
 outputs = json.loads(subprocess.check_output(['swaymsg', '-t', 'get_outputs']))
 width = next(o['rect']['width'] for o in outputs if o['focused'])
 ctx = PangoCairo.FontMap.get_default().create_context()
-# swaynag draws each glyph advance rounded to whole pixels; measuring the same way keeps widths exact.
-ctx.set_round_glyph_positions(True)
+# swaynag lays out text with unrounded glyph positions (common/pango.c); match it or widths drift.
+ctx.set_round_glyph_positions(False)
 font = Pango.FontDescription.from_string('monospace 9')
 
 def text_width(markup):
