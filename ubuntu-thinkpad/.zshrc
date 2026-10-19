@@ -55,3 +55,6 @@ alias psmem10='ps auxf | sort -nr -k 4 | head -10'
 alias jctl='journalctl -p 3 -xb'
 alias tb='nc termbin.com 9999'
 alias cleanup='sudo apt autoremove -y'
+
+# Right-side clock (HH:MM:SS).
+RPROMPT='%D{%H:%M:%S}'

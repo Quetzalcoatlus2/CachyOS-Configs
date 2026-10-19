@@ -3,8 +3,8 @@ set $left h
 set $down j
 set $up k
 set $right l
-set $term foot
-set $menu wofi --show drun
+set $term $HOME/.local/bin/foot
+set $menu env PATH=$HOME/.local/bin:$PATH sh $HOME/.local/bin/wmenu-frequent.sh
 
 output * bg #000000 solid_color
 output eDP-1 pos 0 1080
@@ -12,7 +12,7 @@ output "Eizo Nanao Corporation EV2316W 75500038" pos 0 0
 
 focus_follows_mouse yes
 
-exec foot --server
+exec $HOME/.local/bin/foot --server
 # Automatically choose split direction when autotiling is installed.
 exec sh -c 'command -v autotiling >/dev/null 2>&1 && exec autotiling'
 exec $HOME/.local/bin/mako
@@ -117,11 +117,11 @@ bindsym --locked XF86AudioStop exec playerctl stop
 bindsym --locked XF86MonBrightnessDown exec sg video -c 'brightnessctl set 5%-'
 bindsym --locked XF86MonBrightnessUp exec sg video -c 'brightnessctl set 5%+'
 
-bindsym Print exec sh -c 'region=$(slurp) && [ -n "$region" ] && grim -g "$region" - | wl-copy -t image/png'
-bindsym Shift+Print exec sh -c 'mkdir -p "$HOME/Pictures/Screenshots"; file="$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png"; region=$(slurp) && [ -n "$region" ] && grim -g "$region" "$file" && wl-copy -t image/png < "$file"'
-bindsym $mod+Shift+s exec sh -c 'region=$(slurp) && [ -n "$region" ] && grim -g "$region" - | wl-copy -t image/png'
-bindsym $mod+Print exec sh -c 'mkdir -p "$HOME/Pictures/Screenshots"; file="$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png"; region=$(slurp) && [ -n "$region" ] && grim -g "$region" "$file" && wl-copy -t image/png < "$file" && pinta "$file"'
-bindsym Ctrl+Print exec grim - | wl-copy -t image/png
+bindsym Print exec sh -c 'region=$(slurp) && [ -n "$region" ] && grim -g "$region" - | $HOME/.local/bin/wl-copy -t image/png'
+bindsym Shift+Print exec sh -c 'mkdir -p "$HOME/Pictures/Screenshots"; file="$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png"; region=$(slurp) && [ -n "$region" ] && grim -g "$region" "$file" && $HOME/.local/bin/wl-copy -t image/png < "$file"'
+bindsym $mod+Shift+s exec sh -c 'region=$(slurp) && [ -n "$region" ] && grim -g "$region" - | $HOME/.local/bin/wl-copy -t image/png'
+bindsym $mod+Print exec sh -c 'mkdir -p "$HOME/Pictures/Screenshots"; file="$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png"; region=$(slurp) && [ -n "$region" ] && grim -g "$region" "$file" && $HOME/.local/bin/wl-copy -t image/png < "$file" && pinta "$file"'
+bindsym Ctrl+Print exec sh -c 'grim - | $HOME/.local/bin/wl-copy -t image/png'
 
 
 bindsym $mod+Ctrl+l exec env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -c 000000
