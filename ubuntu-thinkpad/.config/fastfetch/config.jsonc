@@ -1,0 +1,103 @@
+{
+  // Fastfetch config for Ubuntu (Sway).
+  //
+  // This mirrors /usr/share/fastfetch/presets/all.jsonc verbatim - it is the
+  // layout this machine was previously showing - with one change: `top` is
+  // pinned to 5 processes.
+  //
+  // Keep the module OPTIONS when editing. They carry most of the detail, and
+  // dropping them is what makes the output look thinner than it used to:
+  //   cpu/ gpu/ battery/ physicaldisk  "temp": true  -> 55.5 degC, 42.9 degC
+  //   cpu                               showPeCoreCount -> per-core GHz
+  //   gpu                               driverSpecific  -> VRAM / clocks
+  //   codec                             splitGPU        -> encoder + decoder
+  //   swap                              "separate": true -> one line per swap
+  //   localip                           showAllIps/ showMac/ showSpeed/ showMtu
+  //   publicip/ weather                 "timeout": 1000  -> never hang a shell
+  //
+  // A bare {"type": "cpu"} drops the temperature and the per-core detail,
+  // so do not replace the objects above with bare strings.
+  "$schema": "https://raw.githubusercontent.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+
+  "logo": {
+    "padding": {
+      "top": 2
+    }
+  },
+
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "host",
+    "bios",
+    "bootmgr",
+    "board",
+    "chassis",
+    "kernel",
+    "initsystem",
+    "uptime",
+    "loadavg",
+    "processes",
+    "packages",
+    "shell",
+    "editor",
+    "display",
+    "brightness",
+    "monitor",
+    "lm",
+    "de",
+    "wm",
+    "wmtheme",
+    "theme",
+    "icons",
+    "font",
+    "cursor",
+    "wallpaper",
+    "terminal",
+    "terminalfont",
+    "terminalsize",
+    "terminaltheme",
+    {"type": "cpu", "showPeCoreCount": true, "temp": true},
+    "cpucache",
+    "cpuusage",
+    {"type": "gpu", "driverSpecific": true, "temp": true},
+    {"type": "codec", "splitGPU": true},
+    "memory",
+    "physicalmemory",
+    {"type": "swap", "separate": true},
+    "disk",
+    "btrfs",
+    "zpool",
+    {"type": "battery", "temp": true},
+    "poweradapter",
+    "player",
+    "media",
+    {"type": "publicip", "timeout": 1000},
+    {"type": "localip", "showIpv6": true, "showMac": true, "showSpeed": true, "showMtu": true, "showLoop": true, "showFlags": true, "showAllIps": true},
+    "dns",
+    "wifi",
+    "datetime",
+    "locale",
+    "vulkan",
+    "opengl",
+    "opencl",
+    "users",
+    "bluetooth",
+    "bluetoothradio",
+    "sound",
+    "camera",
+    "gamepad",
+    "mouse",
+    "keyboard",
+    "tpm",
+    "netio",
+    "diskio",
+    {"type": "physicaldisk", "temp": true},
+    {"type": "weather", "timeout": 1000},
+    { "type": "top", "processes": 5, "cpu": true, "memory": true, "io": true },
+    "version",
+    "break",
+    "colors"
+  ]
+}

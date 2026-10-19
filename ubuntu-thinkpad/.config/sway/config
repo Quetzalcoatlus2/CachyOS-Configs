@@ -4,7 +4,7 @@ set $down j
 set $up k
 set $right l
 set $term $HOME/.local/bin/foot
-set $menu env PATH=$HOME/.local/bin:$PATH sh $HOME/.local/bin/wmenu-frequent.sh
+set $menu $HOME/.local/bin/wofi --show drun
 
 output * bg #000000 solid_color
 output eDP-1 pos 0 1080

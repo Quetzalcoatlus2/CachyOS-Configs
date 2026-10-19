@@ -116,7 +116,7 @@
     "tooltip-format": "Active notifications: {text}",
     "on-click": "$HOME/.local/bin/makoctl restore",
     "on-click-right": "$HOME/.local/bin/makoctl dismiss -a",
-    "on-click-middle": "$HOME/.local/bin/makoctl menu -- $HOME/.local/bin/wmenu -i -p 'Notification:' -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff"
+    "on-click-middle": "$HOME/.local/bin/makoctl menu -- $HOME/.local/bin/wofi --dmenu -p 'Notification:'"
   },
   "sway/window": {
     "format": "{}",
