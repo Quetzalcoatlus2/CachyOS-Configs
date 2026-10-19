@@ -1,20 +1,24 @@
 {
   // Fastfetch config for CachyOS (Sway).
   //
-  // Two goals: trim the stock preset, which emits ~68 lines and overflows a
-  // 24-row terminal, and add live telemetry it omits.
+  // Reproduces the full hardware/session module set, then extends it with
+  // live telemetry the default preset omits: top processes, disk and network
+  // throughput, and the Wi-Fi link.
   //
-  // Timing measured on this machine (10 runs, mean per invocation):
-  //   identity only ..............................   4 ms
-  //   everything below except `top` ..............  26 ms
-  //   `top` added ............................... ~265 ms
+  // Output runs ~40 lines, so on a 24-row terminal you will scroll to reach
+  // the prompt. That is a deliberate trade for the density of information.
   //
-  // The `top` module is the expensive part and the cost does not scale with
-  // `processes` or with which metrics are enabled - computing per-process CPU%
-  // needs a sampling window. That is the price of the top-5 list.
+  // Timing measured on this machine (mean per invocation):
+  //   this config .................. ~290 ms
+  //   same, minus `top` ........... ~26 ms
+  //   stock default preset ......... ~23 ms
   //
-  // Note: `structure` is a CLI-only option and is ignored here; the module
-  // list below is what drives the output.
+  // `cpuusage` and `top` both need a sampling window and share one, so the
+  // two together cost no more than `top` alone. Dropping `top` is the only
+  // meaningful way to cut startup time here.
+  //
+  // Note: `structure` is a CLI-only option and is ignored in this file; the
+  // module list below is what drives the output.
   "$schema": "https://raw.githubusercontent.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
 
   "logo": {
@@ -22,36 +26,65 @@
   },
 
   "modules": [
+    // Identity
     { "type": "title" },
+    { "type": "separator" },
     { "type": "os" },
     { "type": "host" },
+    { "type": "bios" },
+    { "type": "board" },
+    { "type": "chassis" },
+    { "type": "bootmgr" },
     { "type": "kernel" },
+    { "type": "initsystem" },
 
     { "type": "break" },
 
-    { "type": "wm" },
-    { "type": "terminal" },
-    { "type": "shell" },
+    // Session
     { "type": "uptime" },
+    { "type": "loadavg" },
+    { "type": "processes" },
+    { "type": "packages" },
+    { "type": "shell" },
+    { "type": "editor" },
+    { "type": "terminal" },
+    { "type": "display" },
+    { "type": "monitor" },
+    { "type": "brightness" },
+    { "type": "lm" },
+    { "type": "de" },
+    { "type": "wm" },
+    { "type": "theme" },
+    { "type": "cursor" },
 
     { "type": "break" },
 
-    // `cpuusage` is omitted deliberately. It samples /proc/stat and costs
-    // ~200ms on its own; when `top` is present the two share one sampling
-    // window, so it contributes nothing (267ms -> 269ms). Waybar's cpu module
-    // already reports live utilisation.
+    // Hardware
     { "type": "cpu" },
+    { "type": "cpucache" },
+    { "type": "cpuusage" },
     { "type": "gpu" },
-
-    { "type": "break" },
-
-    // Renders one line per active swap device, so swapfile + zram0 = 2 lines.
     { "type": "memory" },
     { "type": "swap" },
+    { "type": "disk" },
+
+    { "type": "break" },
+
+    // Power and connectivity
+    { "type": "battery" },
+    { "type": "poweradapter" },
+    { "type": "wifi" },
+    { "type": "localip" },
+    { "type": "netio" },
 
     { "type": "break" },
 
     // Top processes by CPU, memory and disk I/O.
-    { "type": "top", "processes": 5, "cpu": true, "memory": true, "io": true }
+    { "type": "top", "processes": 5, "cpu": true, "memory": true, "io": true },
+
+    { "type": "break" },
+
+    { "type": "version" },
+    { "type": "colors" }
   ]
 }
