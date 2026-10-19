@@ -1,5 +1,5 @@
 #!/bin/sh
-# Prints one icon for the active output port of the default sink: headphones, HDMI, or speaker.
+# Prints an icon for headphones or HDMI on the default sink; prints nothing for the built-in speaker.
 sink=$(pactl get-default-sink 2>/dev/null) || exit 0
 port=$(pactl list sinks | awk -v s="$sink" '
     /^[[:space:]]*Name: / { cur = ($2 == s) }
@@ -7,5 +7,6 @@ port=$(pactl list sinks | awk -v s="$sink" '
 case "$port" in
     *[Hh]eadphone*|*[Hh]eadset*|*[Hh]ands-free*) printf '%s\n' "🎧" ;;
     *[Hh][Dd][Mm][Ii]*) printf '%s\n' "📺" ;;
+    *[Ss]peaker*) ;;
     *) printf '%s\n' "🔈" ;;
 esac
