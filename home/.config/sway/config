@@ -17,7 +17,7 @@ set $right l
 set $term foot
 exec foot --server
 # Your preferred application launcher
-set $menu wmenu-run -N 000000 -n 888888 -M 000000 -m ffffff -S 000000 -s ffffff
+set $menu wofi --show drun
 
 ### Output configuration
 #
