@@ -43,6 +43,10 @@ text=(root/'home/.config/waybar/config.jsonc').read_text()
 text=re.sub(r'("(?:\\.|[^"\\])*")|//[^\n]*|/\*.*?\*/',lambda m:m.group(1) or '',text,flags=re.S)
 text=re.sub(r'("(?:\\.|[^"\\])*")|,\s*(?=[}\]])',lambda m:m.group(1) or '',text)
 json.loads(text,object_pairs_hook=unique)
+fastfetch=(root/'home/.config/fastfetch/config.jsonc').read_text()
+fastfetch=re.sub(r'("(?:\\.|[^"\\])*")|//[^\n]*|/\*.*?\*/',lambda m:m.group(1) or '',fastfetch,flags=re.S)
+fastfetch=re.sub(r'("(?:\\.|[^"\\])*")|,\s*(?=[}\]])',lambda m:m.group(1) or '',fastfetch)
+json.loads(fastfetch,object_pairs_hook=unique)
 for base in ('home','system'):
     for path in (root/base).rglob('*.py'):
         data=path.read_text()

@@ -1,0 +1,57 @@
+{
+  // Fastfetch config for CachyOS (Sway).
+  //
+  // Two goals: trim the stock preset, which emits ~68 lines and overflows a
+  // 24-row terminal, and add live telemetry it omits.
+  //
+  // Timing measured on this machine (10 runs, mean per invocation):
+  //   identity only ..............................   4 ms
+  //   everything below except `top` ..............  26 ms
+  //   `top` added ............................... ~265 ms
+  //
+  // The `top` module is the expensive part and the cost does not scale with
+  // `processes` or with which metrics are enabled - computing per-process CPU%
+  // needs a sampling window. That is the price of the top-5 list.
+  //
+  // Note: `structure` is a CLI-only option and is ignored here; the module
+  // list below is what drives the output.
+  "$schema": "https://raw.githubusercontent.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+
+  "logo": {
+    "type": "auto"
+  },
+
+  "modules": [
+    { "type": "title" },
+    { "type": "os" },
+    { "type": "host" },
+    { "type": "kernel" },
+
+    { "type": "break" },
+
+    { "type": "wm" },
+    { "type": "terminal" },
+    { "type": "shell" },
+    { "type": "uptime" },
+
+    { "type": "break" },
+
+    // `cpuusage` is omitted deliberately. It samples /proc/stat and costs
+    // ~200ms on its own; when `top` is present the two share one sampling
+    // window, so it contributes nothing (267ms -> 269ms). Waybar's cpu module
+    // already reports live utilisation.
+    { "type": "cpu" },
+    { "type": "gpu" },
+
+    { "type": "break" },
+
+    // Renders one line per active swap device, so swapfile + zram0 = 2 lines.
+    { "type": "memory" },
+    { "type": "swap" },
+
+    { "type": "break" },
+
+    // Top processes by CPU, memory and disk I/O.
+    { "type": "top", "processes": 5, "cpu": true, "memory": true, "io": true }
+  ]
+}
