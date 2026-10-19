@@ -19,6 +19,7 @@
     "disk",
     "custom/network",
     "pulseaudio",
+    "custom/audio-output",
     "pulseaudio#microphone",
     "backlight",
     "battery",
@@ -173,47 +174,18 @@
     "tooltip": true,
     "on-click": "foot nmtui"
   },
+  "custom/audio-output": {
+    "exec": "bash $HOME/.config/waybar/scripts/audio-output.sh",
+    "return-type": "json",
+    "interval": 2,
+    "tooltip": true,
+    "on-click": "GTK_THEME=Adwaita:dark pavucontrol"
+  },
   "pulseaudio": {
     "max-volume": 100,
-    "format": "{icon} {volume}%",
-    "format-muted": "🔇 Muted",
+    "format": "{icon}{volume}%",
+    "format-muted": "🔇{volume}%",
     "format-icons": {
-      "headphone": [
-        "🎧🔈",
-        "🎧🔉",
-        "🎧🔊",
-        "🎧📢"
-      ],
-      "hands-free": [
-        "🎧🔈",
-        "🎧🔉",
-        "🎧🔊",
-        "🎧📢"
-      ],
-      "headset": [
-        "🎧🔈",
-        "🎧🔉",
-        "🎧🔊",
-        "🎧📢"
-      ],
-      "phone": [
-        "📞🔈",
-        "📞🔉",
-        "📞🔊",
-        "📞📢"
-      ],
-      "portable": [
-        "📱🔈",
-        "📱🔉",
-        "📱🔊",
-        "📱📢"
-      ],
-      "car": [
-        "🚗🔈",
-        "🚗🔉",
-        "🚗🔊",
-        "🚗📢"
-      ],
       "default": [
         "🔈",
         "🔉",
