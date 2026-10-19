@@ -31,6 +31,8 @@ DETAILS="
     • Use Case  : Applying Linux kernel patches, rebuilding DKMS kernel modules, or recovering from deep driver runtime faults.  │    • Use Case  : Leaving laptops unattended with uncertain remaining charge, or running desktop workstations without UPS units.
 ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
 
+# Zero border/padding keeps the bar at minimum height. Message padding also sets the
+# left inset, so the title is indented with spaces instead.
 printf '%s\n' "$DETAILS" | exec swaynag \
     --edge top \
     --layer bottom \
@@ -38,14 +40,18 @@ printf '%s\n' "$DETAILS" | exec swaynag \
     --background 000000 \
     --border 222222 \
     --border-bottom 222222 \
-    --border-bottom-size 1 \
+    --border-bottom-size 0 \
     --text ffffff \
     --button-background 000000 \
     --button-text ffffff \
-    --button-border-size 1 \
+    --button-border-size 0 \
+    --button-padding 0 \
+    --button-gap 14 \
+    --button-margin-right 8 \
+    --message-padding 0 \
     --details-background 000000 \
     --details-border-size 1 \
-    -m "Power Management Options" \
+    -m "  Power Management Options" \
     -L "📖 Instructions" \
     -l \
     -s "✖ Cancel" \
