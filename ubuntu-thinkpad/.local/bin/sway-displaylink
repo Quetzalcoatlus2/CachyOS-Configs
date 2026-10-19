@@ -18,4 +18,20 @@ export WLR_RENDERER=gles2
 unset WLR_RENDERER_ALLOW_SOFTWARE
 
 mkdir -p "$state" || exit 1
+if [ -x /usr/bin/gdb ] && [ -r "$HOME/.config/sway/crash-capture.gdb" ]; then
+	mkdir -p -m 0700 "$state/crash-captures" || exit 1
+	capture=$(mktemp "$state/crash-captures/session-$(date +%Y%m%d-%H%M%S)-XXXXXX.log") || exit 1
+	printf '\nSway session %s: debugger capture %s\n' "$(date --iso-8601=seconds)" "$capture" >>"$state/session.log"
+	exec env -u LD_LIBRARY_PATH /usr/bin/gdb -q -nx -nh -batch \
+		-iex 'set debuginfod enabled off' \
+		-ex "set environment LD_LIBRARY_PATH $LD_LIBRARY_PATH" \
+		-ex "set logging file $capture" \
+		-ex 'set logging overwrite on' \
+		-ex 'set logging redirect on' \
+		-ex 'set logging enabled on' \
+		-x "$HOME/.config/sway/crash-capture.gdb" \
+		--args "$prefix/bin/sway" --unsupported-gpu "$@" \
+		</dev/null >>"$state/session.log" 2>&1
+fi
+printf '\nSway session %s: debugger capture unavailable\n' "$(date --iso-8601=seconds)" >>"$state/session.log"
 exec "$prefix/bin/sway" --unsupported-gpu "$@" 2>>"$state/session.log"

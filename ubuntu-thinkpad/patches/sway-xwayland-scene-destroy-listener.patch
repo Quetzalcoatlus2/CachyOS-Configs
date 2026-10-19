@@ -1,0 +1,85 @@
+Subject: [PATCH] xwayland: track scene and image-capture node lifetimes
+
+For Sway 1.12 (8886939) with wlroots 0.20.0 (c1d3853).
+Remove and reinitialize the listener when the scene tree is destroyed before
+unmap. This satisfies wlroots' empty-list assertion and makes the later
+unconditional listener removal in handle_unmap safe.
+
+Verified with debugger-invoked early scene-tree destruction: the unpatched
+binary aborts with wlr_scene_node_destroy's destroy-listener assertion; the
+patched binary destroys the tree and later unmaps and exits normally.
+An isolated MATLAB R2024a software-OpenGL terminal-close probe also passes.
+The captured desktop crash additionally identified a stale image-capture node:
+wlroots destroys it on the Wayland surface destroy signal, before XWayland's
+addon emits unmap. Clear its pointer from a node-destroy listener, and only
+destroy a surviving capture node during unmap. This cumulative patch includes
+both fixes and applies directly to the unmodified Sway revision above.
+
+The captured wl_list_remove -> wlr_scene_node_destroy -> handle_unmap stack
+was reproduced by destroying a mapped XWayland surface between event-loop
+iterations. The previous binary crashes; this patch completes teardown with
+both scene pointers cleared. The real automated Simulink suite was not rerun.
+
+Apply from the Sway source directory with:
+  git apply /path/to/sway-xwayland-scene-destroy-listener.patch
+Then rebuild and install the private Sway binary; no wlroots rebuild is needed.
+
+diff --git a/include/sway/tree/view.h b/include/sway/tree/view.h
+--- a/include/sway/tree/view.h
++++ b/include/sway/tree/view.h
+@@ -177,6 +177,7 @@ struct sway_xwayland_view {
+ 	struct wl_listener override_redirect;
+ 
+ 	struct wl_listener surface_tree_destroy;
++	struct wl_listener image_capture_scene_surface_destroy;
+ };
+ 
+ struct sway_xwayland_unmanaged {
+diff --git a/sway/desktop/xwayland.c b/sway/desktop/xwayland.c
+--- a/sway/desktop/xwayland.c
++++ b/sway/desktop/xwayland.c
+@@ -497,8 +497,9 @@ static void handle_unmap(struct wl_listener *listener, void *data) {
+ 	wl_list_remove(&xwayland_view->commit.link);
+ 	wl_list_remove(&xwayland_view->surface_tree_destroy.link);
+ 
+-	wlr_scene_node_destroy(&xwayland_view->image_capture_scene_surface->buffer->node);
+-	xwayland_view->image_capture_scene_surface = NULL;
++	if (xwayland_view->image_capture_scene_surface) {
++		wlr_scene_node_destroy(&xwayland_view->image_capture_scene_surface->buffer->node);
++	}
+ 
+ 	if (xwayland_view->surface_tree) {
+ 		wlr_scene_node_destroy(&xwayland_view->surface_tree->node);
+@@ -511,9 +512,19 @@ static void handle_unmap(struct wl_listener *listener, void *data) {
+ static void handle_surface_tree_destroy(struct wl_listener *listener, void *data) {
+ 	struct sway_xwayland_view *xwayland_view = wl_container_of(listener, xwayland_view,
+ 		surface_tree_destroy);
++	wl_list_remove(&xwayland_view->surface_tree_destroy.link);
++	wl_list_init(&xwayland_view->surface_tree_destroy.link);
+ 	xwayland_view->surface_tree = NULL;
+ }
+ 
++static void handle_image_capture_scene_surface_destroy(
++		struct wl_listener *listener, void *data) {
++	struct sway_xwayland_view *xwayland_view = wl_container_of(listener, xwayland_view,
++		image_capture_scene_surface_destroy);
++	wl_list_remove(&xwayland_view->image_capture_scene_surface_destroy.link);
++	xwayland_view->image_capture_scene_surface = NULL;
++}
++
+ static void handle_map(struct wl_listener *listener, void *data) {
+ 	struct sway_xwayland_view *xwayland_view =
+ 		wl_container_of(listener, xwayland_view, map);
+@@ -542,6 +553,12 @@ static void handle_map(struct wl_listener *listener, void *data) {
+ 
+ 	xwayland_view->image_capture_scene_surface =
+ 		wlr_scene_surface_create(&xwayland_view->view.image_capture_scene->tree, xsurface->surface);
++	if (xwayland_view->image_capture_scene_surface) {
++		xwayland_view->image_capture_scene_surface_destroy.notify =
++			handle_image_capture_scene_surface_destroy;
++		wl_signal_add(&xwayland_view->image_capture_scene_surface->buffer->node.events.destroy,
++			&xwayland_view->image_capture_scene_surface_destroy);
++	}
+ 
+ 	transaction_commit_dirty();
+ }
