@@ -301,6 +301,6 @@
     "tooltip-format": "Active notifications: {text}",
     "on-click": "makoctl restore",
     "on-click-right": "makoctl dismiss -a",
-    "on-click-middle": "makoctl menu -- wmenu -p 'Notification:'"
+    "on-click-middle": "makoctl menu -- wofi --dmenu -p 'Notification:'"
   }
 }
