@@ -10,8 +10,17 @@ gap_ms=1000
 state_dir=${XDG_RUNTIME_DIR:-$HOME/.cache}
 state="$state_dir/brightness-scroll.ms"
 
-max=$(brightnessctl max) || exit 1
-cur=$(brightnessctl get) || exit 1
+# Waybar starts one run per scroll event without waiting, so overlapping runs read the same
+# level and lose steps. The timestamp is taken on arrival and the read-modify-write is serialised.
+now=$(date +%s%3N)
+mkdir -p "$state_dir"
+exec 9>"$state_dir/brightness.lock"
+flock 9
+
+info=$(brightnessctl -m info) || exit 1
+IFS=, read -r _dev _class cur _pct max <<EOF
+$info
+EOF
 pct=$(((cur * 100 + max / 2) / max))
 
 case "$1" in
@@ -30,9 +39,7 @@ if [ "$1" = up ]; then
     [ "$new" -gt 100 ] && new=100
     swaymsg "output * power on" >/dev/null 2>&1
 elif [ "$3" = scroll ]; then
-    now=$(date +%s%3N)
     last=$(cat "$state" 2>/dev/null || echo 0)
-    mkdir -p "$state_dir"
     echo "$now" > "$state"
     if [ $((now - last)) -lt "$gap_ms" ]; then
         # Still the same scroll gesture: never go below FLOOR and never blank.
