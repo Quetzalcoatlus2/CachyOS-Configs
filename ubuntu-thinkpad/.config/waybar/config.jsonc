@@ -207,8 +207,8 @@
     "format": "🔆{percent}%",
     "tooltip": true,
     "tooltip-format": "Display Luminance:\n•Brightness Level: {percent}%\n•Driver: default backlight\n\nControls:\n•Scroll Up: Increase brightness by 2%\n•Scroll Down: Decrease brightness by 2%",
-    "on-scroll-up": "sg video -c 'brightnessctl set 2%+'",
-    "on-scroll-down": "sg video -c 'brightnessctl set 2%-'"
+    "on-scroll-up": "sg video -c '$HOME/.config/waybar/scripts/brightness.sh up 2'",
+    "on-scroll-down": "sg video -c '$HOME/.config/waybar/scripts/brightness.sh down 2'"
   },
   "battery": {
     "interval": 10,

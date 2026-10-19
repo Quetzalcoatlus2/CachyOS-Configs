@@ -114,8 +114,8 @@ bindsym --locked XF86AudioPause exec playerctl play-pause
 bindsym --locked XF86AudioPrev exec playerctl previous
 bindsym --locked XF86AudioNext exec playerctl next
 bindsym --locked XF86AudioStop exec playerctl stop
-bindsym --locked XF86MonBrightnessDown exec sg video -c 'brightnessctl set 5%-'
-bindsym --locked XF86MonBrightnessUp exec sg video -c 'brightnessctl set 5%+'
+bindsym --locked XF86MonBrightnessDown exec sg video -c '$HOME/.config/waybar/scripts/brightness.sh down 5 off'
+bindsym --locked XF86MonBrightnessUp exec sg video -c '$HOME/.config/waybar/scripts/brightness.sh up 5'
 
 bindsym Print exec sh -c 'region=$(slurp) && [ -n "$region" ] && grim -g "$region" - | $HOME/.local/bin/wl-copy -t image/png'
 bindsym Shift+Print exec sh -c 'mkdir -p "$HOME/Pictures/Screenshots"; file="$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png"; region=$(slurp) && [ -n "$region" ] && grim -g "$region" "$file" && $HOME/.local/bin/wl-copy -t image/png < "$file"'
@@ -152,8 +152,8 @@ bindgesture swipe:3:left workspace prev
 bindgesture swipe:3:right workspace next
 bindgesture swipe:3:up exec sh -c '$HOME/.config/waybar/scripts/volume.sh up'
 bindgesture swipe:3:down exec sh -c '$HOME/.config/waybar/scripts/volume.sh down'
-bindgesture swipe:4:up exec sg video -c 'brightnessctl set 10%+'
-bindgesture swipe:4:down exec sg video -c 'brightnessctl set 10%-'
+bindgesture swipe:4:up exec sg video -c '$HOME/.config/waybar/scripts/brightness.sh up 10'
+bindgesture swipe:4:down exec sg video -c '$HOME/.config/waybar/scripts/brightness.sh down 10'
 bindgesture swipe:4:left exec playerctl previous
 bindgesture swipe:4:right exec playerctl next
 
@@ -166,6 +166,8 @@ client.focused_inactive #000000 #000000 #888888 #111111 #111111
 client.unfocused        #000000 #000000 #555555 #000000 #000000
 client.urgent           #000000 #000000 #ff5555 #000000 #000000
 
+# swayfx only: no corner rounding, matching the personal config
+corner_radius 0
 default_border normal 2
 default_floating_border normal 2
 # Borders stay on so the client.* border colours above are actually visible.

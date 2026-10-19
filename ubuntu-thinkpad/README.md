@@ -5,11 +5,15 @@ USB-C/USB-A DisplayLink dock (DUD9011D1), on Ubuntu 22.04.
 
 ## Prerequisites
 
-The launcher requires a separately built Sway stack at
-`$HOME/.local/opt/sway-1.12`; it does not use Ubuntu's Sway 1.7.
-The working build uses Sway 1.12, wlroots 0.20.0 with XWayland enabled,
-Wayland 1.24.0, wayland-protocols 1.47, libdrm 2.4.130, xkbcommon 1.8.0,
-Pixman 0.46.4, libdisplay-info 0.4.0, libinput 1.26.2, and XCB 1.17.0.
+The launcher requires a separately built swayfx stack at
+`$HOME/.local/opt/swayfx` (swayfx 0.6 with scenefx 0.5) on top of the private
+Sway 1.12 / wlroots 0.20 prefix at `$HOME/.local/opt/sway-1.12`; it does not use
+Ubuntu's Sway 1.7. The sway-1.12 prefix supplies wlroots 0.20.0 with XWayland
+enabled, Wayland 1.24.0, wayland-protocols 1.47, libdrm 2.4.130, xkbcommon 1.8.0,
+Pixman 0.46.4, libdisplay-info 0.4.0, libinput 1.26.2, XCB 1.17.0, and
+xcb-util-wm 0.4.2 (`xcb-ewmh`, `xcb-icccm`). The swayfx build uses GNU m4 1.4.21
+for xcb-util-wm. The build works around Ubuntu's older Khronos `GLES2/gl2ext.h`
+with a newer header passed as an include override.
 It uses the system Mesa libraries and XWayland 22.1.1. DisplayLink driver
 6.4.0-22 and EVDI 1.15.1 were installed during verification.
 
