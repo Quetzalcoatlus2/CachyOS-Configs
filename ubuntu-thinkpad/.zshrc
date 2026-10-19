@@ -13,6 +13,8 @@ export ZSH="$HOME/.local/share/oh-my-zsh"
 DISABLE_MAGIC_FUNCTIONS="true"
 COMPLETION_WAITING_DOTS="true"
 plugins=(git fzf extract)
+# Must be set before oh-my-zsh.sh is sourced.
+ENABLE_CORRECTION="true"
 source "$ZSH/oh-my-zsh.sh"
 
 source "$HOME/.local/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme"
@@ -38,8 +40,6 @@ export HISTORY_IGNORE="(\&|[bf]g|c|clear|history|exit|q|pwd|* --help)"
 
 setopt autocd
 setopt interactivecomments
-unsetopt correct_all
-unsetopt correct
 
 unalias update 2>/dev/null
 update() {

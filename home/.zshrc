@@ -33,8 +33,7 @@ function update {
 
 eval "$(atuin init zsh)"
 bindkey -M vicmd '^R' atuin-search
-unsetopt correct_all
-unsetopt correct
+setopt correct_all
 
 # Format man pages with bat syntax highlighting
 if command -v bat >/dev/null 2>&1; then
