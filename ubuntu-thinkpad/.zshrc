@@ -1,8 +1,8 @@
+export PATH="$HOME/.local/bin:$PATH"
+
 if command -v fastfetch >/dev/null 2>&1; then
     FORCE_COLOR=1 fastfetch 2>/dev/null
 fi
-
-export PATH="$HOME/.local/bin:$PATH"
 
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -23,6 +23,9 @@ source "$HOME/.local/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme"
 [ -f "$HOME/.local/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ] && source "$HOME/.local/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Overrides the p10k default threshold of 3s so every command shows its duration.
+typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0
 
 export EDITOR=micro
 export VISUAL=micro
