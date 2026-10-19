@@ -21,7 +21,7 @@ exec $HOME/.local/bin/batsignal -w 25 -c 20 -d 0 -f 90
 bindsym $mod+n exec $HOME/.local/bin/makoctl restore
 bindsym $mod+Shift+n exec $HOME/.local/bin/makoctl dismiss -a
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway
-exec env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swayidle -w timeout 600 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000' timeout 900 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' before-sleep 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000'
+exec env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swayidle -w timeout 600 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000' timeout 900 'swaymsg "output * power off"' resume 'sg video -c "$HOME/.config/waybar/scripts/brightness.sh wake"' before-sleep 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000'
 exec $HOME/.config/waybar/scripts/sway-brave-fullscreen.sh
 
 bindsym $mod+Return exec $term

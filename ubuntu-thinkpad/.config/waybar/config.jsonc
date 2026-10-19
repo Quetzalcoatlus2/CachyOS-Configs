@@ -206,7 +206,7 @@
   "backlight": {
     "format": "🔆{percent}%",
     "tooltip": true,
-    "tooltip-format": "Display Luminance:\n•Brightness Level: {percent}%\n•Driver: default backlight\n\nControls:\n•Scroll Up: Increase brightness by 2%\n•Scroll Down: Decrease brightness by 2% (at 1% turns the screen off)",
+    "tooltip-format": "Display Luminance:\n•Brightness Level: {percent}%\n•Driver: default backlight\n\nControls:\n•Scroll Up: Increase brightness by 2%\n•Scroll Down: Decrease brightness by 2% (stops at 1%, one more press turns the screen off)",
     "on-scroll-up": "sg video -c '$HOME/.config/waybar/scripts/brightness.sh up 2'",
     "on-scroll-down": "sg video -c '$HOME/.config/waybar/scripts/brightness.sh down 2 off'"
   },
