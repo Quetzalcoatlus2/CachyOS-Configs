@@ -1,21 +1,22 @@
 {
   // Fastfetch config for CachyOS (Sway).
   //
-  // Reproduces the full hardware/session module set, then extends it with
-  // live telemetry the default preset omits: top processes, disk and network
-  // throughput, and the Wi-Fi link.
+  // Full sweep: every module that reports something on this machine, grouped
+  // into sections. The default preset renders 25 lines; this renders ~65.
   //
-  // Output runs ~40 lines, so on a 24-row terminal you will scroll to reach
-  // the prompt. That is a deliberate trade for the density of information.
+  // Modules that return nothing here are deliberately omitted rather than
+  // left to render blank: wmtheme, icons, font, terminalfont, terminaltheme,
+  // terminalsize, physicalmemory, bluetooth, wallpaper, gamepad, zpool, plus
+  // command/custom/logo which need per-user content.
   //
   // Timing measured on this machine (mean per invocation):
-  //   this config .................. ~290 ms
-  //   same, minus `top` ........... ~26 ms
-  //   stock default preset ......... ~23 ms
+  //   this config .................. ~410 ms
+  //   without `top` ............... ~150 ms
+  //   stock default preset ......... ~25 ms
   //
-  // `cpuusage` and `top` both need a sampling window and share one, so the
-  // two together cost no more than `top` alone. Dropping `top` is the only
-  // meaningful way to cut startup time here.
+  // `cpuusage`, `top`, `netio` and `diskiо` all need sampling and share one
+  // window, so they do not stack. `opengl`/`vulkan`/`opencl` each dlopen a
+  // driver and are the next largest cost after `top`.
   //
   // Note: `structure` is a CLI-only option and is ignored in this file; the
   // module list below is what drives the output.
@@ -26,7 +27,7 @@
   },
 
   "modules": [
-    // Identity
+    // ---- Identity -------------------------------------------------------
     { "type": "title" },
     { "type": "separator" },
     { "type": "os" },
@@ -37,10 +38,13 @@
     { "type": "bootmgr" },
     { "type": "kernel" },
     { "type": "initsystem" },
+    { "type": "locale" },
+    { "type": "datetime" },
+    { "type": "users" },
 
     { "type": "break" },
 
-    // Session
+    // ---- Session --------------------------------------------------------
     { "type": "uptime" },
     { "type": "loadavg" },
     { "type": "processes" },
@@ -59,27 +63,55 @@
 
     { "type": "break" },
 
-    // Hardware
+    // ---- Compute --------------------------------------------------------
     { "type": "cpu" },
     { "type": "cpucache" },
     { "type": "cpuusage" },
     { "type": "gpu" },
     { "type": "memory" },
     { "type": "swap" },
-    { "type": "disk" },
 
     { "type": "break" },
 
-    // Power and connectivity
+    // ---- Storage --------------------------------------------------------
+    { "type": "disk" },
+    { "type": "physicaldisk" },
+    { "type": "diskiо" },
+    { "type": "btrfs" },
+    { "type": "tpm" },
+
+    { "type": "break" },
+
+    // ---- Graphics API ---------------------------------------------------
+    { "type": "opengl" },
+    { "type": "vulkan" },
+    { "type": "opencl" },
+
+    { "type": "break" },
+
+    // ---- Power and network ---------------------------------------------
     { "type": "battery" },
     { "type": "poweradapter" },
     { "type": "wifi" },
     { "type": "localip" },
+    { "type": "publicip" },
+    { "type": "dns" },
     { "type": "netio" },
+    { "type": "sound" },
+    { "type": "codec" },
 
     { "type": "break" },
 
-    // Top processes by CPU, memory and disk I/O.
+    // ---- Peripherals and media -----------------------------------------
+    { "type": "keyboard" },
+    { "type": "mouse" },
+    { "type": "camera" },
+    { "type": "media" },
+    { "type": "player" },
+
+    { "type": "break" },
+
+    // ---- Heaviest processes --------------------------------------------
     { "type": "top", "processes": 5, "cpu": true, "memory": true, "io": true },
 
     { "type": "break" },
