@@ -17,6 +17,7 @@ description=$(awk -F': ' '/^[[:space:]]*Description:/ { print $2; exit }' <<< "$
 active_port=$(awk -F': ' '/^[[:space:]]*Active Port:/ { print $2; exit }' <<< "$sink_block")
 case "${active_port,,} ${description,,}" in
   *headphone*|*headset*|*earphone*|*jabra*|*evolve*) device_icon="🎧" ;;
+  *hdmi*) device_icon="📺" ;;
   *phone*) device_icon="📞" ;;
   *portable*) device_icon="📱" ;;
   *car*) device_icon="🚗" ;;
