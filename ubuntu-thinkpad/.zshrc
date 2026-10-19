@@ -1,20 +1,50 @@
-export PATH="$HOME/.local/bin:$PATH"
-
 if command -v fastfetch >/dev/null 2>&1; then
-    fastfetch
+    FORCE_COLOR=1 fastfetch 2>/dev/null
 fi
 
-setopt autocd
-setopt interactivecomments
-bindkey -v
+export PATH="$HOME/.local/bin:$PATH"
+
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+export ZSH="$HOME/.local/share/oh-my-zsh"
+DISABLE_MAGIC_FUNCTIONS="true"
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="true"
+plugins=(git fzf extract)
+source "$ZSH/oh-my-zsh.sh"
+
+source "$HOME/.local/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme"
+
+[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+[ -f "$HOME/.local/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ] && source "$HOME/.local/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export EDITOR=micro
 export VISUAL=micro
-
+export NEWT_COLORS='root=white,default:border=white,default:window=white,default:shadow=default,default:title=white,default:button=white,default:actbutton=black,white:checkbox=white,default:actcheckbox=black,white:entry=white,default:label=white,default:listbox=white,default:actlistbox=white,default:sellistbox=black,white:actsellistbox=black,white'
+alias xdg-mime='nocorrect xdg-mime'
 alias ll='ls -lah'
 export COLORTERM=truecolor
-[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export LESS_TERMCAP_md="$(tput bold 2> /dev/null; tput setaf 2 2> /dev/null)"
+export LESS_TERMCAP_me="$(tput sgr0 2> /dev/null)"
+export HISTORY_IGNORE="(\&|[bf]g|c|clear|history|exit|q|pwd|* --help)"
+
+setopt autocd
+setopt interactivecomments
+unsetopt correct_all
+unsetopt correct
+bindkey -v
+
+unalias update 2>/dev/null
+update() {
+    sudo apt update && sudo apt upgrade
+}
+
 if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh)"
     bindkey -M vicmd '^R' atuin-search
@@ -55,6 +85,8 @@ alias psmem10='ps auxf | sort -nr -k 4 | head -10'
 alias jctl='journalctl -p 3 -xb'
 alias tb='nc termbin.com 9999'
 alias cleanup='sudo apt autoremove -y'
-
-# Right-side clock (HH:MM:SS).
-RPROMPT='%D{%H:%M:%S}'
+alias make="make -j$(nproc)"
+alias ninja="ninja -j$(nproc)"
+alias n="ninja"
+alias c="clear"
+alias please="sudo"
