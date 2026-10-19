@@ -41,7 +41,6 @@ setopt autocd
 setopt interactivecomments
 unsetopt correct_all
 unsetopt correct
-bindkey -v
 
 unalias update 2>/dev/null
 update() {
@@ -50,7 +49,6 @@ update() {
 
 if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh)"
-    bindkey -M vicmd '^R' atuin-search
 fi
 
 # Portable CachyOS Zsh enhancements and aliases

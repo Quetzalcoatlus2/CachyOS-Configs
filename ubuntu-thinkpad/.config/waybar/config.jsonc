@@ -130,7 +130,7 @@
     "signal": 8,
     "return-type": "json",
     "tooltip": true,
-    "on-click": "foot -e zsh -ic 'sudo apt update && sudo apt upgrade; echo Done; read _; pkill -42 -x waybar'"
+    "on-click": "$HOME/.local/bin/foot -e zsh -ic 'sudo apt update && sudo apt upgrade; echo Done; read _; pkill -42 -x waybar'"
   },
   "temperature": {
     "interval": 2,
@@ -150,14 +150,14 @@
     },
     "tooltip": true,
     "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n\nAction: Click to launch btop.",
-    "on-click": "foot -e btop"
+    "on-click": "$HOME/.local/bin/foot -e btop"
   },
   "custom/memory": {
     "exec": "$HOME/.config/waybar/scripts/memory.sh",
     "interval": 2,
     "return-type": "json",
     "tooltip": true,
-    "on-click": "foot -e btop"
+    "on-click": "$HOME/.local/bin/foot -e btop"
   },
   "custom/disk": {
     "exec": "$HOME/.config/waybar/scripts/disk.sh",
@@ -170,7 +170,7 @@
     "return-type": "json",
     "align": 0,
     "tooltip": true,
-    "on-click": "foot $HOME/.local/bin/nmtui"
+    "on-click": "$HOME/.local/bin/foot $HOME/.local/bin/nmtui"
   },
   "pulseaudio": {
     "format": "{icon}{volume}%",
