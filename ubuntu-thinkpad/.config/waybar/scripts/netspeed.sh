@@ -19,7 +19,12 @@ first=1
 tick=0
 ssid=""
 sig=""
+parent=$PPID
 while :; do
+    # Stop when the waybar that started us is gone, so reloads don't leave loops behind.
+    read -r stat < "/proc/$$/stat"
+    set -- ${stat##*) }
+    [ "$2" = "$parent" ] || exit 0
     iface=$(ip -o route show default 2>/dev/null | awk '{print $5; exit}')
     if [ -n "$iface" ] && [ -r "/sys/class/net/$iface/statistics/rx_bytes" ]; then
         # Wi-Fi name and signal refresh every 5 s from the cached AP list (no forced rescan).

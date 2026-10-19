@@ -166,7 +166,7 @@
     "tooltip": true
   },
   "custom/netspeed": {
-    "exec": "$HOME/.config/waybar/scripts/netspeed.sh",
+    "exec": "exec $HOME/.config/waybar/scripts/netspeed.sh",
     "return-type": "json",
     "align": 0,
     "tooltip": true,
