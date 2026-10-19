@@ -153,7 +153,7 @@ bindgesture swipe:3:right workspace next
 bindgesture swipe:3:up exec sh -c '$HOME/.config/waybar/scripts/volume.sh up'
 bindgesture swipe:3:down exec sh -c '$HOME/.config/waybar/scripts/volume.sh down'
 bindgesture swipe:4:up exec sg video -c '$HOME/.config/waybar/scripts/brightness.sh up 10'
-bindgesture swipe:4:down exec sg video -c '$HOME/.config/waybar/scripts/brightness.sh down 10'
+bindgesture swipe:4:down exec sg video -c '$HOME/.config/waybar/scripts/brightness.sh down 10 off'
 bindgesture swipe:4:left exec playerctl previous
 bindgesture swipe:4:right exec playerctl next
 
