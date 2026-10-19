@@ -42,8 +42,8 @@ HIBERNATE="💾 Hibernate"
 HYBRID="🔄 Hybrid-Sleep"
 CANCEL="✖ Cancel"
 
-# Six groups spread across the bar with equal gaps: Instructions | Lock Logout |
-# Shutdown Reboot | Suspend Suspend-Then-Hibernate | Hibernate Hybrid-Sleep | Cancel.
+# Five groups spread across the bar with equal gaps: Lock Logout | Shutdown Reboot |
+# Suspend Suspend-Then-Hibernate | Hibernate Hybrid-Sleep | Instructions Cancel.
 # Spacers are buttons in the bar colour, sized with Pango (swaynag's font) for the focused output.
 LAYOUT=$(python3 - "$INSTRUCTIONS" "$LOCK" "$LOGOUT" "$SHUTDOWN" "$REBOOT" "$SUSPEND" \
     "$SUSPEND_THEN_HIBERNATE" "$HIBERNATE" "$HYBRID" "$CANCEL" <<'PY'
@@ -70,9 +70,9 @@ buttons = sum(text_width(t) for t in sys.argv[1:])
 best = None
 for gap in (14, 13, 15, 12, 16):
     for n in range(1, 200):
-        # 15 items with 14 gaps. swaynag draws each button 1px narrower, so Instructions
+        # 14 items with 13 gaps. swaynag draws each button 1px narrower, so Lock
         # lands at x=0 when the right margin equals this value.
-        margin = width - buttons - 5 * text_width(' ' * n) + 15 - 14 * gap
+        margin = width - buttons - 4 * text_width(' ' * n) + 14 - 13 * gap
         if margin < 8:
             break
         key = (margin - 8, abs(gap - 14))
@@ -120,5 +120,4 @@ printf '%s\n' "$DETAILS" | exec swaynag \
     -Z "$SHUTDOWN" "systemctl poweroff" \
     -Z "$SPACER" true \
     -Z "$LOGOUT" "swaymsg exit" \
-    -Z "$LOCK" "env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -c 000000" \
-    -Z "$SPACER" true
+    -Z "$LOCK" "env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -c 000000"

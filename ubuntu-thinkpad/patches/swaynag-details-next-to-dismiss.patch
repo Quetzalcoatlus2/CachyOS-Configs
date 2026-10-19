@@ -1,0 +1,26 @@
+Subject: [PATCH] swaynag: place the details toggle left of the dismiss button
+
+For swayfx 0.6 (based on sway 1.12.0).
+swaynag appends the Instructions/details toggle after the dismiss button, so it
+is drawn leftmost. Insert it at index 1 so it sits directly left of Cancel, which
+stays the rightmost element.
+
+Built and rendered headless: Instructions and Cancel share one right-hand group.
+
+---
+ swaynag/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/swaynag/main.c b/swaynag/main.c
+--- a/swaynag/main.c
++++ b/swaynag/main.c
+@@ -87,7 +87,8 @@
+ 		swaynag.details.button_details = calloc(1, sizeof(struct swaynag_button));
+ 		swaynag.details.button_details->text = strdup(swaynag.details.details_text);
+ 		swaynag.details.button_details->type = SWAYNAG_ACTION_EXPAND;
+-		list_add(swaynag.buttons, swaynag.details.button_details);
++		// Index 0 is the dismiss button, drawn rightmost; index 1 puts the toggle directly left of it.
++		list_insert(swaynag.buttons, 1, swaynag.details.button_details);
+ 	}
+ 
+ 	sway_log(SWAY_DEBUG, "Output: %s", swaynag.type->output);
