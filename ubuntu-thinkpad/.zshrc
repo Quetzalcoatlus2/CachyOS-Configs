@@ -13,8 +13,6 @@ export ZSH="$HOME/.local/share/oh-my-zsh"
 DISABLE_MAGIC_FUNCTIONS="true"
 COMPLETION_WAITING_DOTS="true"
 plugins=(git fzf extract)
-# Must be set before oh-my-zsh.sh is sourced.
-ENABLE_CORRECTION="true"
 source "$ZSH/oh-my-zsh.sh"
 
 source "$HOME/.local/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme"
