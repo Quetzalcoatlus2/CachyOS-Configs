@@ -116,7 +116,7 @@
     "tooltip-format": "Active notifications: {text}",
     "on-click": "$HOME/.local/bin/makoctl restore",
     "on-click-right": "$HOME/.local/bin/makoctl dismiss -a",
-    "on-click-middle": "$HOME/.local/bin/makoctl menu -- $HOME/.local/bin/wofi --dmenu -p 'Notification:'"
+    "on-click-middle": "$HOME/.local/bin/makoctl menu -- wofi --dmenu -p 'Notification:'"
   },
   "sway/window": {
     "format": "{}",
@@ -130,7 +130,7 @@
     "signal": 8,
     "return-type": "json",
     "tooltip": true,
-    "on-click": "$HOME/.local/bin/foot -e zsh -ic 'sudo apt update && sudo apt upgrade; echo Done; read _; pkill -42 -x waybar'"
+    "on-click": "foot -e zsh -ic 'sudo apt update && sudo apt upgrade; echo Done; read _; pkill -42 -x waybar'"
   },
   "temperature": {
     "interval": 2,
@@ -150,14 +150,14 @@
     },
     "tooltip": true,
     "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n\nAction: Click to launch btop.",
-    "on-click": "$HOME/.local/bin/foot -e btop"
+    "on-click": "foot -e btop"
   },
   "custom/memory": {
     "exec": "$HOME/.config/waybar/scripts/memory.sh",
     "interval": 2,
     "return-type": "json",
     "tooltip": true,
-    "on-click": "$HOME/.local/bin/foot -e btop"
+    "on-click": "foot -e btop"
   },
   "custom/disk": {
     "exec": "$HOME/.config/waybar/scripts/disk.sh",
@@ -166,11 +166,11 @@
     "tooltip": true
   },
   "custom/netspeed": {
-    "exec": "exec $HOME/.config/waybar/scripts/netspeed.sh",
+    "exec": "$HOME/.config/waybar/scripts/netspeed.sh",
     "return-type": "json",
     "align": 0,
     "tooltip": true,
-    "on-click": "$HOME/.local/bin/foot $HOME/.local/bin/nmtui"
+    "on-click": "foot $HOME/.local/bin/nmtui"
   },
   "pulseaudio": {
     "format": "{icon}{volume}%",
@@ -182,11 +182,11 @@
         "", "", ""]
     },
     "tooltip": true,
-    "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 5%",
+    "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 2%",
     "on-click": "GTK_THEME=Adwaita:dark pavucontrol",
     "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-    "on-scroll-up": "$HOME/.config/waybar/scripts/volume.sh up",
-    "on-scroll-down": "$HOME/.config/waybar/scripts/volume.sh down",
+    "on-scroll-up": "$HOME/.config/waybar/scripts/volume.sh up 2",
+    "on-scroll-down": "$HOME/.config/waybar/scripts/volume.sh down 2",
     "reverse-scrolling": true,
     "reverse-mouse-scrolling": true
   },
@@ -210,7 +210,7 @@
   "backlight": {
     "format": "🔆{percent}%",
     "tooltip": true,
-    "tooltip-format": "Display Luminance:\n•Brightness Level: {percent}%\n•Driver: default backlight\n\nControls:\n•Scroll Up: Increase brightness by 2%\n•Scroll Down: Decrease brightness by 2% (stops at 1%; a new scroll after a pause goes to 0%)",
+    "tooltip-format": "Display Luminance:\n•Brightness Level: {percent}%\n•Driver: default backlight\n\nControls:\n•Scroll Up: Increase brightness by 2%\n•Scroll Down: Decrease brightness by 2% (stops at 1%; a new scroll after a pause blacks the screen; scroll up restores)",
     "on-scroll-up": "$HOME/.config/waybar/scripts/brightness.sh up 2",
     "on-scroll-down": "$HOME/.config/waybar/scripts/brightness.sh down 2 scroll",
     "reverse-scrolling": true,

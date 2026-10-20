@@ -3,10 +3,10 @@
 # Usage: brightness.sh up STEP | down STEP [off|scroll] | wake
 #   off    (keys, swipes): a further down press drops to 0% and powers the outputs off.
 #   scroll (waybar): one continuous scroll stops at FLOOR; a new scroll after a pause
-#          drops to 0% and leaves the outputs on.
+#          drops the backlight to 0% (black) and keeps the outputs on, so scroll up restores.
 # "wake" powers the outputs on (swayidle resume) and lifts a 0% level back to FLOOR.
 floor=1
-gap_ms=1000
+gap_ms=500
 state_dir=${XDG_RUNTIME_DIR:-$HOME/.cache}
 state="$state_dir/brightness-scroll.ms"
 queue="$state_dir/brightness.queue"
@@ -81,7 +81,10 @@ process_batch() {
     done <<<"$1"
     echo "$last_ts" > "$state"
     if [ "$power" = on ]; then swaymsg "output * power on" >/dev/null 2>&1; fi
-    if [ "$p" -ne "$init" ]; then brightnessctl set "${p}%" >/dev/null; fi
+    # brightnessctl clamps "0%" to 1%; the bare value 0 writes raw 0.
+    if [ "$p" -ne "$init" ]; then
+        if [ "$p" -eq 0 ]; then brightnessctl set 0 >/dev/null; else brightnessctl set "${p}%" >/dev/null; fi
+    fi
     if [ "$power" = off ]; then swaymsg "output * power off" >/dev/null 2>&1; fi
     return 0
 }
