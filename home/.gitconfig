@@ -1,0 +1,7 @@
+[user]
+	name = Quetzalcoatlus2
+	email = bogdan-vlad.teodor@student.tuiasi.ro
+[credential]
+	helper = store
+[pull]
+	rebase = true
