@@ -1,0 +1,45 @@
+/* Power menu opened from the waybar power button: compact, black, same font as the bar. */
+
+* {
+    font-family: monospace;
+    font-size: 13px;
+    border: none;
+    border-radius: 0;
+}
+
+window#window {
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #222222;
+}
+
+box,
+list,
+row,
+viewport,
+scrolledwindow,
+#outer-box,
+#inner-box,
+#scroll {
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+}
+
+#entry {
+    margin: 0;
+    padding: 1px 8px;
+    min-height: 22px;
+    background-color: #000000;
+}
+
+#entry:selected,
+#entry:hover {
+    background-color: #222222;
+}
+
+#text {
+    color: #ffffff;
+}

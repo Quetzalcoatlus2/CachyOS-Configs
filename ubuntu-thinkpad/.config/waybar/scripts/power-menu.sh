@@ -1,123 +1,141 @@
 #!/usr/bin/env bash
 
-# Toggle behavior: terminate if already running
-if pgrep -x swaynag >/dev/null; then
-    pkill -x swaynag
+# Power menu opened from the 💡 button in the top bar.
+# The first list is two columns under the button. Instructions opens a second list with the text
+# of each action, placed under the bar at the same right edge (the first list has closed by then).
+# Both lists use power-menu.css and power-menu.conf, so a second 💡 click closes whichever is open.
+# power-menu.conf sets single_click=true, so one click activates. --cache-file /dev/null keeps the
+# order fixed; without it wofi moves the last chosen item to the top on the next open.
+
+MENU_STYLE="$HOME/.config/wofi/power-menu.css"
+WOFI_CONF="$HOME/.config/wofi/power-menu.conf"
+
+# Toggle: a second click closes the open list. Lists are matched by stylesheet path, so the
+# $mod+d launcher (wofi --show drun) is not affected.
+if pgrep -f "wofi .*power-menu\.css" >/dev/null; then
+    pkill -f "wofi .*power-menu\.css"
     exit 0
 fi
-
-DETAILS="
-─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
- SESSION & TERMINATION CONTROLS                                                                                                  │ POWER-SAVING & PERSISTENCE MODES
-─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
- 1. 🔒 LOCK (swaylock)                                                                                                           │ 5. 🌙 SUSPEND (Suspend-to-RAM / ACPI S3/s2idle)
-    • Mechanism : Invokes swaylock PAM authentication; blanks Wayland surfaces while background compute and audio jobs run.      │    • Mechanism : Halts userspace execution, cuts power to SoC/GPU cores, and maintains DRAM self-refresh for instant wake.
-    • Power Draw: Active runtime power (~5W - 15W); SoC clocks dynamically adjust; zero battery savings or thermal cooldown.     │    • Power Draw: Ultra-low quiescent drain (~0.5W - 1.2W); instantaneous resume (<1s) via keyboard press, mouse, or lid open.
-    • Use Case  : Stepping away briefly in shared office spaces, client environments, or public co-working environments.         │    • Use Case  : Short interruptions throughout the workday when rapid return to an active multi-window workflow is needed.
-                                                                                                                                 │
- 2. 🚪 LOGOUT (swaymsg exit)                                                                                                     │ 6. ⏳ SUSPEND-THEN-HIBERNATE (systemd-suspend-then-hibernate)
-    • Mechanism : Signals Sway IPC socket to terminate compositor; shuts down graphical clients, Wayland protocols, and apps.    │    • Mechanism : Enters RAM sleep immediately; automatically commits complete RAM image to swap storage if idle timer expires.
-    • Power Draw: Active idle state at login display manager; frees all user-space physical RAM allocations and GPU buffers.     │    • Power Draw: Draws ~0.8W during initial RAM sleep phase, dropping to absolute 0.0W once written to swap partition on disk.
-    • Use Case  : Switching user profiles, applying desktop shell configuration changes, or concluding the daily work session.   │    • Use Case  : Overnight laptop sleep without battery drain risk while retaining the exact state of all open workspaces.
-                                                                                                                                 │
- 3. 🔌 SHUTDOWN (systemctl poweroff)                                                                                             │ 7. 💾 HIBERNATE (Suspend-to-Disk / ACPI S4)
-    • Mechanism : Flushes kernel I/O queues, commits Btrfs journals, unmounts subvolumes cleanly, and commands ACPI S5/G3.       │    • Mechanism : Serializes physical memory image into /swap/swapfile, verifies disk image integrity, and powers off hardware.
-    • Power Draw: Absolute 0.0W hardware cutoff; completely isolates motherboard power rails and flushes volatile memory.        │    • Power Draw: Absolute 0.0W draw; preserves battery indefinitely with zero parasitic drain, standby heat, or wear.
-    • Use Case  : Packing laptop in transit bags, hardware servicing, electrical storm safety, or end-of-day system powerdown.   │    • Use Case  : Multi-day storage, long-distance flights, or transport where exact application sessions must remain untouched.
-                                                                                                                                 │
- 4. 🔁 REBOOT (systemctl reboot)                                                                                                 │ 8. 🔄 HYBRID-SLEEP (systemd-hybrid-sleep)
-    • Mechanism : Gracefully stops system daemons, flushes NVMe storage caches, unmounts drives, and executes UEFI reset vector. │    • Mechanism : Writes RAM image to swap storage while simultaneously maintaining DRAM refresh in low-power S3 sleep mode.
-    • Power Draw: Full continuous power cycle passing directly through motherboard BIOS/UEFI POST and systemd initialization.    │    • Fault Tol : Instant wake from RAM if battery holds; automatically recovers cleanly from swap if battery fully depletes.
-    • Use Case  : Applying Linux kernel patches, rebuilding DKMS kernel modules, or recovering from deep driver runtime faults.  │    • Use Case  : Leaving laptops unattended with uncertain remaining charge, or running desktop workstations without UPS units.
-─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
 
 INSTRUCTIONS="📖 Instructions"
 LOCK="🔒 Lock"
 LOGOUT="🚪 Logout"
-SHUTDOWN="⏻ Shutdown"
+SHUTDOWN="⚡ Shutdown"
 REBOOT="🔁 Reboot"
 SUSPEND="🌙 Suspend"
 SUSPEND_THEN_HIBERNATE="⏳ Suspend-Then-Hibernate"
 HIBERNATE="💾 Hibernate"
 HYBRID="🔄 Hybrid-Sleep"
-CANCEL="✖ Cancel"
+CANCEL="❌ Cancel"
 
-# Five groups spread across the bar with equal gaps: Lock Logout | Shutdown Reboot |
-# Suspend Suspend-Then-Hibernate | Hibernate Hybrid-Sleep | Instructions Cancel.
-# Spacers are buttons in the bar colour, sized with Pango (swaynag's font) for the focused output.
-LAYOUT=$(python3 - "$INSTRUCTIONS" "$LOCK" "$LOGOUT" "$SHUTDOWN" "$REBOOT" "$SUSPEND" \
-    "$SUSPEND_THEN_HIBERNATE" "$HIBERNATE" "$HYBRID" "$CANCEL" <<'PY'
-import json, subprocess, sys
-import gi
-gi.require_version('Pango', '1.0')
-gi.require_version('PangoCairo', '1.0')
-from gi.repository import Pango, PangoCairo
-
-outputs = json.loads(subprocess.check_output(['swaymsg', '-t', 'get_outputs']))
-width = next(o['rect']['width'] for o in outputs if o['focused'])
-ctx = PangoCairo.FontMap.get_default().create_context()
-# swaynag lays out text with unrounded glyph positions (common/pango.c); match it or widths drift.
-ctx.set_round_glyph_positions(False)
-font = Pango.FontDescription.from_string('monospace 9')
-
-def text_width(markup):
-    layout = Pango.Layout.new(ctx)
-    layout.set_font_description(font)
-    layout.set_markup(markup, -1)
-    return layout.get_pixel_size()[0]
-
-buttons = sum(text_width(t) for t in sys.argv[1:])
-best = None
-for gap in (14, 13, 15, 12, 16):
-    for n in range(1, 200):
-        # 14 items with 13 gaps. swaynag draws each button 1px narrower, so Lock
-        # lands at x=0 when the right margin equals this value.
-        margin = width - buttons - 4 * text_width(' ' * n) + 14 - 13 * gap
-        if margin < 8:
-            break
-        key = (margin - 8, abs(gap - 14))
-        if best is None or key < best[0]:
-            best = (key, n, gap, margin)
-print(*best[1:]) if best else print(1, 14, 8)
-PY
+# Two columns of five, placed under the 💡 power button at the right end of the top bar.
+# Column 1: Lock, Logout, Shutdown, Reboot, Instructions. Column 2: Suspend, Suspend-Then-Hibernate,
+# Hibernate, Hybrid-Sleep, Cancel. wofi fills each row left to right, so the list is interleaved by row.
+MENU=(
+    "$LOCK" "$SUSPEND"
+    "$LOGOUT" "$SUSPEND_THEN_HIBERNATE"
+    "$SHUTDOWN" "$HIBERNATE"
+    "$REBOOT" "$HYBRID"
+    "$INSTRUCTIONS" "$CANCEL"
 )
-read -r SPACER_LEN GAP MARGIN <<<"${LAYOUT:-1 14 8}"
-SPACER=$(printf '%*s' "$SPACER_LEN" '')
 
-# Zero border/padding keeps the bar at minimum height. swaynag requires a message, so it
-# is left empty: a title would be drawn at the left edge on top of Instructions.
-printf '%s\n' "$DETAILS" | exec swaynag \
-    --edge top \
-    --layer bottom \
-    --font "monospace 9" \
-    --background 000000 \
-    --border 222222 \
-    --border-bottom 222222 \
-    --border-bottom-size 0 \
-    --text ffffff \
-    --button-background 000000 \
-    --button-text ffffff \
-    --button-border-size 0 \
-    --button-padding 0 \
-    --button-gap "$GAP" \
-    --button-dismiss-gap 0 \
-    --button-margin-right "$MARGIN" \
-    --message-padding 0 \
-    --details-background 000000 \
-    --details-border-size 1 \
-    -m "" \
-    -L "$INSTRUCTIONS" \
-    -l \
-    -s "$CANCEL" \
-    -Z "$SPACER" true \
-    -Z "$HYBRID" "systemctl hybrid-sleep || notify-send -u critical 'Hybrid-Sleep failed' 'Not available: no resume device configured or swap too small'" \
-    -Z "$HIBERNATE" "systemctl hibernate || notify-send -u critical 'Hibernate failed' 'Not available: no resume device configured or swap too small'" \
-    -Z "$SPACER" true \
-    -Z "$SUSPEND_THEN_HIBERNATE" "systemctl suspend-then-hibernate || notify-send -u critical 'Suspend-Then-Hibernate failed' 'Not available: no resume device configured or swap too small'" \
-    -Z "$SUSPEND" "systemctl suspend" \
-    -Z "$SPACER" true \
-    -Z "$REBOOT" "systemctl reboot" \
-    -Z "$SHUTDOWN" "systemctl poweroff" \
-    -Z "$SPACER" true \
-    -Z "$LOGOUT" "swaymsg exit" \
-    -Z "$LOCK" "env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -c 000000"
+# Text for the Instructions list: one wofi row per line, each kept under about 100 characters.
+INSTRUCTION_LINES=(
+    "SESSION & TERMINATION CONTROLS"
+    "🔒 Lock (swaylock)"
+    "    Mechanism: swaylock PAM authentication; blanks the screen while jobs keep running."
+    "    Power:     Active runtime power (~5-15 W); no battery savings or thermal cooldown."
+    "    Use case:  Stepping away briefly in shared offices, client sites, or co-working spaces."
+    "🚪 Logout (swaymsg exit)"
+    "    Mechanism: Sway IPC exit; closes the compositor, Wayland clients, and apps."
+    "    Power:     Idle at the login screen; frees all user-space RAM and GPU buffers."
+    "    Use case:  Switching users, applying shell config changes, or ending the work session."
+    "⚡ Shutdown (systemctl poweroff)"
+    "    Mechanism: Flushes I/O queues, commits journals, unmounts cleanly, then powers off."
+    "    Power:     0.0 W; power rails are cut and volatile memory is lost."
+    "    Use case:  Transport, hardware servicing, electrical storms, or end-of-day power-down."
+    "🔁 Reboot (systemctl reboot)"
+    "    Mechanism: Stops daemons, flushes storage caches, unmounts drives, resets via UEFI."
+    "    Power:     Full power cycle through BIOS/UEFI POST and systemd startup."
+    "    Use case:  Applying kernel patches, rebuilding DKMS modules, or clearing driver faults."
+    ""
+    "POWER-SAVING & PERSISTENCE MODES"
+    "🌙 Suspend (suspend-to-RAM, ACPI S3)"
+    "    Mechanism: Halts userspace and cuts SoC/GPU power; DRAM stays refreshed for instant wake."
+    "    Power:     About 0.5-1.2 W; resumes in under 1 s via key, mouse, or lid open."
+    "    Use case:  Short breaks in the workday when a fast return to the session is needed."
+    "⏳ Suspend-Then-Hibernate (systemd-suspend-then-hibernate)"
+    "    Mechanism: Sleeps in RAM, then writes the RAM image to swap if the idle timer expires."
+    "    Power:     About 0.8 W in RAM sleep, then 0.0 W once the image is on disk."
+    "    Use case:  Overnight sleep without battery-drain risk; all workspaces are kept."
+    "💾 Hibernate (suspend-to-disk, ACPI S4)"
+    "    Mechanism: Writes the RAM image to /swap/swapfile, verifies it, then powers off."
+    "    Power:     0.0 W; no standby drain, heat, or wear."
+    "    Use case:  Multi-day storage, flights, or transport with sessions left untouched."
+    "🔄 Hybrid-Sleep (systemd-hybrid-sleep)"
+    "    Mechanism: Writes the RAM image to swap while staying in low-power S3 sleep."
+    "    Fault:     Wakes from RAM while the battery holds; recovers from swap if it depletes."
+    "    Use case:  Unattended laptops with an uncertain charge, or desktops without a UPS."
+    ""
+    "Press Escape or click a line to close."
+)
+
+# Measured on the eDP-1 top bar: the power button ends about 19 px from the output's right edge.
+# The tray sits to the right of the button, so increase POWER_RIGHT_OFFSET if tray icons are added.
+POWER_RIGHT_OFFSET=19
+# A right-anchored wofi cannot be inset from the right edge (its x offset only narrows the window),
+# so both lists are anchored top-left and placed by x, with their right edges at POWER_RIGHT_OFFSET.
+MENU_WIDTH=360
+MENU_HEIGHT=158
+INSTR_WIDTH=820
+INSTR_HEIGHT=$(( ${#INSTRUCTION_LINES[@]} * 24 + 8 ))
+OUTPUT_WIDTH=$(swaymsg -r -t get_outputs 2>/dev/null | jq -r '[.[] | select(.focused)][0].rect.width // empty')
+MENU_X=$(( ${OUTPUT_WIDTH:-1920} - POWER_RIGHT_OFFSET - MENU_WIDTH ))
+INSTR_X=$(( ${OUTPUT_WIDTH:-1920} - POWER_RIGHT_OFFSET - INSTR_WIDTH ))
+
+# Waybar reserves the top 19 px, so no vertical offset is needed to sit directly below the bar.
+choice=$(printf '%s\n' "${MENU[@]}" | wofi --dmenu \
+    --conf "$WOFI_CONF" \
+    --cache-file /dev/null \
+    --style "$MENU_STYLE" \
+    --location top_left \
+    --xoffset "$MENU_X" \
+    --yoffset 0 \
+    --columns 2 \
+    --width "$MENU_WIDTH" \
+    --height "$MENU_HEIGHT" \
+    --hide-search \
+    --hide-scroll \
+    --no-custom-entry)
+
+case "$choice" in
+    "$INSTRUCTIONS")
+        # Shows the text of each action directly below the bar. Nothing is run here; Escape or a
+        # click on a line closes it.
+        printf '%s\n' "${INSTRUCTION_LINES[@]}" | wofi --dmenu \
+            --conf "$WOFI_CONF" \
+            --cache-file /dev/null \
+            --style "$MENU_STYLE" \
+            --location top_left \
+            --xoffset "$INSTR_X" \
+            --yoffset 0 \
+            --width "$INSTR_WIDTH" \
+            --height "$INSTR_HEIGHT" \
+            --hide-search \
+            --hide-scroll \
+            --no-custom-entry >/dev/null
+        exit 0
+        ;;
+    "$LOCK") action="env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -c 000000" ;;
+    "$LOGOUT") action="swaymsg exit" ;;
+    "$SHUTDOWN") action="systemctl poweroff" ;;
+    "$REBOOT") action="systemctl reboot" ;;
+    "$SUSPEND") action="systemctl suspend" ;;
+    "$SUSPEND_THEN_HIBERNATE") action="systemctl suspend-then-hibernate || notify-send -u critical 'Suspend-Then-Hibernate failed' 'Not available: no resume device configured or swap too small'" ;;
+    "$HIBERNATE") action="systemctl hibernate || notify-send -u critical 'Hibernate failed' 'Not available: no resume device configured or swap too small'" ;;
+    "$HYBRID") action="systemctl hybrid-sleep || notify-send -u critical 'Hybrid-Sleep failed' 'Not available: no resume device configured or swap too small'" ;;
+    *) exit 0 ;;
+esac
+
+# Detached so swaylock or a slow command does not keep the bar's click handler busy.
+setsid -f sh -c "$action"
