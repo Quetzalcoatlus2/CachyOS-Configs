@@ -226,7 +226,6 @@
   },
   "battery": {
     "interval": 10,
-    "full-at": 90,
     "states": {
       "warning": 25,
       "critical": 20,

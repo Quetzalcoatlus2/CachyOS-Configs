@@ -34,8 +34,10 @@ default-timeout=0
 border-color=#56b4e9
 on-notify=exec canberra-gtk-play -i message-new-instant
 
+# Battery threshold snapshots are point-in-time values; let normal and full
+# alerts expire. The critical urgency rule below still keeps critical alerts sticky.
 [app-name=batsignal]
-default-timeout=0
+default-timeout=15000
 
 [urgency=critical]
 default-timeout=0
