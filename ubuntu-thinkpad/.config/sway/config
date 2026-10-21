@@ -17,7 +17,7 @@ exec $HOME/.local/bin/foot --server
 exec sh -c 'command -v autotiling >/dev/null 2>&1 && exec autotiling'
 exec $HOME/.local/bin/mako
 exec env -u LD_LIBRARY_PATH QT_QPA_PLATFORM=xcb /opt/paloaltonetworks/globalprotect/PanGPUI
-exec $HOME/.local/bin/batsignal -w 25 -c 20 -d 0 -f 90
+exec $HOME/.local/bin/batsignal -w 25 -c 20 -d 0 -f 100 -e
 bindsym $mod+n exec $HOME/.local/bin/makoctl restore
 bindsym $mod+Shift+n exec $HOME/.local/bin/makoctl dismiss -a
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway
