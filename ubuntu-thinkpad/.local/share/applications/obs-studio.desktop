@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Name=OBS Studio
+GenericName=Screen recorder
+Comment=OBS Studio 32.2.0 (snap, no root)
+Exec=/home/ABO4198/.local/opt/obs-studio-snap/run-obs.sh
+Icon=/home/ABO4198/.local/opt/obs-studio-snap/app/usr/share/icons/hicolor/scalable/apps/com.obsproject.Studio.svg
+Categories=AudioVideo;Video;Recorder;
+Keywords=obs;record;stream;capture;
