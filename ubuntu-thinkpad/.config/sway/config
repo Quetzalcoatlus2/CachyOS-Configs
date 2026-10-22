@@ -182,3 +182,5 @@ popup_during_fullscreen smart
 for_window [app_id="^brave.*"] border pixel 0, inhibit_idle fullscreen
 for_window [class="^[bB]rave.*"] border pixel 0, inhibit_idle fullscreen
 for_window [title="(?i)picture[ -]in[ -]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 465
+# Simulink ribbon flickers after MATLAB maps a window; fullscreen on/off settles it (see script header).
+exec_always flock -n $XDG_RUNTIME_DIR/simulink-tile-fix.lock $HOME/.config/sway/scripts/simulink-tile-fix.py
