@@ -297,6 +297,26 @@ edit_path() {
     fi
 }
 
+# libalpm logs "pkg: local (x) is newer than repo (y)" when the installed
+# package is newer than the first repo that provides it. With the CachyOS v3
+# overlay, core/extra/testing and the generic cachyos repo this is expected:
+# pacman-filtered already adds the newest available repo version as an explicit
+# target. Paru prefixes these libalpm notices with "::" on stderr, so drop only
+# those lines and keep real warnings and errors.
+filter_paru_stderr() {
+    awk '
+        {
+            clean = $0
+            gsub(/\033\[[0-9;]*[A-Za-z]/, "", clean)
+            if (clean ~ /^(::|warning:) .*: local \([^)]*\) is newer than /) {
+                next
+            }
+            print
+            fflush()
+        }
+    '
+}
+
 review_one_pacnew() {
     local file=$1
     local base=${file%.pacnew}
@@ -833,7 +853,7 @@ main() {
             return 1
         fi
 
-        paru --pacman /usr/local/bin/pacman-filtered -Syu
+        paru --pacman /usr/local/bin/pacman-filtered -Syu 2> >(filter_paru_stderr >&2)
         rc=$?
         if (( rc == 0 )); then
             UPGRADE_STATUS="success"
