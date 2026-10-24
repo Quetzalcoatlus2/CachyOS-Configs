@@ -1,0 +1,2 @@
+# Apply the AC/battery power profile when the Mains supply changes.
+ACTION=="add|change", SUBSYSTEM=="power_supply", ATTR{type}=="Mains", TAG+="systemd", ENV{SYSTEMD_WANTS}+="ideapad-power-profile.service"

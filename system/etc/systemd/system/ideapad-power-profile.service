@@ -1,0 +1,11 @@
+[Unit]
+Description=Apply IdeaPad AC/battery power profile
+After=power-profiles-daemon.service
+Wants=power-profiles-daemon.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/ideapad-power-profile.sh
+
+[Install]
+WantedBy=multi-user.target

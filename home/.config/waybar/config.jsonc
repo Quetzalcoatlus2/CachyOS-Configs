@@ -118,7 +118,7 @@
     "interval": 3600,
     "exec": "$HOME/.config/waybar/scripts/check-updates.sh",
     "return-type": "json",
-    "on-click": "foot -e zsh -ic 'update; rc=$?; printf \"\\nUpdate complete. Press any key to close...\"; read -r -s -k 1; exit \"$rc\"'",
+    "on-click": "foot -T 'System Update' bash \"$HOME/.config/waybar/scripts/update-all.sh\"",
     "signal": 8,
     "tooltip": true
   },

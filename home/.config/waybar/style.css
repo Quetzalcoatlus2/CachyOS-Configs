@@ -212,6 +212,12 @@ window#waybar {
     font-weight: bold;
 }
 
+#custom-updates.error {
+    color: #ff5555;
+    animation: pulse-critical 1.2s ease-in-out infinite;
+    font-weight: bold;
+}
+
 /* Waybar vertical height lock across playback states */
 window#waybar > box {
     padding-top: 0;
