@@ -65,7 +65,7 @@ require_fifo() {
 if [[ $command == check || $command == validate ]]; then validate; exit; fi
 if [[ $command == setup-timers ]]; then
     require_fifo
-    sudo grep -qE '^ExecStartPre=/usr/local/bin/snapper-fifo.py --apply --limit 100$' /etc/systemd/system/snapper-cleanup.service.d/zz-fifo.conf
+    sudo grep -qE '^ExecStartPre=/usr/local/bin/snapper-fifo.py --apply --limit 500$' /etc/systemd/system/snapper-cleanup.service.d/zz-fifo.conf
     state="$HOME/.local/state/cachyos-config-backups"
     mkdir -p -- "$state"; chmod 700 "$state"
     record="$(mktemp "$state/timers-before-XXXXXXXX.txt")"

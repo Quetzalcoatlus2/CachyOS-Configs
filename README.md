@@ -19,9 +19,9 @@ Deploy backs up each overwritten file under the printed private state directory 
 
 ## Snapshots and maintenance
 
-The existing /usr/local/bin/snapper-fifo.py implementation is preserved and required. The cleanup-service drop-in changes its argument from --limit 500 to --limit 100 without clearing vendor ExecStartPre/ExecStopPost hooks, including Limine's lock. The script itself has not been imported or audited here; restore your original implementation before deploying to a fresh machine. No alternate deletion algorithm is introduced.
+The existing /usr/local/bin/snapper-fifo.py implementation is preserved and required. The cleanup-service drop-in sets the cleanup argument to --limit 500 without clearing vendor ExecStartPre/ExecStopPost hooks, including Limine's lock. The script itself has not been imported or audited here; restore your original implementation before deploying to a fresh machine. No alternate deletion algorithm is introduced.
 
-NUMBER_CLEANUP, TIMELINE_CREATE, TIMELINE_CLEANUP and EMPTY_PRE_POST_CLEANUP must remain no in /etc/snapper/configs/root. Deploy refuses unexpected policy values. NUMBER_LIMIT and NUMBER_LIMIT_IMPORTANT are inactive while number cleanup is disabled; the operative cap is the FIFO command's --limit 100. Existing script rules, including any protection exceptions, remain unchanged.
+NUMBER_CLEANUP, TIMELINE_CREATE, TIMELINE_CLEANUP and EMPTY_PRE_POST_CLEANUP must remain no in /etc/snapper/configs/root. Deploy refuses unexpected policy values. NUMBER_LIMIT and NUMBER_LIMIT_IMPORTANT are inactive while number cleanup is disabled; the operative cap is the FIFO command's --limit 500. Existing script rules, including any protection exceptions, remain unchanged.
 
 Deploy reloads systemd but does not explicitly start snapshot cleanup, restart zram, apply sysctls, restart applications or change the kernel. The next scheduled cleanup uses the new limit and may delete snapshots exceeding it. setup-timers separately records prior enablement states, disables the unused timeline timer and enables cleanup, paccache and root Btrfs scrub timers. Starting timers can trigger overdue maintenance jobs.
 
