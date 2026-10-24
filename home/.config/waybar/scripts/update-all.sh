@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # One-click system update and maintenance workflow for the Waybar update widget.
 #
+# The window opens with the same fastfetch banner as a normal foot terminal.
+#
 # Sequence:
 #   1. refuse to run alongside another package transaction
 #   2. report repository, AUR/devel and optional Flatpak updates
@@ -25,7 +27,8 @@ Usage: update-all.sh [--dry-run] [--help]
   --help, -h      Show this help.
 
 Environment:
-  UPDATE_ALL_NO_PAUSE=1   Do not wait for Enter before closing.
+  UPDATE_ALL_NO_PAUSE=1   Do not wait for a key before closing.
+  UPDATE_ALL_NO_BANNER=1  Do not print the fastfetch banner.
   NO_COLOR=1              Disable ANSI colours.
 EOF
 }
@@ -63,15 +66,35 @@ err()  { printf '%s\n' "${RED}✗${RESET} $*" >&2; }
 
 PAUSE=1
 [[ ${UPDATE_ALL_NO_PAUSE:-0} == 1 ]] && PAUSE=0
+SHOW_BANNER=1
+[[ ${UPDATE_ALL_NO_BANNER:-0} == 1 || ! -t 1 ]] && SHOW_BANNER=0
 WORKDIR=""
+
+# Reuse the fastfetch config and FORCE_COLOR=1 invocation from ~/.zshrc. zsh
+# must stay alive while fastfetch runs so the Shell module reports zsh instead
+# of the bash workflow; without the trailing ":" zsh execs fastfetch and the
+# parent becomes bash.
+show_banner() {
+    (( SHOW_BANNER )) || return 0
+
+    local fastfetch_path
+    fastfetch_path=$(command -v fastfetch 2>/dev/null) || return 0
+
+    if command -v zsh >/dev/null 2>&1; then
+        zsh -f -c 'FORCE_COLOR=1 "$1" 2>/dev/null; :' _ "$fastfetch_path" || true
+    else
+        FORCE_COLOR=1 "$fastfetch_path" 2>/dev/null || true
+    fi
+    printf '\n'
+}
 
 cleanup() {
     local rc=$?
     trap - EXIT INT TERM
     [[ -n $WORKDIR ]] && rm -rf -- "$WORKDIR"
     if (( PAUSE )) && [[ -t 0 && -t 1 ]]; then
-        printf '\n%sPress Enter to close...%s' "$DIM" "$RESET"
-        read -r _ || true
+        printf '\n%sPress any key to close...%s' "$DIM" "$RESET"
+        read -r -n 1 -s _ || true
         printf '\n'
     fi
     exit "$rc"
@@ -95,6 +118,10 @@ if ! flock -n 9; then
 fi
 
 WORKDIR=$(mktemp -d "${TMPDIR:-/tmp}/waybar-update-all.XXXXXX") || exit 1
+
+# Print the banner before setting EDITOR, matching ~/.zshrc where fastfetch runs
+# before the editor exports.
+show_banner
 
 # Keep the editor usable for Paru PKGBUILD review and sudo -e.
 export EDITOR="${EDITOR:-micro}"
