@@ -880,7 +880,7 @@ main() {
             return 1
         fi
 
-        paru --pacman /usr/local/bin/pacman-filtered -Syu 2> >(filter_paru_stderr >&2)
+        paru --pacman /usr/local/bin/pacman-filtered --combinedupgrade --upgrademenu --color always -Syu 2> >(filter_paru_stderr >&2)
         rc=$?
         if (( rc == 0 )); then
             UPGRADE_STATUS="success"
