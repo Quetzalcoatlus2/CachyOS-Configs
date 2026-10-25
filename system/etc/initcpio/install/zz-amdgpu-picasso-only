@@ -2,7 +2,7 @@
 # Host-specific initramfs pruning. Installed firmware is never modified.
 
 _picasso_host_ok() {
-    local p class vendor device found=0
+    local p class vendor device revision found=0
     for p in /sys/bus/pci/devices/*; do
         [[ -r "$p/class" && -r "$p/vendor" && -r "$p/device" ]] || continue
         read -r class < "$p/class"
@@ -10,6 +10,8 @@ _picasso_host_ok() {
         [[ $class == 0x03* && $vendor == 0x1002 ]] || continue
         read -r device < "$p/device"
         [[ $device == 0x15d8 ]] || return 1
+        read -r revision < "$p/revision"
+        [[ $revision == 0xc2 ]] || return 1
         found=1
     done
     (( found ))
@@ -28,7 +30,7 @@ _picasso_prune() {
 
     for name in picasso_gpu_info picasso_asd picasso_ce picasso_me \
         picasso_mec picasso_mec2 picasso_pfp picasso_rlc picasso_sdma \
-        raven_vcn raven2_vcn; do
+        picasso_vcn picasso_ta picasso_ip_discovery raven_dmcu; do
         if [[ ! -f "$dir/$name.bin" &&
               ! -f "$dir/$name.bin.zst" &&
               ! -f "$dir/$name.bin.xz" ]]; then
@@ -38,7 +40,7 @@ _picasso_prune() {
     done
 
     # Preserve shared content before deleting unrelated filenames.
-    for f in "$dir"/picasso_* "$dir"/raven_* "$dir"/raven2_*; do
+    for f in "$dir"/picasso_* "$dir"/raven_dmcu.bin*; do
         [[ -L $f ]] || continue
         target=$(readlink -f -- "$f") || return 1
         [[ -f $target ]] || return 1
@@ -57,7 +59,11 @@ _picasso_prune() {
     for f in "$dir"/*; do
         [[ -f $f || -L $f ]] || continue
         case "${f##*/}" in
-            picasso_*|raven_*|raven2_*) ;;
+            picasso_rlc_am4.bin*)
+                rm -f -- "$f" || return 1
+                removed=$((removed + 1))
+                ;;
+            picasso_*|raven_dmcu.bin|raven_dmcu.bin.zst|raven_dmcu.bin.xz) ;;
             *)
                 rm -f -- "$f" || return 1
                 removed=$((removed + 1))
