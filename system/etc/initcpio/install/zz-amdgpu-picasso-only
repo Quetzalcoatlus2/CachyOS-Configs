@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# Host-specific initramfs pruning. Installed firmware is never modified.
+
+_picasso_host_ok() {
+    local p class vendor device found=0
+    for p in /sys/bus/pci/devices/*; do
+        [[ -r "$p/class" && -r "$p/vendor" && -r "$p/device" ]] || continue
+        read -r class < "$p/class"
+        read -r vendor < "$p/vendor"
+        [[ $class == 0x03* && $vendor == 0x1002 ]] || continue
+        read -r device < "$p/device"
+        [[ $device == 0x15d8 ]] || return 1
+        found=1
+    done
+    (( found ))
+}
+
+_picasso_prune() {
+    local root dir name f target tmp removed=0
+    root=$(readlink -f -- "$1") || return 1
+    [[ $root != / ]] || {
+        error "Refusing unsafe firmware root"
+        return 1
+    }
+    [[ -d "$root/usr/lib/firmware/amdgpu" ]] || return 0
+    dir=$(readlink -f -- "$root/usr/lib/firmware/amdgpu") || return 1
+    [[ $dir == "$root/"* && $dir != /usr/lib/firmware/amdgpu ]] || return 1
+
+    for name in picasso_gpu_info picasso_asd picasso_ce picasso_me \
+        picasso_mec picasso_mec2 picasso_pfp picasso_rlc picasso_sdma \
+        raven_vcn raven2_vcn; do
+        if [[ ! -f "$dir/$name.bin" &&
+              ! -f "$dir/$name.bin.zst" &&
+              ! -f "$dir/$name.bin.xz" ]]; then
+            warning "Skipping pruning: missing $name firmware"
+            return 0
+        fi
+    done
+
+    # Preserve shared content before deleting unrelated filenames.
+    for f in "$dir"/picasso_* "$dir"/raven_* "$dir"/raven2_*; do
+        [[ -L $f ]] || continue
+        target=$(readlink -f -- "$f") || return 1
+        [[ -f $target ]] || return 1
+        case "$target" in
+            "$dir"/*|/usr/lib/firmware/*|/lib/firmware/*) ;;
+            *) error "Unsafe firmware link: $f"; return 1 ;;
+        esac
+        tmp=$(mktemp "$dir/.picasso-copy.XXXXXX") || return 1
+        if ! cp -L --preserve=mode -- "$f" "$tmp"; then
+            rm -f -- "$tmp"
+            return 1
+        fi
+        mv -f -- "$tmp" "$f" || return 1
+    done
+
+    for f in "$dir"/*; do
+        [[ -f $f || -L $f ]] || continue
+        case "${f##*/}" in
+            picasso_*|raven_*|raven2_*) ;;
+            *)
+                rm -f -- "$f" || return 1
+                removed=$((removed + 1))
+                ;;
+        esac
+    done
+    msg "Picasso/Raven: pruned %s unrelated firmware files" "$removed"
+}
+
+build() {
+    local root
+    if ! _picasso_host_ok; then
+        warning "Not an exclusively Picasso AMD GPU system; pruning skipped"
+        return 0
+    fi
+    for root in "${BUILDROOT:-}" "${EARLYROOT:-}"; do
+        [[ -n $root ]] || continue
+        _picasso_prune "$root" || return 1
+    done
+}
+
+help() {
+    printf '%s\n' 'Keep Picasso/Raven firmware and materialize its aliases; initramfs only.'
+}
