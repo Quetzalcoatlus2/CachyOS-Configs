@@ -1,47 +1,7 @@
 #!/usr/bin/env bash
-# Keep only the Renoir (Ryzen 4000U/H) amdgpu firmware in the initramfs.
-# The full amdgpu firmware set is ~700 files and most are for GPUs this
-# machine does not have. The kernel can load any other firmware from
-# /usr/lib/firmware after the root filesystem is mounted.
-
-build() {
-    local root f base target removed=0
-
-    for root in "$BUILDROOT" "${EARLYROOT:-}"; do
-        [[ -n "$root" && -d "$root/usr/lib/firmware/amdgpu" ]] || continue
-
-        # Several renoir_* firmware files are symlinks to other GPU families
-        # (for example green_sardine_*). Replace them with the real content
-        # before removing everything that is not named renoir_*.
-        for f in "$root"/usr/lib/firmware/amdgpu/renoir_*; do
-            [[ -L "$f" ]] || continue
-            target=$(readlink -f -- "$f") || continue
-            [[ -f "$target" ]] || continue
-            cp -L --remove-destination -- "$target" "$f" || return 1
-        done
-
-        for f in "$root"/usr/lib/firmware/amdgpu/*; do
-            [[ -e "$f" || -L "$f" ]] || continue
-            base=${f##*/}
-            case "$base" in
-                renoir_*) ;;
-                *)
-                    rm -f -- "$f"
-                    removed=$((removed + 1))
-                    ;;
-            esac
-        done
-    done
-
-    (( removed == 0 )) || msg "Pruned %d non-Renoir amdgpu firmware files" "$removed"
-    return 0
-}
-
+# Retired: prefix-only pruning broke this Picasso/Raven 2 GPU.
+# Leave all firmware selected by the normal build hooks intact.
+build() { return 0; }
 help() {
-    cat <<'EOF'
-Keep only Renoir amdgpu firmware in the initramfs.
-
-This hook removes every file in usr/lib/firmware/amdgpu except renoir_*.
-It is intended for the IdeaPad's Renoir iGPU. Keep the kms hook before it.
-EOF
+    printf '%s\n' 'Retired firmware-pruning hook; removes nothing.'
 }
