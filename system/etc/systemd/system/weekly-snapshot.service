@@ -1,0 +1,6 @@
+[Unit]
+Description=Create weekly important snapper snapshot
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/weekly-snapshot.sh

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=OpenCode
+Comment=AI coding agent
+Exec="/home/quetzal/Applications/opencode-desktop-linux-x86_64.AppImage"
+Icon=applications-development
+Terminal=false
+Categories=Development;

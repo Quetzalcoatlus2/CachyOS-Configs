@@ -1,0 +1,17 @@
+[Default Applications]
+text/html=brave-browser-nightly.desktop
+x-scheme-handler/http=brave-browser-nightly.desktop
+x-scheme-handler/https=brave-browser-nightly.desktop
+x-scheme-handler/about=brave-browser-nightly.desktop
+x-scheme-handler/unknown=brave-browser-nightly.desktop
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=com.brave.Browser.nightly.desktop
+text/plain=micro.desktop
+text/x-shellscript=micro.desktop
+application/pdf=com.brave.Browser.nightly.desktop
+video/mp4=com.obsproject.Studio.desktop
+
+[Added Associations]
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=com.brave.Browser.nightly.desktop;
+text/x-shellscript=micro.desktop;
+application/pdf=com.brave.Browser.nightly.desktop;
+video/mp4=com.brave.Browser.nightly.desktop;com.obsproject.Studio.desktop;

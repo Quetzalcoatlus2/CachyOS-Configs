@@ -32,7 +32,16 @@ export HISTORY_IGNORE="(\&|[bf]g|c|clear|history|exit|q|pwd|* --help)"
 unalias update 2>/dev/null
 
 function update {
-  command paru --pacman /usr/local/bin/pacman-filtered -Syu
+  command paru \
+    --pacman /usr/local/bin/pacman-filtered \
+    --combinedupgrade \
+    --upgrademenu \
+    --color always \
+    -Syu
+
+  local rc=$?
+  pkill -RTMIN+8 -x waybar 2>/dev/null || true
+  return "$rc"
 }
 
 eval "$(atuin init zsh)"

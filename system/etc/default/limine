@@ -1,0 +1,3 @@
+ESP_PATH="/boot"
+KERNEL_CMDLINE[default]+="rcu_nocbs=all rcutree.enable_rcu_lazy=1 quiet nowatchdog splash rw rootflags=subvol=/@ rd.luks.uuid=6f883926-63cf-42ec-90a3-8e194840b2d0 root=/dev/mapper/luks-6f883926-63cf-42ec-90a3-8e194840b2d0 resume=UUID=f348113b-e987-4683-a11d-6761bf58b134 resume_offset=3337964"
+BOOT_ORDER="*, *lts, *fallback, Snapshots"

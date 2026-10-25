@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+import ctypes
+import os
+import pty
+import re
+import subprocess
+import sys
+
+PACMAN_BIN = "/usr/bin/pacman"
+args = sys.argv[1:]
+
+short_flags = "".join(a[1:] for a in args if a.startswith("-") and not a.startswith("--"))
+is_sync = ("S" in short_flags or "--sync" in args) and not any(f in short_flags for f in "islgq")
+is_upgrade = "u" in short_flags or "--sysupgrade" in args
+is_refresh = "y" in short_flags or "--refresh" in args
+is_print = "p" in short_flags or "--print" in args or any(a.startswith("--print-format") for a in args)
+
+if not (is_sync and is_upgrade) or is_print:
+    os.execv(PACMAN_BIN, [PACMAN_BIN, *args])
+
+if is_refresh:
+    sync_flag = "-Syy" if short_flags.count("y") > 1 else "-Sy"
+    rc = subprocess.call([PACMAN_BIN, sync_flag])
+    if rc != 0:
+        sys.exit(rc)
+    new_args = []
+    for a in args:
+        if a == "--refresh":
+            continue
+        if a.startswith("-") and not a.startswith("--") and "y" in a:
+            stripped = a.replace("y", "")
+            if stripped != "-":
+                new_args.append(stripped)
+        else:
+            new_args.append(a)
+    args = new_args
+
+alpm = ctypes.CDLL("libalpm.so")
+alpm.alpm_pkg_vercmp.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+alpm.alpm_pkg_vercmp.restype = ctypes.c_int
+
+def vercmp(v1: str, v2: str) -> int:
+    return alpm.alpm_pkg_vercmp(v1.encode(), v2.encode())
+
+env = os.environ.copy()
+env["LC_ALL"] = "C.UTF-8"
+sl_out = subprocess.check_output([PACMAN_BIN, "-Sl"], text=True, env=env)
+
+local_vers = {}
+first_ver = {}
+best_repo_ver = {}
+
+for line in sl_out.splitlines():
+    if "[installed" not in line:
+        continue
+    parts = line.split()
+    repo, pkg, rver = parts[0], parts[1], parts[2]
+    lver = rver if parts[3] == "[installed]" else parts[4].rstrip("]")
+    local_vers[pkg] = lver
+    if pkg not in first_ver:
+        first_ver[pkg] = rver
+    if pkg not in best_repo_ver or vercmp(rver, best_repo_ver[pkg][1]) > 0:
+        best_repo_ver[pkg] = (repo, rver)
+
+extra_targets = []
+for pkg, (brepo, bver) in best_repo_ver.items():
+    if pkg != "libclc" and vercmp(bver, local_vers[pkg]) > 0 and vercmp(bver, first_ver[pkg]) > 0:
+        target = f"{brepo}/{pkg}"
+        if pkg not in args and target not in args:
+            extra_targets.append(target)
+
+master_fd, slave_fd = pty.openpty()
+proc = subprocess.Popen([PACMAN_BIN, *args, *extra_targets], stderr=slave_fd)
+os.close(slave_fd)
+
+ansi_re = re.compile(r"\x1b\[[0-9;]*[a-zA-Z]")
+warn_re = re.compile(r"^warning:\s+\S+:\s+local\s+\([^)]+\)\s+is\s+newer\s+than\s+")
+
+buf = ""
+while True:
+    try:
+        chunk = os.read(master_fd, 4096).decode("utf-8", errors="replace")
+        if not chunk:
+            break
+    except OSError:
+        break
+    buf += chunk
+    while "\n" in buf:
+        line, buf = buf.split("\n", 1)
+        clean = ansi_re.sub("", line).strip()
+        if not warn_re.match(clean):
+            sys.stderr.write(line + "\n")
+            sys.stderr.flush()
+    if buf and ("?" in buf or "]" in buf):
+        sys.stderr.write(buf)
+        sys.stderr.flush()
+        buf = ""
+
+if buf:
+    clean = ansi_re.sub("", buf).strip()
+    if not warn_re.match(clean):
+        sys.stderr.write(buf)
+        sys.stderr.flush()
+
+os.close(master_fd)
+sys.exit(proc.wait())

@@ -19,7 +19,9 @@ Deploy backs up each overwritten file under the printed private state directory 
 
 ## Snapshots and maintenance
 
-The existing /usr/local/bin/snapper-fifo.py implementation is preserved and required. The cleanup-service drop-in sets the cleanup argument to --limit 500 without clearing vendor ExecStartPre/ExecStopPost hooks, including Limine's lock. The script itself has not been imported or audited here; restore your original implementation before deploying to a fresh machine. No alternate deletion algorithm is introduced.
+The existing /usr/local/bin/snapper-fifo.py implementation is preserved and required. The cleanup-service drop-in sets the cleanup argument to --limit 500 without clearing vendor ExecStartPre/ExecStopPost hooks, including Limine's lock. The current implementation is tracked at system/usr/local/bin/snapper-fifo.py; review it before deploying to a fresh machine. No alternate deletion algorithm is introduced.
+
+The system tree also tracks the host-specific boot and maintenance inputs: /etc/fstab, /etc/mkinitcpio.conf, /etc/default/limine, /etc/pacman.conf, /etc/snapper/configs/root, the keyboard/locale/hostname settings, the weekly snapshot timer, and the local update/snapshot helpers. Review and adjust these before deploying to a different machine. Deploy installs the files but does not rebuild the initramfs, regenerate locales, or rewrite the kernel command line.
 
 NUMBER_CLEANUP, TIMELINE_CREATE, TIMELINE_CLEANUP and EMPTY_PRE_POST_CLEANUP must remain no in /etc/snapper/configs/root. Deploy refuses unexpected policy values. NUMBER_LIMIT and NUMBER_LIMIT_IMPORTANT are inactive while number cleanup is disabled; the operative cap is the FIFO command's --limit 500. Existing script rules, including any protection exceptions, remain unchanged.
 
