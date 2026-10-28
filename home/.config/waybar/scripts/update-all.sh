@@ -11,7 +11,7 @@
 #   5. offer orphan removal
 #   6. offer package-cache cleanup with an explicit retention policy
 #   7. review .pacnew/.pacsave files
-#   8. report services that may need a restart
+#   8. automatically restart affected active services
 #   9. compare the running kernel with its installed package and check fwupd
 #  10. refresh Waybar and print the result
 #
@@ -331,18 +331,22 @@ edit_path() {
 # target. Paru prefixes these libalpm notices with "::" on stderr, so drop only
 # those lines and keep real warnings and errors.
 filter_paru_stderr() {
-    awk '
+    gawk '
+        BEGIN {
+            RS = "[\r\n]"
+        }
         {
             clean = $0
             gsub(/\033\[[0-9;]*[A-Za-z]/, "", clean)
             if (clean ~ /^(::|warning:) .*: local \([^)]*\) is newer than /) {
                 next
             }
-            print
+            printf "%s%s", $0, RT
             fflush()
         }
     '
 }
+
 
 review_one_pacnew() {
     local file=$1
@@ -632,102 +636,216 @@ review_cache() {
     fi
 }
 
+_update_restart_permitted() {
+    local current metadata property value name index=0
+    local -a queue=("$1") words=()
+    local -A visited=()
+    shift
+
+    while (( index < ${#queue[@]} )); do
+        (( index < 512 )) || return 1
+        current=${queue[$index]}
+        index=$((index + 1))
+        [[ -n ${visited[$current]:-} ]] && continue
+        visited[$current]=1
+
+        metadata=$("$@" show "$current" \
+            -p Names -p RefuseManualStop -p RequiredBy -p RequisiteOf \
+            -p BoundBy -p ConsistsOf -p PropagatesStopTo \
+            2>/dev/null) || return 1
+        [[ $metadata == *Names=* ]] || return 1
+
+        while IFS='=' read -r property value; do
+            case $property in
+                Names)
+                    read -r -a words <<< "$value"
+                    (( ${#words[@]} )) || return 1
+                    for name in "${words[@]}"; do
+                        case $name in
+                            dbus*|systemd-*|user@*|user-runtime-dir@*|session-*|*.scope|\
+                            ly*|display-manager*|gdm*|sddm*|lightdm*|greetd*|lxdm*|xdm*|\
+                            seatd*|polkit*|accounts-daemon*|NetworkManager*|\
+                            wpa_supplicant*|iwd*|connman*|dhcpcd*|sshd*|ssh.service|\
+                            udisks2*|lvm*|dm-event*|multipath*|cryptsetup*|\
+                            sway*|app-*sway*|waybar*|foot*|app-*foot*|\
+                            graphical*.target|graphical-session*.target)
+                                return 1 ;;
+                        esac
+                    done
+                    ;;
+                RefuseManualStop)
+                    [[ $value == yes ]] && return 1
+                    ;;
+                RequiredBy|RequisiteOf|BoundBy|ConsistsOf|PropagatesStopTo)
+                    read -r -a words <<< "$value"
+                    queue+=("${words[@]}")
+                    ;;
+            esac
+        done <<< "$metadata"
+    done
+    return 0
+}
+
 service_diagnostic() {
     section "Service restart diagnostic"
+
     local -a failed=()
-    mapfile -t failed < <(systemctl --failed --no-legend --plain 2>/dev/null || true)
+    mapfile -t failed < <(
+        systemctl --failed --no-legend --plain 2>/dev/null || true
+    )
     SERVICE_FAILED=${#failed[@]}
-    if (( SERVICE_FAILED > 0 )); then
+    RESTART_UNITS=()
+
+    if (( SERVICE_FAILED )); then
         warn "Failed system units:"
         printf '  %s\n' "${failed[@]}"
-    else
-        ok "No failed system units."
     fi
 
     if (( DRY_RUN )); then
-        info "[dry-run] Would scan running processes for deleted files from /usr."
+        info "[dry-run] Would detect and restart affected active services."
         SERVICE_STATUS="dry-run (${SERVICE_FAILED} failed unit(s))"
-        return
+        return 0
     fi
 
     if ! command -v lsof >/dev/null 2>&1; then
-        warn "lsof is not installed; cannot check for processes using replaced files."
+        warn "lsof is missing; service restart detection is unavailable."
         SERVICE_STATUS="lsof missing"
-        return
+        return 0
     fi
 
-    local lsof_out="$WORKDIR/lsof.out"
-    if (( EUID == 0 )); then
-        lsof +L1 -F pcn >"$lsof_out" 2>/dev/null || true
-    else
-        sudo lsof +L1 -F pcn >"$lsof_out" 2>/dev/null || true
+    local out="$WORKDIR/restart-lsof.out"
+    local errors="$WORKDIR/restart-lsof.err"
+    local scan_rc=0
+    local -a privileged=()
+    (( EUID == 0 )) || privileged=(sudo)
+
+    "${privileged[@]}" lsof +L1 -F pn >"$out" 2>"$errors" || scan_rc=$?
+
+    if (( scan_rc > 1 )) ||
+       { (( scan_rc != 0 )) && [[ ! -s $out && -s $errors ]]; }; then
+        warn "Service inspection failed; no automatic restarts attempted."
+        cat "$errors" >&2
+        SERVICE_STATUS="inspection failed"
+        return 0
     fi
 
-    declare -A pid_cmd=()
-    declare -A pid_path=()
-    local pid="" cmd="" line path
-    while IFS= read -r line; do
-        case $line in
-            p*) pid=${line#p}; cmd="" ;;
-            c*) cmd=${line#c} ;;
-            n*)
-                path=${line#n}
-                [[ $path == /usr/* ]] || continue
-                if [[ -n $pid && -z ${pid_path[$pid]:-} ]]; then
-                    pid_cmd[$pid]=$cmd
-                    pid_path[$pid]=$path
-                fi
-                ;;
-        esac
-    done <"$lsof_out"
-
-    if (( ${#pid_path[@]} == 0 )); then
-        ok "No running process is holding a deleted file from /usr."
-        SERVICE_STATUS="none (${SERVICE_FAILED} failed unit(s))"
-        return
+    if [[ -s $errors ]]; then
+        warn "lsof reported warnings; inspection may be incomplete."
+        cat "$errors" >&2
     fi
 
-    warn "Processes holding deleted files from /usr (best-effort restart candidates):"
-    declare -A seen_units=()
-    RESTART_UNITS=()
-    local count=0 unit uunit
-    for pid in "${!pid_path[@]}"; do
-        if (( count >= 30 )); then
-            info "More than 30 processes matched; only the first 30 are shown."
-            break
-        fi
+    local uid self_cgroup pid cgroup component unit scope key
+    local restarted=0 unsuccessful=0 skipped=0 unresolved=0
+    local -a components=() ctl=()
+    local -A candidates=()
 
-        unit=$(systemctl status "$pid" --no-pager -n 0 2>/dev/null \
-            | sed -n '1{s/^[^[:alnum:]]*//;s/[[:space:]].*//;p}')
-        if [[ -z $unit || $unit == user@* ]]; then
-            uunit=$(systemctl --user status "$pid" --no-pager -n 0 2>/dev/null \
-                | sed -n '1{s/^[^[:alnum:]]*//;s/[[:space:]].*//;p}')
-            [[ -n $uunit ]] && unit=$uunit
-        fi
+    uid=$(id -u)
+    self_cgroup=$(awk -F: '$1 == "0" {print $3; exit}' "/proc/$$/cgroup")
+
+    while IFS= read -r pid; do
+        [[ $pid =~ ^[0-9]+$ ]] || continue
+        [[ -d /proc/$pid ]] || continue
 
         if (( pid == 1 )); then
-            warn "PID 1 is using a deleted file; a reboot is safer than restarting systemd."
+            warn "PID 1 holds replaced files; reboot manually when convenient."
+            unresolved=$((unresolved + 1))
+            continue
         fi
 
-        if [[ -n $unit && $unit == *.service && -z ${seen_units[$unit]:-} ]]; then
-            seen_units[$unit]=1
-            RESTART_UNITS+=("$unit")
+        cgroup=$(awk -F: '$1 == "0" {print $3; exit}' \
+            "/proc/$pid/cgroup" 2>/dev/null)
+        unit=""
+        scope=system
+
+        if [[ -z $cgroup ]]; then
+            warn "Cannot resolve PID $pid; left for manual review."
+            unresolved=$((unresolved + 1))
+            continue
         fi
 
-        printf '  %-32s PID %-7s %s\n' \
-            "${unit:-${pid_cmd[$pid]:-unknown}}" "$pid" "${pid_path[$pid]}"
-        count=$((count + 1))
+        if [[ $cgroup =~ /user@([0-9]+)\.service(/|$) ]]; then
+            if [[ ${BASH_REMATCH[1]} != "$uid" ]]; then
+                warn "PID $pid belongs to another user's manager; not restarted."
+                unresolved=$((unresolved + 1))
+                continue
+            fi
+            scope=user
+        fi
+
+        IFS=/ read -r -a components <<< "$cgroup"
+        for component in "${components[@]}"; do
+            [[ $component == *.service ]] && unit=$component
+        done
+
+        if [[ -z $unit || $unit == user@*.service ]]; then
+            info "PID $pid is an application/session, not a restartable service."
+            unresolved=$((unresolved + 1))
+            continue
+        fi
+
+        if [[ "/${self_cgroup#/}/" == *"/$unit/"* ]]; then
+            warn "Skipping $unit: restarting it could terminate this updater."
+            unresolved=$((unresolved + 1))
+            continue
+        fi
+
+        candidates["$scope:$unit"]=1
+    done < <(
+        awk '
+            /^p/ {pid = substr($0, 2)}
+            /^n\/usr\// {if (pid != "") print pid}
+        ' "$out" | sort -nu
+    )
+
+    for key in "${!candidates[@]}"; do
+        RESTART_UNITS+=("$key")
     done
 
-    printf '\nRestart only the affected units, for example:\n'
-    printf '  sudo systemctl try-restart <unit>       # system services\n'
-    printf '  systemctl --user try-restart <unit>     # user services\n'
-    info "No services were restarted automatically."
+    if (( ${#RESTART_UNITS[@]} )); then
+        warn "Automatically restarting affected services; network/audio may briefly disconnect."
+    fi
 
-    SERVICE_STATUS="${#RESTART_UNITS[@]} unit(s) to review"
-    (( SERVICE_FAILED > 0 )) && SERVICE_STATUS+=", ${SERVICE_FAILED} failed"
+    for key in "${RESTART_UNITS[@]}"; do
+        scope=${key%%:*}
+        unit=${key#*:}
+
+        if [[ $scope == user ]]; then
+            ctl=(systemctl --user)
+        else
+            ctl=("${privileged[@]}" systemctl)
+        fi
+
+        if ! _update_restart_permitted "$unit" "${ctl[@]}"; then
+            warn "Not auto-restarting $scope/$unit: protected service, protected dependent, or inspection unavailable."
+            skipped=$((skipped + 1))
+            continue
+        fi
+
+        if ! "${ctl[@]}" is-active --quiet "$unit"; then
+            info "Skipped inactive service: $scope/$unit"
+            skipped=$((skipped + 1))
+            continue
+        fi
+
+        info "Restarting $scope/$unit"
+        if "${ctl[@]}" try-restart "$unit" &&
+           "${ctl[@]}" is-active --quiet "$unit"; then
+            ok "Restart completed: $scope/$unit"
+            restarted=$((restarted + 1))
+        else
+            warn "Restart failed or service is no longer active: $scope/$unit"
+            unsuccessful=$((unsuccessful + 1))
+        fi
+    done
+
+    SERVICE_STATUS="$restarted restarted, $unsuccessful unsuccessful, $skipped skipped, $unresolved process(es) need manual review"
+    (( SERVICE_FAILED )) && SERVICE_STATUS+=", $SERVICE_FAILED previously failed unit(s)"
+    [[ -s $errors ]] && SERVICE_STATUS+=", inspection warnings"
+
+    info "$SERVICE_STATUS"
     return 0
 }
+
 
 kernel_check() {
     section "Kernel and reboot check"
