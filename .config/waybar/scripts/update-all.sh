@@ -331,18 +331,22 @@ edit_path() {
 # target. Paru prefixes these libalpm notices with "::" on stderr, so drop only
 # those lines and keep real warnings and errors.
 filter_paru_stderr() {
-    awk '
+    gawk '
+        BEGIN {
+            RS = "[\r\n]"
+        }
         {
             clean = $0
             gsub(/\033\[[0-9;]*[A-Za-z]/, "", clean)
             if (clean ~ /^(::|warning:) .*: local \([^)]*\) is newer than /) {
                 next
             }
-            print
+            printf "%s%s", $0, RT
             fflush()
         }
     '
 }
+
 
 review_one_pacnew() {
     local file=$1
