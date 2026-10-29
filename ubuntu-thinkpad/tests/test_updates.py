@@ -60,16 +60,28 @@ class UpdateTests(unittest.TestCase):
         self.stub("apt-get", 'printf "%s\\n" "$*"')
         result = self.run_script("update-all.sh", "--dry-run")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("-s upgrade", result.stdout)
+        self.assertIn("-s --with-new-pkgs upgrade", result.stdout)
         self.assertFalse((self.root / "calls").exists())
 
     def test_partial_source_warning_is_visible(self):
-        self.stub("apt-get", "echo 'W: Unable to read /etc/apt/sources.list' >&2\necho 'Inst pkg'")
+        self.stub("apt-get", "echo 'W: Unable to read /etc/apt/sources.list - open (13: Permission denied)' >&2\necho 'Inst pkg'")
         result = self.run_script("updates.sh")
         self.assertEqual(result.returncode, 0)
         data = json.loads(result.stdout)
-        self.assertEqual(data["class"], "error")
+        self.assertEqual(data["class"], "partial")
+        self.assertEqual(data["text"], "📦1?")
         self.assertIn("Unable to read", data["tooltip"])
+
+    def test_other_warnings_are_errors(self):
+        self.stub("apt-get", "echo 'W: Unable to read /etc/apt/sources.list' >&2\necho 'Inst pkg'")
+        data = json.loads(self.run_script("updates.sh").stdout)
+        self.assertEqual(data["class"], "error")
+
+    def test_simulation_allows_new_dependencies(self):
+        self.stub("apt-get", 'printf "%s\\n" "$*" >> "$CALLS"')
+        self.run_script("updates.sh")
+        self.assertEqual((self.root / "calls").read_text().splitlines(),
+                         ["-s --with-new-pkgs upgrade"])
 
     def test_refresh_failure_stops_upgrade(self):
         self.env["SUDO_RC"] = "100"
@@ -83,7 +95,7 @@ class UpdateTests(unittest.TestCase):
         result = self.run_script("update-all.sh")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual((self.root / "calls").read_text().splitlines(),
-                         ["apt-get -o APT::Update::Error-Mode=any update", "apt-get upgrade"])
+                         ["apt-get -o APT::Update::Error-Mode=any update", "apt-get --with-new-pkgs upgrade"])
 
     def test_bad_arguments(self):
         result = self.run_script("update-all.sh", "--dry-run", "extra")

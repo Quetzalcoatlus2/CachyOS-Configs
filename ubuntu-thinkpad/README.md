@@ -74,7 +74,11 @@ the laptop's top edge to reach the monitor, or the monitor's bottom edge to retu
 
 The Waybar update widget checks APT's local indexes hourly without root. A failed
 check displays a red error indicator and diagnostic tooltip, not zero updates.
-APT warnings (including unreadable source lists) also flag an incomplete check.
+Other APT warnings also flag an incomplete check. On this laptop
+`/etc/apt/sources.list` is root-only (`0600`), so the user-level count is shown
+as partial (yellow, `📦N?`) rather than as a permanent error. Upgrades use
+`apt-get --with-new-pkgs upgrade`, matching `apt upgrade`: new dependencies
+(for example kernel metapackage updates) are installed, but nothing is removed.
 Clicking opens the private foot terminal, refreshes indexes with sudo, and lets
 APT show its upgrade plan and ask for confirmation. Failures remain visible in
 the terminal; Waybar refreshes when the workflow exits. Reboots are reported,

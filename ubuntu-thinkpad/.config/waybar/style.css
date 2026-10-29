@@ -428,3 +428,7 @@ tooltip {
     color: #ff5555;
     font-weight: bold;
 }
+
+#custom-updates.partial {
+    color: #f1fa8c;
+}

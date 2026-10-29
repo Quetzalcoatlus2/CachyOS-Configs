@@ -41,11 +41,11 @@ fi
 printf 'Ubuntu package updates\nPrivate builds, Snap and Flatpak are not included.\n'
 if (( dry_run )); then
     printf '\nRead-only preview using existing package indexes:\n'
-    apt-get -s upgrade || exit "$?"
+    apt-get -s --with-new-pkgs upgrade || exit "$?"
 else
     sudo apt-get -o APT::Update::Error-Mode=any update || exit "$?"
     printf '\nReview the upgrade plan below; APT will ask before installing.\n'
-    sudo apt-get upgrade || exit "$?"
+    sudo apt-get --with-new-pkgs upgrade || exit "$?"
     if [[ -f /var/run/reboot-required ]]; then
         printf '\nA reboot is required; restart manually when convenient.\n'
     fi
