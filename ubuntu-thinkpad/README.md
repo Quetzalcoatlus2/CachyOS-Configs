@@ -70,6 +70,31 @@ Sway's DisplayLink support-policy warning. The config places the external monito
 above the laptop panel using its stable monitor identity. Move the pointer through
 the laptop's top edge to reach the monitor, or the monitor's bottom edge to return.
 
+## Ubuntu updates
+
+The Waybar update widget checks APT's local indexes hourly without root. A failed
+check displays a red error indicator and diagnostic tooltip, not zero updates.
+APT warnings (including unreadable source lists) also flag an incomplete check.
+Clicking opens the private foot terminal, refreshes indexes with sudo, and lets
+APT show its upgrade plan and ask for confirmation. Failures remain visible in
+the terminal; Waybar refreshes when the workflow exits. Reboots are reported,
+not initiated. No extra service restarts, package removal or cache cleanup are
+requested (package maintainer scripts may still restart services normally).
+The interactive Zsh `update` function uses the same workflow.
+
+Run `bash ~/.config/waybar/scripts/update-all.sh --dry-run` for a read-only
+preview using existing indexes. Private source builds, Snap and Flatpak are not
+covered. The CachyOS Paru/AUR, firmware-pruning and bootloader settings are not
+deployed on Ubuntu.
+
+Portable preferences from the latest CachyOS update are adapted here: GTK4's
+black theme, foot as the XFCE terminal, and native Wayland launch for Code
+Insiders. Existing Ubuntu MIME defaults, Pavucontrol window dimensions, custom
+Thunar action, OBS capture setup, and Waybar layout are retained rather than
+overwritten by personal-machine values. Fish, Paru, Shelly and OpenCode settings
+are not deployed because their CachyOS-specific packages/workflows are absent
+from this Ubuntu setup.
+
 ## Display shortcuts
 
 `Mod` is the Super/Windows key. Up always targets the external monitor; Down

@@ -423,3 +423,8 @@ tooltip {
     animation-direction: alternate;
     font-weight: bold;
 }
+
+#custom-updates.error {
+    color: #ff5555;
+    font-weight: bold;
+}

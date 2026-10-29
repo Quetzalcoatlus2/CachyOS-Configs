@@ -42,7 +42,7 @@ setopt interactivecomments
 
 unalias update 2>/dev/null
 update() {
-    sudo apt update && sudo apt upgrade
+    bash "$HOME/.config/waybar/scripts/update-all.sh"
 }
 
 if command -v atuin >/dev/null 2>&1; then

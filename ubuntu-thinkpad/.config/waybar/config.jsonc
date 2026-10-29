@@ -130,7 +130,7 @@
     "signal": 8,
     "return-type": "json",
     "tooltip": true,
-    "on-click": "foot -e zsh -ic 'sudo apt update && sudo apt upgrade; echo Done; read _; pkill -42 -x waybar'"
+    "on-click": "/home/ABO4198/.local/bin/foot -T 'System Update' bash \"$HOME/.config/waybar/scripts/update-all.sh\""
   },
   "temperature": {
     "interval": 2,
