@@ -151,8 +151,8 @@ input "type:touchpad" {
 # Touchpad gestures mirror the CachyOS config, using this laptop's volume and brightness wrappers.
 bindgesture pinch:3:inward exec playerctl play-pause
 bindgesture pinch:3:outward exec playerctl play-pause
-bindgesture swipe:3:left workspace prev
-bindgesture swipe:3:right workspace next
+bindgesture swipe:3:left workspace next
+bindgesture swipe:3:right workspace prev
 bindgesture swipe:3:up exec sh -c '$HOME/.config/waybar/scripts/volume.sh up 10'
 bindgesture swipe:3:down exec sh -c '$HOME/.config/waybar/scripts/volume.sh down 10'
 bindgesture swipe:4:up exec sg video -c '$HOME/.config/waybar/scripts/brightness.sh up 10'
