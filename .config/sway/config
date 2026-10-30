@@ -227,8 +227,8 @@ bindsym $mod+r mode "resize"
 #
     bindgesture pinch:3:inward exec playerctl play-pause
     bindgesture pinch:3:outward exec playerctl play-pause
-    bindgesture swipe:3:left workspace prev
-    bindgesture swipe:3:right workspace next
+    bindgesture swipe:3:left workspace next
+    bindgesture swipe:3:right workspace prev
     bindgesture swipe:3:up exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 10%+
     bindgesture swipe:3:down exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-
 
