@@ -9,7 +9,7 @@
 #   3. let Paru present Arch news and the coloured upgrade plan
 #   4. run the combined repository + AUR upgrade
 #   5. offer orphan removal
-#   6. offer package-cache cleanup with an explicit retention policy
+#   6. report package-cache candidates and leave cleanup to paccache.timer
 #   7. review .pacnew/.pacsave files
 #   8. automatically restart affected active services
 #   9. compare the running kernel with its installed package and check fwupd
@@ -599,9 +599,10 @@ review_cache() {
     section "Package cache"
     info "Retention policy: keep the 3 most recent versions of each package; keep anything newer than 30 days."
     info "AUR build caches are separate; use 'paru -Sc' explicitly if they need cleaning."
+    info "Deletion is delegated to paccache.timer, which already uses this policy."
 
     if (( DRY_RUN )); then
-        info "[dry-run] Would run: sudo paccache -r -k 3 --min-mtime '30 days ago'"
+        info "[dry-run] Would list candidates with: sudo paccache -d -k 3 --min-mtime '30 days ago'"
         CACHE_STATUS="dry-run"
         return
     fi
@@ -615,25 +616,29 @@ review_cache() {
     fi
 
     printf '%s\n' "$(cat "$dry")"
-    if grep -q 'no candidate packages' "$dry"; then
+
+    local candidates=""
+    candidates=$(sed -n 's/.*finished dry run: \([0-9][0-9]*\) candidates.*/\1/p' "$dry" | tail -n 1)
+
+    if [[ -z $candidates ]]; then
+        if grep -q 'no candidate packages' "$dry"; then
+            ok "No cache candidates under the retention policy."
+            CACHE_STATUS="nothing to remove"
+        else
+            warn "Could not parse the paccache candidate count; review the listing above."
+            CACHE_STATUS="candidates listed for paccache.timer"
+        fi
+        return
+    fi
+
+    if (( candidates == 0 )); then
         ok "No cache candidates under the retention policy."
         CACHE_STATUS="nothing to remove"
         return
     fi
 
-    if ! ask_yes_no "Remove the candidate packages listed above?"; then
-        info "Cache cleanup skipped."
-        CACHE_STATUS="skipped"
-        return
-    fi
-
-    if sudo paccache -r -k 3 --min-mtime '30 days ago'; then
-        ok "Package cache cleaned using the stated retention policy."
-        CACHE_STATUS="cleaned"
-    else
-        err "Cache cleanup failed."
-        CACHE_STATUS="cleanup failed"
-    fi
+    info "$candidates candidate package(s) left for paccache.timer; no files were deleted now."
+    CACHE_STATUS="$candidates candidate(s) pending for paccache.timer"
 }
 
 _update_restart_permitted() {
@@ -668,7 +673,12 @@ _update_restart_permitted() {
                             wpa_supplicant*|iwd*|connman*|dhcpcd*|sshd*|ssh.service|\
                             udisks2*|lvm*|dm-event*|multipath*|cryptsetup*|\
                             sway*|app-*sway*|waybar*|foot*|app-*foot*|\
-                            graphical*.target|graphical-session*.target)
+                            graphical*.target|graphical-session*.target|\
+                            snapper*|paccache*|limine-snapper-*|\
+                            btrfs*|fstrim*|logrotate*|man-db*|plocate-*|updatedb*|\
+                            fwupd*|packagekit*|cachyos-rate-mirrors*|bluetooth*|\
+                            postgresql*|mysql*|mariadb*|mongodb*|redis*|\
+                            docker*|podman*|containerd*|libvirt*|virtqemud*|qemu*|kvm*)
                                 return 1 ;;
                         esac
                     done

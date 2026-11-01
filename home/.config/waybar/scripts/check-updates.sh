@@ -142,7 +142,7 @@ if (( ${#errors[@]} > 0 )); then
     class="error"
 else
     if (( total == 0 )); then
-        class="synced"
+        class="updated"
     elif (( total <= 10 )); then
         class="low"
     elif (( total <= 35 )); then
