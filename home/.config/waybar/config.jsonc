@@ -170,7 +170,7 @@
     "min-length": 43,
     "max-length": 43,
     "interval": 1,
-    "exec": "$HOME/.config/waybar/scripts/network-traffic.py",
+    "exec": "$HOME/.config/waybar/scripts/network-traffic.sh",
     "return-type": "json",
     "tooltip": true,
     "on-click": "foot nmtui"

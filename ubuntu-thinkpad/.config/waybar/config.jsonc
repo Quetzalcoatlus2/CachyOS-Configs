@@ -130,7 +130,7 @@
     "signal": 8,
     "return-type": "json",
     "tooltip": true,
-    "on-click": "/home/ABO4198/.local/bin/foot -T 'System Update' bash \"$HOME/.config/waybar/scripts/update-all.sh\""
+    "on-click": "foot -T 'System Update' bash \"$HOME/.config/waybar/scripts/update-all.sh\""
   },
   "temperature": {
     "interval": 2,
