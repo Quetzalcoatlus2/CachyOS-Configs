@@ -216,6 +216,10 @@ window#waybar {
 }
 
 /* Thermal Alerts */
+#temperature.warning {
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
 #temperature.critical {
     animation: pulse-danger 0.8s ease-in-out infinite;
 }
@@ -286,6 +290,7 @@ window#waybar label,
 #custom-updates.medium,
 #custom-updates.high,
 #temperature,
+#temperature.warning,
 #temperature.critical,
 #cpu,
 #memory,

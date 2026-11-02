@@ -134,11 +134,12 @@
   },
   "temperature": {
     "interval": 2,
-    "critical-threshold": 110,
+    "warning-threshold": 110,
+    "critical-threshold": 120,
     "format": "🌡️{temperatureC}°C",
     "format-critical": "🔥{temperatureC}°C",
     "tooltip": true,
-    "tooltip-format": "Thermal Monitoring:\n•Current Temperature: {temperatureC}°C ({temperatureF}°F)\n•Sensor Path: thermal-zone11 (x86_pkg_temp)\n•Critical Threshold: 110°C",
+    "tooltip-format": "Thermal Monitoring:\n•Current Temperature: {temperatureC}°C ({temperatureF}°F)\n•Sensor Path: thermal-zone11 (x86_pkg_temp)\n•Warning Threshold: 110°C\n•Critical Threshold: 120°C",
     "thermal-zone": 11
   },
   "cpu": {
