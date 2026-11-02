@@ -74,9 +74,11 @@ the laptop's top edge to reach the monitor, or the monitor's bottom edge to retu
 
 The Waybar update widget checks APT's local indexes hourly without root, like the
 CachyOS widget: it shows `📦N` and a `📦?` only when the check itself fails (red).
-On this laptop `/etc/apt/sources.list` is root-only (`0600`), so the user-level
-count cannot include the main Ubuntu archive. The tooltip states this partial
-count; the bar does not add a marker. Upgrades use
+On this laptop `/etc/apt/sources.list` was root-only (`0600`), so the user-level
+count could not include the main Ubuntu archive. While the file is unreadable,
+the tooltip states this partial count and the bar does not add a marker. Making
+it world-readable (`sudo chmod 644 /etc/apt/sources.list`, Ubuntu's default)
+lets the count be complete. Upgrades use
 `apt-get --with-new-pkgs upgrade`, matching `apt upgrade`: new dependencies
 (for example kernel metapackage updates) are installed, but nothing is removed.
 Clicking opens the private foot terminal, refreshes indexes with sudo, and lets
