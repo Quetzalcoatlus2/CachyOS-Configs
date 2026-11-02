@@ -52,7 +52,7 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
         data = json.loads(result.stdout)
         self.assertEqual(data["class"], "error")
-        self.assertEqual(data["text"], "📦!")
+        self.assertEqual(data["text"], "📦?")
         self.assertIn("&lt;index&gt;", data["tooltip"])
         self.assertIn("exit 100", data["tooltip"])
 
@@ -63,14 +63,15 @@ class UpdateTests(unittest.TestCase):
         self.assertIn("-s --with-new-pkgs upgrade", result.stdout)
         self.assertFalse((self.root / "calls").exists())
 
-    def test_partial_source_warning_is_visible(self):
+    def test_partial_source_is_explained_without_marker(self):
         self.stub("apt-get", "echo 'W: Unable to read /etc/apt/sources.list - open (13: Permission denied)' >&2\necho 'Inst pkg'")
         result = self.run_script("updates.sh")
         self.assertEqual(result.returncode, 0)
         data = json.loads(result.stdout)
-        self.assertEqual(data["class"], "partial")
-        self.assertEqual(data["text"], "📦1?")
+        self.assertEqual(data["class"], "low")
+        self.assertEqual(data["text"], "📦1")
         self.assertIn("Unable to read", data["tooltip"])
+        self.assertIn("Partial count", data["tooltip"])
 
     def test_other_warnings_are_errors(self):
         self.stub("apt-get", "echo 'W: Unable to read /etc/apt/sources.list' >&2\necho 'Inst pkg'")

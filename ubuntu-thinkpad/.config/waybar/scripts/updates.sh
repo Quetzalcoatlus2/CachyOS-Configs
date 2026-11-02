@@ -4,7 +4,8 @@ set -u
 export LC_ALL=C
 rc=0
 output=$(apt-get -s --with-new-pkgs upgrade 2>&1) || rc=$?
-# Unreadable root-only source lists make the count partial, not unusable.
+# Unreadable root-only source lists leave the count incomplete: keep the normal
+# display (like the CachyOS widget) and explain the gap in the tooltip.
 unreadable_re='^W: Unable to read /etc/apt/sources\.list(\.d/[^ ]*)? - open \(13: Permission denied\)$'
 partial=$(printf '%s\n' "$output" | grep -E "$unreadable_re")
 if (( rc == 0 )) && printf '%s\n' "$output" | grep -vE "$unreadable_re" | grep -qE '^[WE]:'; then
@@ -16,7 +17,7 @@ import html
 import json
 import sys
 print(json.dumps({
-    "text": "📦!",
+    "text": "📦?",
     "class": "error",
     "tooltip": html.escape(f"APT update check failed (exit {sys.argv[1]}):\n{sys.argv[2]}"),
 }))
@@ -30,18 +31,14 @@ tip="System Package Synchronization:
 
 Action: Click to refresh indexes, review and install Ubuntu updates.
 Private source builds, Snap and Flatpak are not updated by this widget."
-mark=
 if [[ -n $partial ]]; then
-    mark='?'
     tip="$tip
 
 Partial count: some APT sources are readable by root only:
 $partial
 Click to run the full sudo update."
 fi
-if [[ -n $partial ]]; then
-    class=partial
-elif (( n == 0 )); then
+if (( n == 0 )); then
     class=updated
 elif (( n <= 10 )); then
     class=low
@@ -50,7 +47,7 @@ elif (( n <= 35 )); then
 else
     class=high
 fi
-python3 - "$n$mark" "$class" "$tip" <<'PY'
+python3 - "$n" "$class" "$tip" <<'PY'
 import html
 import json
 import sys
