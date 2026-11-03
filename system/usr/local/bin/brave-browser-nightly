@@ -18,8 +18,11 @@ fi
 
 # Keep stderr available to the launching terminal or session logger.
 # Hardware decoding already works without forced VA-API feature overrides.
+# Pin the v10 "peanuts" cookie key: with no secret service present, backend
+# autodetection can drift and orphan existing cookies on a later start.
 exec /opt/brave.com/brave-nightly/brave-browser \
   --ozone-platform=wayland \
+  --password-store=basic \
   --disable-features=WaylandOverlayDelegation,WaylandFractionalScaleV1,WaylandWindowDecorations,BraveWebViewRoundedCorners,HistoryEmbeddings,BraveAIChat,BraveRewards,BraveWallet \
   --enable-features=HighEfficiencyModeAvailable,BatterySaverModeAvailable \
   --process-per-site \
