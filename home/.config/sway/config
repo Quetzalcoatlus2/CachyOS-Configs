@@ -135,8 +135,8 @@ set $menu wofi --show drun
     bindsym $mod+Ctrl+0 workspace number 20
     bindsym $mod+Ctrl+Right workspace next
     bindsym $mod+Ctrl+Left workspace prev
-    bindsym $mod+Ctrl+Shift+Right move container to workspace next
-    bindsym $mod+Ctrl+Shift+Left move container to workspace prev
+    bindsym --no-repeat $mod+Ctrl+Shift+Right exec ~/.config/sway/scripts/move-container-workspace.sh next
+    bindsym --no-repeat $mod+Ctrl+Shift+Left exec ~/.config/sway/scripts/move-container-workspace.sh prev
     # Move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace number 1
     bindsym $mod+Shift+2 move container to workspace number 2
