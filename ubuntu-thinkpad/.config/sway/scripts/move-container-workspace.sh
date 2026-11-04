@@ -9,6 +9,11 @@ case "${1:-}" in
     *) printf 'Usage: %s next|prev\n' "${0##*/}" >&2; exit 2 ;;
 esac
 
+# Held key repeats can overlap; serialize them and drop the extra presses.
+lock="${XDG_RUNTIME_DIR:-/tmp}/sway-move-container-workspace.lock"
+exec 9>"$lock"
+flock -n 9 || exit 0
+
 current=$(swaymsg -t get_workspaces -r |
     jq -r '.[] | select(.focused) | .num' |
     head -n 1)

@@ -81,8 +81,8 @@ bindsym $mod+Ctrl+9 workspace number 19
 bindsym $mod+Ctrl+0 workspace number 20
 bindsym $mod+Ctrl+Right workspace next
 bindsym $mod+Ctrl+Left workspace prev
-bindsym --no-repeat $mod+Ctrl+Shift+Right exec ~/.config/sway/scripts/move-container-workspace.sh next
-bindsym --no-repeat $mod+Ctrl+Shift+Left exec ~/.config/sway/scripts/move-container-workspace.sh prev
+bindsym $mod+Ctrl+Shift+Right exec ~/.config/sway/scripts/move-container-workspace.sh next
+bindsym $mod+Ctrl+Shift+Left exec ~/.config/sway/scripts/move-container-workspace.sh prev
 
 bindsym $mod+Shift+1 move container to workspace number 1
 bindsym $mod+Shift+2 move container to workspace number 2
