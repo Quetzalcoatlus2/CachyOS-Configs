@@ -21,16 +21,19 @@ on-button-right=dismiss
 
 [app-name=teams-for-linux]
 default-timeout=0
+height=1000
 border-color=#56b4e9
 on-notify=exec canberra-gtk-play -i message-new-instant
 
 [app-name="Microsoft Teams"]
 default-timeout=0
+height=1000
 border-color=#56b4e9
 on-notify=exec canberra-gtk-play -i message-new-instant
 
 [app-name="Teams for Linux"]
 default-timeout=0
+height=1000
 border-color=#56b4e9
 on-notify=exec canberra-gtk-play -i message-new-instant
 
