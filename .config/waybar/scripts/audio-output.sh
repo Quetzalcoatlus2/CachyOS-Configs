@@ -24,13 +24,9 @@ case "${active_port,,} ${description,,}" in
   *) device_icon="" ;;
 esac
 
-escape_json() {
-  sed 's/\\/\\\\/g; s/"/\\"/g'
-}
-
 text="$device_icon"
-tooltip="Audio Output Device (PipeWire Sink):\n•Target Device: ${description}\n•Active Port: ${active_port}"
-printf '{"text":"%s","tooltip":"%s","class":"%s"}\n' \
-  "$(printf '%s' "$text" | escape_json)" \
-  "$(printf '%s' "$tooltip" | escape_json)" \
-  "normal"
+printf -v tooltip 'Audio Output Device (PipeWire Sink):\n•Target Device: %s\n•Active Port: %s' \
+  "$description" "$active_port"
+
+jq -cn --arg text "$text" --arg tooltip "$tooltip" --arg class "normal" \
+  '{text: $text, tooltip: $tooltip, class: $class}'
