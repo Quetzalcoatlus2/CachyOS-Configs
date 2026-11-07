@@ -5,6 +5,21 @@ from datetime import datetime as _dt_cls, timezone as _tz_cls
 from zoneinfo import ZoneInfo as _ZoneInfo
 
 _orig_dumps = _json_mod.dumps
+
+
+def _compact_markup(markup):
+    # GTK3 tooltips wrap the label at 70 characters.  The 4x3 calendar grid
+    # and the world clock are wider than that, so make visible spaces
+    # non-breaking to preserve the monospace alignment.  Blank lines are
+    # dropped so the complete tooltip fits on screen.
+    parts = _re_mod.split(r"(<[^>]+>)", markup)
+    markup = "".join(
+        part if part.startswith("<") else part.replace(" ", "\u00a0")
+        for part in parts
+    )
+    return "\n".join(line for line in markup.split("\n") if line.strip())
+
+
 def _patched_dumps(obj, *args, **kwargs):
     if isinstance(obj, dict) and "tooltip" in obj and "WORLD CLOCK" not in obj["tooltip"]:
         _cache_file = "/dev/shm/waybar_cal_tooltip_cache"
@@ -13,7 +28,7 @@ def _patched_dumps(obj, *args, **kwargs):
             with open(_cache_file, "r") as _cf:
                 _cached_key, _cached_tip = _cf.read().split("\n", 1)
                 if _cached_key == _min_key:
-                    obj["tooltip"] = _cached_tip
+                    obj["tooltip"] = _compact_markup(_cached_tip)
                     return _orig_dumps(obj, *args, **kwargs)
         except Exception:
             pass
@@ -99,6 +114,7 @@ def _patched_dumps(obj, *args, **kwargs):
             obj["tooltip"] = obj["tooltip"][:-13] + _block + "</small></tt>"
         else:
             obj["tooltip"] += _block
+        obj["tooltip"] = _compact_markup(obj["tooltip"])
         try:
             with open(_cache_file, "w") as _cf:
                 _cf.write(_min_key + "\n" + obj["tooltip"])
