@@ -726,6 +726,7 @@ service_diagnostic() {
     local out="$WORKDIR/restart-lsof.out"
     local errors="$WORKDIR/restart-lsof.err"
     local scan_rc=0
+    local inspection_warnings=0
     local -a privileged=()
     (( EUID == 0 )) || privileged=(sudo)
 
@@ -740,11 +741,19 @@ service_diagnostic() {
     fi
 
     if [[ -s $errors ]]; then
-        warn "lsof reported warnings; inspection may be incomplete."
-        cat "$errors" >&2
+        # lsof always complains about the session's FUSE mounts; they cannot
+        # hold services or replaced libraries, so do not flag them as a
+        # degraded inspection.  Anything else remains a real warning.
+        if grep -qvE '^lsof: WARNING: can.t stat\(\) fuse\.|^[[:space:]]+Output information may be incomplete\.$' "$errors"; then
+            inspection_warnings=1
+            warn "lsof reported warnings; inspection may be incomplete."
+            cat "$errors" >&2
+        else
+            info "lsof skipped FUSE mounts (gvfsd-fuse, portal); no service can live there."
+        fi
     fi
 
-    local uid self_cgroup pid cgroup component unit scope key
+    local uid self_cgroup pid cgroup component unit scope key comm
     local restarted=0 unsuccessful=0 skipped=0 unresolved=0
     local -a components=() ctl=()
     local -A candidates=()
@@ -788,7 +797,8 @@ service_diagnostic() {
         done
 
         if [[ -z $unit || $unit == user@*.service ]]; then
-            info "PID $pid is an application/session, not a restartable service."
+            comm=$(tr -d '\0' < "/proc/$pid/comm" 2>/dev/null || true)
+            info "PID $pid${comm:+ ($comm)} is an application/session, not a restartable service."
             unresolved=$((unresolved + 1))
             continue
         fi
@@ -850,7 +860,7 @@ service_diagnostic() {
 
     SERVICE_STATUS="$restarted restarted, $unsuccessful unsuccessful, $skipped skipped, $unresolved process(es) need manual review"
     (( SERVICE_FAILED )) && SERVICE_STATUS+=", $SERVICE_FAILED previously failed unit(s)"
-    [[ -s $errors ]] && SERVICE_STATUS+=", inspection warnings"
+    (( inspection_warnings )) && SERVICE_STATUS+=", inspection warnings"
 
     info "$SERVICE_STATUS"
     return 0
@@ -859,12 +869,13 @@ service_diagnostic() {
 
 kernel_check() {
     section "Kernel and reboot check"
-    local running pkg installed kernel_reboot=0 fwupd_reboot=0
+    local running pkg installed kernel_reboot=0 fwupd_reboot=0 owner_verified=0
     running=$(uname -r)
     pkg=""
 
     if [[ -e /usr/lib/modules/$running/vmlinuz ]]; then
         pkg=$(/usr/bin/pacman -Qoq "/usr/lib/modules/$running/vmlinuz" 2>/dev/null || true)
+        [[ -n $pkg ]] && owner_verified=1
     fi
 
     if [[ -z $pkg ]]; then
@@ -881,8 +892,17 @@ kernel_check() {
 
     if [[ -n $pkg ]]; then
         installed=$(/usr/bin/pacman -Q "$pkg" 2>/dev/null | awk '{print $2}')
-        if [[ -n $installed && ( $running == "$installed" || $running == "$installed"-* ) ]]; then
+        # RC packages have versions like 7.4.rc1-2 while uname reports
+        # 7.4.0-rc1-2-cachyos-rc, so a textual prefix match fails even though
+        # the running kernel is correct.  Ownership of the running release's
+        # vmlinuz is authoritative; keep the prefix match for stable kernels
+        # whose module tree may already have been removed by an upgrade.
+        if [[ -n $installed ]] &&
+           { (( owner_verified )) || [[ $running == "$installed" || $running == "$installed"-* ]]; }; then
             ok "Running kernel $running matches installed package $pkg $installed."
+        elif [[ -z $installed ]]; then
+            warn "Cannot determine the installed version of $pkg; reboot cannot be ruled out."
+            kernel_reboot=1
         else
             warn "Running kernel $running does not match installed package $pkg $installed."
             kernel_reboot=1
