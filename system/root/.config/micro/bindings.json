@@ -3,5 +3,7 @@
     "CtrlUnderscore": "lua:comment.comment",
     "CtrlSpace": "Copy|CopyLine",
     "CtrlHome": "CursorStart",
-    "CtrlEnd": "CursorEnd"
+    "CtrlEnd": "CursorEnd",
+    "F1": "CursorStart",
+    "F2": "CursorEnd"
 }

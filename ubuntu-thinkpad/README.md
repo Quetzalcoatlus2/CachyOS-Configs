@@ -107,9 +107,10 @@ Foot maps Ctrl+C to NUL, which is the shell's set-mark key and Micro's copy key,
 passes Ctrl+A through, and handles Ctrl+V as paste. In Micro, including
 `sudo micro`, Ctrl+C copies the selection (or the current line when nothing is
 selected), Ctrl+V pastes, and Ctrl+A selects all. Ctrl+Shift+C is the SIGINT
-key. Mouse selections in a shell copy automatically because
-`selection-target=both` is set; Ctrl+Insert is the explicit terminal copy
-fallback, and Ctrl+V or Ctrl+Shift+V pastes.
+key. F1 and F2 jump to the start and end of the buffer, matching Foot's
+scrollback bindings; Ctrl+S saves. Mouse selections in a shell copy
+automatically because `selection-target=both` is set; Ctrl+Insert is the
+explicit terminal copy fallback, and Ctrl+V or Ctrl+Shift+V pastes.
 
 Micro uses the terminal clipboard (OSC 52), so `sudo micro` can copy through the
 terminal without sharing the user's clipboard socket with root. Install the
