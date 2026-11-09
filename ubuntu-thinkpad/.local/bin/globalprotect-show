@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# PanGPUI is single-instance. The login autostart leaves a hidden copy running,
+# and a second launch exits silently, so start one only when none is running
+# and then ask the GlobalProtect agent to show its window.
+if ! pgrep -x PanGPUI >/dev/null; then
+	setsid -f env -u LD_LIBRARY_PATH QT_QPA_PLATFORM=xcb /opt/paloaltonetworks/globalprotect/PanGPUI >/dev/null 2>&1
+	sleep 3
+fi
+exec globalprotect launch-ui

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=GlobalProtect
 Comment=GlobalProtect UI
-Exec=env -u LD_LIBRARY_PATH QT_QPA_PLATFORM=xcb /opt/paloaltonetworks/globalprotect/PanGPUI
+Exec=/home/ABO4198/.local/bin/globalprotect-show
 Icon=/usr/share/icons/hicolor/48x48/apps/globalprotect.png
 Terminal=false
 Type=Application
