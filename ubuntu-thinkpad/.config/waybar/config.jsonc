@@ -233,6 +233,10 @@
     "tooltip-format": "Power Subsystem Metrics:\n•Charge Level: {capacity}%\n•Estimated Runtime: {time}"
   },
   "custom/clock": {
+    "format": "{}",
+    "align": 1,
+    "min-length": 22,
+    "max-length": 22,
     "exec": "python3 $HOME/.config/waybar/scripts/calendar-belgium.py",
     "interval": 1,
     "return-type": "json",
