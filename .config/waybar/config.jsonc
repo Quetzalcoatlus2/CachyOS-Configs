@@ -245,8 +245,8 @@
   "custom/calendar": {
     "format": "{}",
     "align": 1,
-    "min-length": 21,
-    "max-length": 21,
+    "min-length": 22,
+    "max-length": 22,
     "interval": 1,
     "exec": "python3 $HOME/.config/waybar/scripts/calendar-belgium.py",
     "return-type": "json",
