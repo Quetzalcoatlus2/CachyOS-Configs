@@ -40,6 +40,10 @@ pgrep -u "$(id -u)" -x autotiling >/dev/null || swaymsg exec autotiling
 
 Restart Waybar or log out and back in to load its restored CPU sensor. The sensor path is verified for the Ryzen laptop, not universal across different hardware. Exit Brave normally and reopen it to load the restored feature list. Other Brave workarounds and the 12 GiB zram configuration are unchanged.
 
+## Networking
+
+The CachyOS tree ships `system/etc/NetworkManager/dispatcher.d/99-wifi-noscan.sh`. On a weak 5 GHz link NetworkManager's default `bgscan` (`simple:30:-70:86400`) scans every 30 s; each scan takes the radio off-channel long enough to underrun video buffers. The dispatcher clears wpa_supplicant's `bgscan` after association and reassociates once. It does not change channels or power save, and normal scans still run while disconnected or when NetworkManager explicitly requests one.
+
 ## Terminal and editor shortcuts
 
 Foot maps Ctrl+C to NUL, which is the shell's set-mark key and Micro's copy key,
