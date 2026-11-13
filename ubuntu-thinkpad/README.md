@@ -124,6 +124,27 @@ for f in settings.json bindings.json colorschemes/monokai-black.micro; do
 done
 ```
 
+## Networking
+
+The tree ships `system/etc/NetworkManager/dispatcher.d/99-wifi-noscan.sh`. On a
+weak 5 GHz link NetworkManager's default `bgscan` (`simple:30:-70:86400`) scans
+every 30 s, and each scan takes the radio off-channel long enough to underrun
+video buffers. The dispatcher clears wpa_supplicant's `bgscan` after association
+and reassociates once. It does not change channels or power save, and normal
+scans still run while disconnected or when NetworkManager explicitly requests
+one. Install it once from this directory:
+
+```sh
+cd ubuntu-thinkpad
+sudo install -D -o root -g root -m 0755 \
+    system/etc/NetworkManager/dispatcher.d/99-wifi-noscan.sh \
+    /etc/NetworkManager/dispatcher.d/99-wifi-noscan.sh
+```
+
+The reassociation drops Wi-Fi for a moment. To apply it to the current
+connection without waiting for a reconnect, run
+`sudo /etc/NetworkManager/dispatcher.d/99-wifi-noscan.sh wlp0s20f3 up`.
+
 ## Display shortcuts
 
 `Mod` is the Super/Windows key. Up always targets the external monitor; Down
