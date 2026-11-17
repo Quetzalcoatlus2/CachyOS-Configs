@@ -62,11 +62,19 @@ for line in sl_out.splitlines():
     if pkg not in best_repo_ver or vercmp(rver, best_repo_ver[pkg][1]) > 0:
         best_repo_ver[pkg] = (repo, rver)
 
+# Paru passes repo targets as "repo/pkg". Compare package names, not whole
+# arguments, so the same package is never added as a second explicit target.
+arg_packages = {
+    a.rsplit("/", 1)[-1]
+    for a in args
+    if a and not a.startswith("-")
+}
+
 extra_targets = []
 for pkg, (brepo, bver) in best_repo_ver.items():
     if pkg != "libclc" and vercmp(bver, local_vers[pkg]) > 0 and vercmp(bver, first_ver[pkg]) > 0:
         target = f"{brepo}/{pkg}"
-        if pkg not in args and target not in args:
+        if pkg not in arg_packages and target not in args:
             extra_targets.append(target)
 
 master_fd, slave_fd = pty.openpty()
