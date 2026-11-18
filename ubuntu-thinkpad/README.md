@@ -6,7 +6,7 @@ USB-C/USB-A DisplayLink dock (DUD9011D1), on Ubuntu 22.04.
 ## Prerequisites
 
 The launcher requires a separately built swayfx stack at
-`$HOME/.local/opt/swayfx` (swayfx 0.6 with scenefx 0.5) on top of the private
+`$HOME/.local/opt/swayfx` (swayfx 0.6.1 with scenefx 0.5) on top of the private
 Sway 1.12 / wlroots 0.20 prefix at `$HOME/.local/opt/sway-1.12`; it does not use
 Ubuntu's Sway 1.7. The sway-1.12 prefix supplies wlroots 0.20.0 with XWayland
 enabled, Wayland 1.24.0, wayland-protocols 1.47, libdrm 2.4.130, xkbcommon 1.8.0,
@@ -45,8 +45,8 @@ instances. The updated daemon was already started manually in the current sessio
 ## Session
 
 Install `.config/sway/config` and the executable `.local/bin/sway-displaylink`
-under the user's home. The config also expects the existing user Waybar launcher
-at `/home/ABO4198/.local/bin/waybar`.
+under the user's home. The config also expects Waybar 0.16.0 at
+`/home/ABO4198/.local/bin/waybar`.
 
 The GDM entry at `/usr/share/wayland-sessions/sway-displaylink.desktop` is:
 

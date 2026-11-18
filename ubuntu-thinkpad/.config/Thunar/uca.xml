@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Open Terminal Here</name>
+	<unique-id>1791988563568822-1</unique-id>
+	<command>/home/ABO4198/.local/bin/foot -D "%f"</command>
+	<description>Open Foot in the selected directory</description>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+</actions>
