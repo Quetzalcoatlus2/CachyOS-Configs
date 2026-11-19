@@ -107,7 +107,6 @@ if (( state_ok )); then
         cp -- "$state_file" "$STATE_FILE"
     elif ! cmp -s -- "$state_file" "$STATE_FILE"; then
         old_total=$(wc -l <"$STATE_FILE" 2>/dev/null || printf '0')
-        new_total=$(wc -l <"$state_file" 2>/dev/null || printf '0')
 
         if (( total > 0 )); then
             if (( old_total == 0 )); then
@@ -120,12 +119,9 @@ if (( state_ok )); then
             body+=$'\n'"AUR/devel: $aur_count"
             (( flatpak_count > 0 )) && body+=$'\n'"Flatpak: $flatpak_count"
 
-            preview=$(awk 'NF >= 2 { print $2 }' "$state_file" | head -n 5)
+            preview=$(awk 'NF >= 2 { print $2 }' "$state_file")
             if [[ -n $preview ]]; then
                 body+=$'\n\n'"$(printf '%s\n' "$preview" | sed 's/^/• /')"
-                if (( new_total > 5 )); then
-                    body+=$'\n'"… and $((new_total - 5)) more"
-                fi
             fi
             notify-send -a "System Updates" -i "$NOTIFY_ICON" "$title" "$body" 2>/dev/null || true
         elif (( old_total > 0 )); then

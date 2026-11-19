@@ -5,7 +5,8 @@ border-color=#777777
 border-size=1
 border-radius=4
 width=380
-height=220
+# Allow long notifications to show all their lines; mako shrinks short ones.
+height=1000
 # Offset the whole stack from the screen edges; margin=0 makes popups touch.
 outer-margin=40,12,12,12
 margin=0
