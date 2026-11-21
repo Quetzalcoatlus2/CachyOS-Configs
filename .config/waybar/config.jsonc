@@ -141,7 +141,7 @@
       "critical": 90
     },
     "tooltip": true,
-    "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Mean Frequency: {avg_frequency} GHz\n•System Load: {load}\n•Core Breakdown:\n{core_frequencies}\n\nAction: Click to launch btop.",
+    "tooltip-format": "Processor Telemetry:\n•Total CPU Load: {usage}%\n•Frequency: {avg_frequency:.2f} GHz (min {min_frequency:.2f} / max {max_frequency:.2f})\n•System Load: {load:.2f}\n•Per-Core: {usage0}% {usage1}% {usage2}% {usage3}% {usage4}% {usage5}% {usage6}% {usage7}%\n\nAction: Click to launch btop.",
     "on-click": "foot -e btop"
   },
   "memory": {
@@ -152,19 +152,19 @@
       "critical": 90
     },
     "tooltip": true,
-    "tooltip-format": "Memory & Swap Allocation:\n•Physical RAM Used: {used:0.2f} GiB / {total:0.2f} GiB ({percentage}%)\n•Available Memory: {avail:0.2f} GiB\n•Swap Allocation: {swapUsed:0.2f} GiB / {swapTotal:0.2f} GiB ({swapPercentage}%)\n\nAction: Click to launch btop.",
+    "tooltip-format": "🧠 Memory &amp; Swap\n•RAM Used: {used:.2f} GiB / {total:.2f} GiB ({percentage}%)\n•Available: {avail:.2f} GiB\n•Swap Used: {swapUsed:.2f} GiB / {swapTotal:.2f} GiB ({swapPercentage}%)\n\nAction: Click to launch btop.",
     "on-click": "foot -e btop"
   },
   "disk": {
     "interval": 30,
     "format": "💾{percentage_used}%",
-    "path": "/",
+    "paths": ["/"],
     "states": {
       "warning": 80,
       "critical": 90
     },
     "tooltip": true,
-    "tooltip-format": "Root Storage Subvolume:\n•Mount Point: {path}\n•Space Consumed: {used} / {total} ({percentage_used}%)\n•Available Storage: {free} ({percentage_free}% remaining)"
+    "tooltip-format": "💾 Root Storage Subvolume:\n•Mount Point: {path}\n•Space Consumed: {used} / {total} ({percentage_used}%)\n•Available Storage: {free} ({percentage_free}% remaining)"
   },
   "custom/network": {
     "align": 0,
