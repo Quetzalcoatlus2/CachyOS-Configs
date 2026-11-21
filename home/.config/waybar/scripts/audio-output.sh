@@ -25,8 +25,10 @@ case "${active_port,,} ${description,,}" in
 esac
 
 text="$device_icon"
-printf -v tooltip 'Audio Output Device (PipeWire Sink):\n•Target Device: %s\n•Active Port: %s' \
-  "$description" "$active_port"
+icon_prefix=""
+[[ -n "$device_icon" ]] && icon_prefix="${device_icon} "
+printf -v tooltip '%sAudio Output Device (PipeWire Sink):\n•Target Device: %s\n•Active Port: %s' \
+  "$icon_prefix" "$description" "$active_port"
 
 jq -cn --arg text "$text" --arg tooltip "$tooltip" --arg class "normal" \
   '{text: $text, tooltip: $tooltip, class: $class}'
