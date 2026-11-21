@@ -5,7 +5,13 @@
 # Editor backup / swap files
 *~
 *.bak
+*.bak.*
+*.before-*
 *.orig
 *.swp
 .*.sw?
 .*.swn
+
+# Python bytecode
+__pycache__/
+*.pyc

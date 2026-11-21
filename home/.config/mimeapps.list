@@ -9,9 +9,11 @@ text/plain=micro.desktop
 text/x-shellscript=micro.desktop
 application/pdf=com.brave.Browser.nightly.desktop
 video/mp4=com.obsproject.Studio.desktop
+x-scheme-handler/openchamber=openchamber.desktop
 
 [Added Associations]
 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=libreoffice-calc.desktop;com.brave.Browser.nightly.desktop;
 text/x-shellscript=micro.desktop;
 application/pdf=com.brave.Browser.nightly.desktop;
 video/mp4=com.brave.Browser.nightly.desktop;com.obsproject.Studio.desktop;
+x-scheme-handler/openchamber=openchamber.desktop;

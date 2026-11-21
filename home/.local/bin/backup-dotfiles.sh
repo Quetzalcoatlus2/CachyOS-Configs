@@ -26,7 +26,9 @@ rm -rf "$BACKUP_DIR/hypr" "$BACKUP_DIR/.config/hypr"
 cd "$HOME"
 for target in "${TARGETS[@]}"; do
     if [ -e "$target" ]; then
-        rsync -aR --delete --exclude='.git' --exclude='*~' --exclude='*.before-autotiling-*' "$target" "$BACKUP_DIR/"
+        rsync -aR --delete --exclude='.git' --exclude='*~' --exclude='*.bak.*' \
+            --exclude='__pycache__' --exclude='*.pyc' \
+            --exclude='*.before-autotiling-*' "$target" "$BACKUP_DIR/"
     fi
 done
 
