@@ -34,7 +34,7 @@ def parse_rows(text):
 
 def read_records():
     result = subprocess.run(
-        [SNAPPER, "--csvout", "-c", "root", "list", "--disable-used-space", "--columns", ",".join(COLUMNS)],
+        [SNAPPER, "--no-dbus", "--csvout", "-c", "root", "list", "--disable-used-space", "--columns", ",".join(COLUMNS)],
         check=True, text=True, stdout=subprocess.PIPE,
         env={**os.environ, "LC_ALL": "C"},
     )
@@ -94,7 +94,7 @@ def main():
             linked = {other for n in group for other in current[n]["links"] if other in current}
             if not linked.issubset(set(group)):
                 raise RuntimeError("Snapshot pair changed; refusing deletion")
-            subprocess.run([SNAPPER, "-c", "root", "delete", *map(str, group)], check=True)
+            subprocess.run([SNAPPER, "--no-dbus", "-c", "root", "delete", *map(str, group)], check=True)
         remaining = len(read_records())
         print(f"Cleanup complete; remaining root snapshots: {remaining}", flush=True)
         if remaining > args.limit:
