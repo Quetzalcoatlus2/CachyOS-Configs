@@ -42,7 +42,7 @@ if [[ -z "$iface" ]]; then
 fi
 
 if [[ -z "$iface" ]]; then
-    printf '{"text":"🚫 Disconnected","tooltip":"Network Interface Status:\\n•Status: Disconnected","class":"disconnected"}\n'
+    printf '{"text":"🚫 Disconnected","tooltip":"🚫 Network Interface Status:\\n•Status: Disconnected","class":"disconnected"}\n'
     exit 0
 fi
 
@@ -79,7 +79,7 @@ if [[ -z "$ip_addr" ]]; then
 fi
 
 if [[ -z "$ip_addr" ]]; then
-    printf '{"text":"🔗 %s (No IP)","tooltip":"Network Interface Status:\\n•Device: %s\\n•Status: Connected (No IP)","class":"linked"}\n' "$iface" "$iface"
+    printf '{"text":"🔗 %s (No IP)","tooltip":"🔗 Network Interface Status:\\n•Device: %s\\n•Status: Connected (No IP)","class":"linked"}\n' "$iface" "$iface"
     exit 0
 fi
 
@@ -112,11 +112,13 @@ if [[ -d "/sys/class/net/$iface/wireless" ]]; then
         fi
     done < /proc/net/wireless
     text="📶${ssid}(${signal}%)🔻${down_str}🔺${up_str}"
+    net_icon="📶"
 else
     text="🌐${ip_addr}/${cidr}🔻${down_str}🔺${up_str}"
+    net_icon="🌐"
 fi
 
-tooltip="Network Interface Status:\\n•Device: ${iface}\\n•IP Address: ${ip_addr}/${cidr}"
+tooltip="${net_icon} Network Interface Status:\\n•Device: ${iface}\\n•IP Address: ${ip_addr}/${cidr}"
 [[ -n "$gw" ]] && tooltip="${tooltip}\\n•Gateway: ${gw}"
 tooltip="${tooltip}\\n•Download: ${down_str}\\n•Upload: ${up_str}"
 

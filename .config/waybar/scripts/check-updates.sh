@@ -153,7 +153,7 @@ if (( total == 0 && ${#errors[@]} > 0 )); then
     text="?"
 fi
 
-tooltip="System Package Synchronization"
+tooltip="📦 System Package Synchronization"
 tooltip+=$'\n'"• Available updates: $total ($repo_count repository, $aur_count AUR/devel"
 if (( flatpak_count > 0 )); then
     tooltip+=", $flatpak_count Flatpak"
