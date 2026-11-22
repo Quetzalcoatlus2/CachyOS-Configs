@@ -5,6 +5,12 @@ set $up k
 set $right l
 set $term $HOME/.local/bin/foot
 set $menu $HOME/.local/bin/wofi --show drun
+# Preferred applications for the shortcuts shared with the CachyOS desktop
+set $files thunar
+set $browser microsoft-edge-stable
+set $sysmon btop
+set $net $HOME/.local/bin/nmtui
+set $lock env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -c 000000
 
 output * bg #000000 solid_color
 output eDP-1 pos 0 1080
@@ -26,7 +32,13 @@ exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSO
 exec env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swayidle -w timeout 600 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000' timeout 900 'swaymsg "output * power off"' resume 'sg video -c "$HOME/.config/waybar/scripts/brightness.sh wake"' before-sleep 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000'
 exec $HOME/.config/waybar/scripts/sway-brave-fullscreen.sh
 
+# Mod+T also works on keyboards without Return
 bindsym $mod+Return exec $term
+bindsym $mod+t exec $term
+
+# Floating terminal for a quick command over the current window
+bindsym $mod+Shift+t exec $term --app-id floating-term
+
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
 bindsym $mod+Shift+c reload
@@ -140,8 +152,17 @@ bindsym $mod+Print exec sh -c 'mkdir -p "$HOME/Pictures/Screenshots"; file="$HOM
 bindsym Ctrl+Print exec sh -c 'grim - | $HOME/.local/bin/wl-copy -t image/png'
 
 
-bindsym $mod+Ctrl+l exec env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -c 000000
+bindsym $mod+Ctrl+l exec $lock
+bindsym $mod+Escape exec $lock
 bindsym $mod+Shift+Escape exec sh -c '$HOME/.config/waybar/scripts/power-menu.sh'
+
+# Quick application shortcuts (shared with the CachyOS desktop)
+bindsym $mod+Shift+e exec $files
+bindsym $mod+Shift+b exec $browser
+bindsym $mod+Shift+a exec env GTK_THEME=Adwaita:dark pavucontrol
+bindsym $mod+Shift+i exec $term $net
+bindsym $mod+Shift+m exec $term -e $sysmon
+bindsym $mod+Shift+u exec $term -T 'System Update' bash "$HOME/.config/waybar/scripts/update-all.sh"
 
 input "type:keyboard" {
     xkb_layout "us"
@@ -195,6 +216,8 @@ popup_during_fullscreen smart
 for_window [app_id="^brave.*"] border pixel 0, inhibit_idle fullscreen
 for_window [class="^[bB]rave.*"] border pixel 0, inhibit_idle fullscreen
 for_window [title="(?i)picture[ -]in[ -]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 465
+# Center the quick terminal so it never joins the tiling layout.
+for_window [app_id="floating-term"] floating enable, resize set 1000 650, move position center
 # Simulink ribbon flickers after MATLAB maps a window; fullscreen on/off settles it (see script header).
 exec_always flock -n $XDG_RUNTIME_DIR/simulink-tile-fix.lock $HOME/.config/sway/scripts/simulink-tile-fix.py
 # Teams only desktop-notifies meetings; chat messages only bump the unread count in the window title.
