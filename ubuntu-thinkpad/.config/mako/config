@@ -57,3 +57,8 @@ default-timeout=15000
 default-timeout=0
 border-color=#ff6655
 on-notify=exec canberra-gtk-play -i dialog-warning
+
+# Brief OSD when Alt+Tab changes the focused window.
+[app-name="Window focus"]
+default-timeout=1200
+border-color=#89b4fa

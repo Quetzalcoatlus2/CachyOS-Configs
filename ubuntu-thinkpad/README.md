@@ -160,6 +160,10 @@ always targets the laptop, even when that display is already focused.
 | Mod+arrow | Focus a neighboring window |
 | Mod+Shift+arrow | Move a window within the layout |
 
+Focus follows the keyboard, not the mouse: hovering over a window no longer
+changes focus. Click a window or use Alt+Tab. Alt+Tab and Alt+Shift+Tab cycle
+all windows on visible workspaces and briefly show the selected window's title.
+
 Each display shows its own workspace. Workspace numbers are shared across the
 session: selecting a workspace already visible on another display focuses it
 there. Moving a workspace transfers all its windows together. If a parent
