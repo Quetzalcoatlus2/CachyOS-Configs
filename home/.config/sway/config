@@ -92,6 +92,9 @@ set $lock swaylock -f -c 000000
     # Reload the configuration file
     bindsym $mod+Shift+c reload
 
+    # Restart sway in place (picks up graphics and driver changes)
+    bindsym $mod+Shift+r restart
+
     # Exit sway (logs you out of your Wayland session)
 #
 # Moving around:
@@ -106,6 +109,11 @@ set $lock swaylock -f -c 000000
     bindsym $mod+Down focus down
     bindsym $mod+Up focus up
     bindsym $mod+Right focus right
+
+    # Familiar window controls
+    bindsym Alt+Tab focus next
+    bindsym Alt+Shift+Tab focus prev
+    bindsym Alt+F4 kill
 
     # Move the focused window with the same, but add Shift
     bindsym $mod+Shift+$left move left
@@ -146,6 +154,8 @@ set $lock swaylock -f -c 000000
     bindsym $mod+Ctrl+Left workspace prev
     bindsym $mod+Ctrl+Shift+Right exec ~/.config/sway/scripts/move-container-workspace.sh next
     bindsym $mod+Ctrl+Shift+Left exec ~/.config/sway/scripts/move-container-workspace.sh prev
+    # Jump back to the previous workspace
+    bindsym $mod+Tab workspace back_and_forth
     # Move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace number 1
     bindsym $mod+Shift+2 move container to workspace number 2
@@ -192,6 +202,8 @@ set $lock swaylock -f -c 000000
 
     # Move the currently focused window to the scratchpad
     bindsym $mod+Shift+minus move scratchpad
+    # Minimize to the scratchpad (familiar Super+M)
+    bindsym $mod+m move scratchpad
 
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
@@ -289,10 +301,6 @@ input "type:touchpad" {
     pointer_accel 0.0
 }
 
-# Lock Screen shortcut
-
-# Hardware Power Button toggle
-
 # Pitch Black Appearance
 output * bg #000000 solid_color
 
@@ -325,12 +333,6 @@ for_window [app_id="floating-term"] floating enable, resize set 1000 650, move p
 
 # Auto-float, strip borders, and center vertically on the right edge
 for_window [title="(?i)picture[- ]in[- ]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 405
-
-# Set default wmenu runner colors
-
-# Power Management Dropdown Modal (Docked beneath top bar on the right)
-
-# Power Management Dropdown Modal
 
 exec batsignal -w 25 -c 20 -d 0 -f 100 -e
 

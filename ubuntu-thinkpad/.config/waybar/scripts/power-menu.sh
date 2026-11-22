@@ -131,9 +131,9 @@ case "$choice" in
     "$SHUTDOWN") action="systemctl poweroff" ;;
     "$REBOOT") action="systemctl reboot" ;;
     "$SUSPEND") action="systemctl suspend" ;;
-    "$SUSPEND_THEN_HIBERNATE") action="systemctl suspend-then-hibernate || notify-send -u critical 'Suspend-Then-Hibernate failed' 'Not available: no resume device configured or swap too small'" ;;
-    "$HIBERNATE") action="systemctl hibernate || notify-send -u critical 'Hibernate failed' 'Not available: no resume device configured or swap too small'" ;;
-    "$HYBRID") action="systemctl hybrid-sleep || notify-send -u critical 'Hybrid-Sleep failed' 'Not available: no resume device configured or swap too small'" ;;
+    "$SUSPEND_THEN_HIBERNATE") action="out=\$(systemctl suspend-then-hibernate 2>&1) || notify-send -u critical 'Suspend-Then-Hibernate failed' \"\$out\"" ;;
+    "$HIBERNATE") action="out=\$(systemctl hibernate 2>&1) || notify-send -u critical 'Hibernate failed' \"\$out\"" ;;
+    "$HYBRID") action="out=\$(systemctl hybrid-sleep 2>&1) || notify-send -u critical 'Hybrid-Sleep failed' \"\$out\"" ;;
     *) exit 0 ;;
 esac
 

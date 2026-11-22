@@ -30,7 +30,7 @@ bindsym $mod+n exec $HOME/.local/bin/makoctl restore
 bindsym $mod+Shift+n exec $HOME/.local/bin/makoctl dismiss -a
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway
 exec env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swayidle -w timeout 600 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000' timeout 900 'swaymsg "output * power off"' resume 'sg video -c "$HOME/.config/waybar/scripts/brightness.sh wake"' before-sleep 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000'
-exec $HOME/.config/waybar/scripts/sway-brave-fullscreen.sh
+exec $HOME/.config/waybar/scripts/sway-browser-fullscreen.sh
 
 bindsym $mod+Return exec $term
 
@@ -40,6 +40,8 @@ bindsym $mod+t exec $term --app-id floating-term
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
 bindsym $mod+Shift+c reload
+# Restart sway in place (picks up graphics and driver changes)
+bindsym $mod+Shift+r restart
 
 floating_modifier $mod normal
 
@@ -51,6 +53,11 @@ bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
+
+# Familiar window controls
+bindsym Alt+Tab focus next
+bindsym Alt+Shift+Tab focus prev
+bindsym Alt+F4 kill
 
 bindsym Ctrl+Up focus output "Eizo Nanao Corporation EV2316W 75500038"
 bindsym Ctrl+Down focus output eDP-1
@@ -92,6 +99,8 @@ bindsym $mod+Ctrl+Right workspace next
 bindsym $mod+Ctrl+Left workspace prev
 bindsym $mod+Ctrl+Shift+Right exec ~/.config/sway/scripts/move-container-workspace.sh next
 bindsym $mod+Ctrl+Shift+Left exec ~/.config/sway/scripts/move-container-workspace.sh prev
+# Jump back to the previous workspace
+bindsym $mod+Tab workspace back_and_forth
 
 bindsym $mod+Shift+1 move container to workspace number 1
 bindsym $mod+Shift+2 move container to workspace number 2
@@ -115,6 +124,8 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 bindsym $mod+Shift+minus move scratchpad
+# Minimize to the scratchpad (familiar Super+M)
+bindsym $mod+m move scratchpad
 bindsym $mod+minus scratchpad show
 
 mode "resize" {
@@ -210,9 +221,9 @@ default_floating_border normal 2
 smart_borders no
 
 popup_during_fullscreen smart
-# class matches XWayland Brave windows; app_id matches native Wayland ones.
-for_window [app_id="^brave.*"] border pixel 0, inhibit_idle fullscreen
-for_window [class="^[bB]rave.*"] border pixel 0, inhibit_idle fullscreen
+# class matches XWayland browser windows; app_id matches native Wayland ones.
+for_window [app_id="(?i)^(brave|microsoft-edge|msedge)"] border pixel 0, inhibit_idle fullscreen
+for_window [class="(?i)^(brave|microsoft-edge|msedge)"] border pixel 0, inhibit_idle fullscreen
 for_window [title="(?i)picture[ -]in[ -]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 465
 # Center the quick terminal so it never joins the tiling layout.
 for_window [app_id="floating-term"] floating enable, resize set 1000 650, move position center
