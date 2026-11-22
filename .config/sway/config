@@ -18,6 +18,12 @@ set $term foot
 exec foot --server
 # Your preferred application launcher
 set $menu wofi --show drun
+# Preferred applications for the shortcuts shared with the Ubuntu ThinkPad
+set $files thunar
+set $browser brave-browser-nightly
+set $sysmon btop
+set $net nmtui
+set $lock swaylock -f -c 000000
 
 ### Output configuration
 #
@@ -64,11 +70,12 @@ set $menu wofi --show drun
 #
 # Basics:
 #
-    # Start a terminal
+    # Start a terminal (Mod+T also works on keyboards without Return)
     bindsym $mod+Return exec $term
+    bindsym $mod+t exec $term
 
     # Start a floating terminal for a quick command over the current window
-    bindsym $mod+Shift+Return exec foot --app-id floating-term
+    bindsym $mod+Shift+t exec $term --app-id floating-term
 
     # Kill focused window
     bindsym $mod+Shift+q kill
@@ -105,7 +112,7 @@ set $menu wofi --show drun
     bindsym $mod+Shift+$left move left
     bindsym $mod+Shift+$down move down
     bindsym $mod+Shift+$up move up
-    # $mod+Shift+l is reserved for locking the screen; move right stays on $mod+Shift+Right.
+    bindsym $mod+Shift+$right move right
     # Ditto, with arrow keys
     bindsym $mod+Shift+Left move left
     bindsym $mod+Shift+Down move down
@@ -339,27 +346,27 @@ exec swayidle -w timeout 600 'swaylock -f -c 000000' timeout 900 'swaymsg "outpu
 
 # Power menu and lock bindings
 bindsym $mod+Shift+Escape exec ~/.config/waybar/scripts/power-menu.sh
-bindsym $mod+Ctrl+l exec swaylock -f -c 000000
-bindsym $mod+Shift+l exec swaylock -f -c 000000
+bindsym $mod+Ctrl+l exec $lock
+bindsym $mod+Escape exec $lock
 
-# Quick application shortcuts
+# Quick application shortcuts (shared with the Ubuntu ThinkPad)
     # File manager (Explorer-style)
-    bindsym $mod+Shift+e exec thunar
+    bindsym $mod+Shift+e exec $files
 
     # Web browser
-    bindsym $mod+Shift+b exec brave-browser-nightly
+    bindsym $mod+Shift+b exec $browser
 
     # Audio mixer
     bindsym $mod+Shift+a exec env GTK_THEME=Adwaita:dark pavucontrol
 
     # Network settings
-    bindsym $mod+Shift+i exec foot nmtui
+    bindsym $mod+Shift+i exec $term $net
 
     # System monitor
-    bindsym $mod+Shift+m exec foot -e btop
+    bindsym $mod+Shift+m exec $term -e $sysmon
 
     # Full system update in a titled terminal
-    bindsym $mod+Shift+u exec foot -T 'System Update' bash "$HOME/.config/waybar/scripts/update-all.sh"
+    bindsym $mod+Shift+u exec $term -T 'System Update' bash "$HOME/.config/waybar/scripts/update-all.sh"
 
 exec mako
 bindsym $mod+n exec makoctl restore
