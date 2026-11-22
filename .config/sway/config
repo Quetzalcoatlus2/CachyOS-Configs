@@ -25,8 +25,9 @@ set $sysmon btop
 set $net nmtui
 set $lock swaylock -f -c 000000
 
-# Keep keyboard focus stable; hovering over another window must not steal it.
-focus_follows_mouse no
+# Hover focuses windows. Alt+Tab warps the pointer to its selection so hover
+# does not immediately steal focus back.
+focus_follows_mouse yes
 
 ### Output configuration
 #
