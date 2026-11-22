@@ -70,12 +70,11 @@ set $lock swaylock -f -c 000000
 #
 # Basics:
 #
-    # Start a terminal (Mod+T also works on keyboards without Return)
+    # Start a terminal
     bindsym $mod+Return exec $term
-    bindsym $mod+t exec $term
 
     # Start a floating terminal for a quick command over the current window
-    bindsym $mod+Shift+t exec $term --app-id floating-term
+    bindsym $mod+t exec $term --app-id floating-term
 
     # Kill focused window
     bindsym $mod+Shift+q kill
@@ -112,7 +111,6 @@ set $lock swaylock -f -c 000000
     bindsym $mod+Shift+$left move left
     bindsym $mod+Shift+$down move down
     bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
     # Ditto, with arrow keys
     bindsym $mod+Shift+Left move left
     bindsym $mod+Shift+Down move down
@@ -347,7 +345,7 @@ exec swayidle -w timeout 600 'swaylock -f -c 000000' timeout 900 'swaymsg "outpu
 # Power menu and lock bindings
 bindsym $mod+Shift+Escape exec ~/.config/waybar/scripts/power-menu.sh
 bindsym $mod+Ctrl+l exec $lock
-bindsym $mod+Escape exec $lock
+bindsym $mod+Shift+l exec $lock
 
 # Quick application shortcuts (shared with the Ubuntu ThinkPad)
     # File manager (Explorer-style)
