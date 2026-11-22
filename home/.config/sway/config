@@ -92,9 +92,6 @@ set $lock swaylock -f -c 000000
     # Reload the configuration file
     bindsym $mod+Shift+c reload
 
-    # Restart sway in place (picks up graphics and driver changes)
-    bindsym $mod+Shift+r restart
-
     # Exit sway (logs you out of your Wayland session)
 #
 # Moving around:

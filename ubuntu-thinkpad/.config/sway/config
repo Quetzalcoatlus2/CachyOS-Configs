@@ -40,8 +40,6 @@ bindsym $mod+t exec $term --app-id floating-term
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
 bindsym $mod+Shift+c reload
-# Restart sway in place (picks up graphics and driver changes)
-bindsym $mod+Shift+r restart
 
 floating_modifier $mod normal
 

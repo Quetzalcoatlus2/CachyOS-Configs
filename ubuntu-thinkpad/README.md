@@ -165,5 +165,4 @@ session: selecting a workspace already visible on another display focuses it
 there. Moving a workspace transfers all its windows together. If a parent
 container is selected, the window-move shortcut moves that entire container.
 These global Ctrl+arrow bindings override application shortcuts using the same
-keys. Reload the configuration with Mod+Shift+C, or restart Sway in place with
-Mod+Shift+R after graphics or driver changes.
+keys. Reload the configuration with Mod+Shift+C after changing it.
