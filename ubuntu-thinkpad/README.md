@@ -36,7 +36,7 @@ A PAM file installed inside the private prefix does not replace the system PAM
 policy. Do not bypass authentication or protocol safety checks.
 
 The config and Waybar power menu explicitly select the private executables and
-library path. Super+Ctrl+L or Super+Escape locks immediately; idle handling locks after 600 seconds,
+library path. Super+Ctrl+L or Super+Shift+L locks immediately; idle handling locks after 600 seconds,
 powers displays off after 900 seconds, restores power on activity, and locks before
 sleep. Sway's `exec` startup commands do not restart on config reload: after changing
 the idle command, restart that daemon once or start a new session, avoiding duplicate

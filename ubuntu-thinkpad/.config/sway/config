@@ -32,12 +32,10 @@ exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSO
 exec env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swayidle -w timeout 600 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000' timeout 900 'swaymsg "output * power off"' resume 'sg video -c "$HOME/.config/waybar/scripts/brightness.sh wake"' before-sleep 'env LD_LIBRARY_PATH=$HOME/.local/opt/sway-1.12/lib $HOME/.local/opt/sway-1.12/bin/swaylock -f -c 000000'
 exec $HOME/.config/waybar/scripts/sway-brave-fullscreen.sh
 
-# Mod+T also works on keyboards without Return
 bindsym $mod+Return exec $term
-bindsym $mod+t exec $term
 
 # Floating terminal for a quick command over the current window
-bindsym $mod+Shift+t exec $term --app-id floating-term
+bindsym $mod+t exec $term --app-id floating-term
 
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
@@ -64,7 +62,6 @@ bindsym $mod+Ctrl+Shift+Down move workspace to output eDP-1
 bindsym $mod+Shift+$left move left
 bindsym $mod+Shift+$down move down
 bindsym $mod+Shift+$up move up
-bindsym $mod+Shift+$right move right
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
@@ -153,7 +150,7 @@ bindsym Ctrl+Print exec sh -c 'grim - | $HOME/.local/bin/wl-copy -t image/png'
 
 
 bindsym $mod+Ctrl+l exec $lock
-bindsym $mod+Escape exec $lock
+bindsym $mod+Shift+l exec $lock
 bindsym $mod+Shift+Escape exec sh -c '$HOME/.config/waybar/scripts/power-menu.sh'
 
 # Quick application shortcuts (shared with the CachyOS desktop)
