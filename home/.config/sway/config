@@ -92,6 +92,9 @@ set $lock swaylock -f -c 000000
     # Reload the configuration file
     bindsym $mod+Shift+c reload
 
+    # Reload Waybar after changing its config
+    bindsym $mod+Shift+w exec pkill -USR2 -x waybar
+
     # Exit sway (logs you out of your Wayland session)
 #
 # Moving around:
@@ -226,6 +229,7 @@ mode "resize" {
 
     # Return to default mode
     bindsym Return mode "default"
+    bindsym $mod+r mode "default"
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"

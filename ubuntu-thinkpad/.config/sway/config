@@ -40,6 +40,8 @@ bindsym $mod+t exec $term --app-id floating-term
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
 bindsym $mod+Shift+c reload
+# Reload Waybar after changing its config
+bindsym $mod+Shift+w exec pkill -USR2 -x waybar
 
 floating_modifier $mod normal
 
@@ -136,6 +138,7 @@ mode "resize" {
     bindsym Up resize shrink height 10px
     bindsym Right resize grow width 10px
     bindsym Return mode "default"
+    bindsym $mod+r mode "default"
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
