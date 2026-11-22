@@ -67,6 +67,9 @@ set $menu wofi --show drun
     # Start a terminal
     bindsym $mod+Return exec $term
 
+    # Start a floating terminal for a quick command over the current window
+    bindsym $mod+Shift+Return exec foot --app-id floating-term
+
     # Kill focused window
     bindsym $mod+Shift+q kill
 
@@ -102,7 +105,7 @@ set $menu wofi --show drun
     bindsym $mod+Shift+$left move left
     bindsym $mod+Shift+$down move down
     bindsym $mod+Shift+$up move up
-    # bindsym $mod+Shift+$right move right
+    # $mod+Shift+l is reserved for locking the screen; move right stays on $mod+Shift+Right.
     # Ditto, with arrow keys
     bindsym $mod+Shift+Left move left
     bindsym $mod+Shift+Down move down
@@ -311,6 +314,9 @@ popup_during_fullscreen smart
 # With smart_borders on, single-window workspaces hid them entirely.
 smart_borders no
 
+# Center the quick terminal so it never joins the tiling layout.
+for_window [app_id="floating-term"] floating enable, resize set 1000 650, move position center
+
 # Auto-float, strip borders, and center vertically on the right edge
 for_window [title="(?i)picture[- ]in[- ]picture"] floating enable, sticky enable, border none, resize set 480 270, move position 1440 405
 
@@ -334,6 +340,26 @@ exec swayidle -w timeout 600 'swaylock -f -c 000000' timeout 900 'swaymsg "outpu
 # Power menu and lock bindings
 bindsym $mod+Shift+Escape exec ~/.config/waybar/scripts/power-menu.sh
 bindsym $mod+Ctrl+l exec swaylock -f -c 000000
+bindsym $mod+Shift+l exec swaylock -f -c 000000
+
+# Quick application shortcuts
+    # File manager (Explorer-style)
+    bindsym $mod+Shift+e exec thunar
+
+    # Web browser
+    bindsym $mod+Shift+b exec brave-browser-nightly
+
+    # Audio mixer
+    bindsym $mod+Shift+a exec env GTK_THEME=Adwaita:dark pavucontrol
+
+    # Network settings
+    bindsym $mod+Shift+i exec foot nmtui
+
+    # System monitor
+    bindsym $mod+Shift+m exec foot -e btop
+
+    # Full system update in a titled terminal
+    bindsym $mod+Shift+u exec foot -T 'System Update' bash "$HOME/.config/waybar/scripts/update-all.sh"
 
 exec mako
 bindsym $mod+n exec makoctl restore
