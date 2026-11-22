@@ -25,6 +25,9 @@ set $sysmon btop
 set $net nmtui
 set $lock swaylock -f -c 000000
 
+# Keep keyboard focus stable; hovering over another window must not steal it.
+focus_follows_mouse no
+
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
@@ -111,8 +114,8 @@ set $lock swaylock -f -c 000000
     bindsym $mod+Right focus right
 
     # Familiar window controls
-    bindsym Alt+Tab focus next
-    bindsym Alt+Shift+Tab focus prev
+    bindsym Alt+Tab exec ~/.config/sway/scripts/focus-window.sh next
+    bindsym Alt+Shift+Tab exec ~/.config/sway/scripts/focus-window.sh prev
     bindsym Alt+F4 kill
 
     # Move the focused window with the same, but add Shift
@@ -306,7 +309,7 @@ input "type:touchpad" {
 output * bg #000000 solid_color
 
 # Window Border Colors (class border background text indicator child_border)
-client.focused          #000000 #000000 #ffffff #333333 #222222
+client.focused          #000000 #000000 #ffffff #89b4fa #89b4fa
 client.focused_inactive #000000 #000000 #888888 #111111 #111111
 client.unfocused        #000000 #000000 #555555 #000000 #000000
 client.urgent           #000000 #000000 #ff5555 #000000 #000000
