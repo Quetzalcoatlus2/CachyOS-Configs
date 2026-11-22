@@ -62,6 +62,7 @@ bindsym $mod+Ctrl+Shift+Down move workspace to output eDP-1
 bindsym $mod+Shift+$left move left
 bindsym $mod+Shift+$down move down
 bindsym $mod+Shift+$up move up
+# Letter move-right stays unbound: Mod+Shift+L locks, arrow keys move.
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
