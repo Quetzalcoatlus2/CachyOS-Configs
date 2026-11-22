@@ -51,6 +51,19 @@ target=${windows[$index]%%$'\t'*}
 IFS=$'\t' read -r _ app title <<< "${windows[$index]}"
 swaymsg "[con_id=$target] focus" >/dev/null 2>&1 || true
 
+# Put the pointer on the selected window so hover focus agrees with Alt+Tab
+# instead of immediately pulling focus back to the old pointer position.
+seat=$(swaymsg -t get_seats | jq -r '.[0].name // empty')
+if [ -n "$seat" ]; then
+    read -r x y < <(swaymsg -t get_tree | jq -r --arg id "$target" '
+        first(.. | objects | select((.id|tostring) == $id))
+        | .rect | "\(.x + (.width/2 | floor)) \(.y + (.height/2 | floor))"
+    ') || true
+    if [ -n "${x:-}" ] && [ -n "${y:-}" ]; then
+        swaymsg "seat $seat cursor set $x $y" >/dev/null 2>&1 || true
+    fi
+fi
+
 # Replace the previous OSD instead of stacking one notification per keypress.
 idfile="${XDG_RUNTIME_DIR:-/tmp}/sway-focus-osd-${UID}.id"
 replaces=()
