@@ -232,5 +232,3 @@ for_window [title="(?i)picture[ -]in[ -]picture"] floating enable, sticky enable
 for_window [app_id="floating-term"] floating enable, resize set 1000 650, move position center
 # Simulink ribbon flickers after MATLAB maps a window; fullscreen on/off settles it (see script header).
 exec_always flock -n $XDG_RUNTIME_DIR/simulink-tile-fix.lock $HOME/.config/sway/scripts/simulink-tile-fix.py
-# Teams only desktop-notifies meetings; chat messages only bump the unread count in the window title.
-exec_always flock -n $XDG_RUNTIME_DIR/teams-unread-notify.lock $HOME/.config/sway/scripts/teams-unread-notify.py
