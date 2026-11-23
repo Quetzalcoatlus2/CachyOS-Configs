@@ -44,6 +44,9 @@ bindsym $mod+Return exec $term
 bindsym $mod+t exec $term --app-id floating-term
 
 bindsym $mod+Shift+q kill
+# Garuda-style aliases for closing the focused window.
+bindsym $mod+q kill
+bindsym $mod+BackSpace kill
 bindsym $mod+d exec $menu
 bindsym $mod+Shift+c reload
 # Reload Waybar after changing its config
@@ -120,6 +123,7 @@ bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 
 bindsym $mod+b splith
+bindsym $mod+Shift+v splith
 bindsym $mod+v splitv
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
@@ -175,7 +179,9 @@ bindsym $mod+Ctrl+Shift+x exec $HOME/.config/sway/scripts/clipboard-history.sh w
 
 bindsym $mod+Ctrl+l exec $lock
 bindsym $mod+Shift+l exec $lock
+bindsym $mod+F1 exec $lock
 bindsym $mod+Shift+Escape exec sh -c '$HOME/.config/waybar/scripts/power-menu.sh'
+bindsym Ctrl+Alt+Delete exec sh -c '$HOME/.config/waybar/scripts/power-menu.sh'
 
 # Quick application shortcuts (shared with the CachyOS desktop)
 bindsym $mod+Shift+e exec $files

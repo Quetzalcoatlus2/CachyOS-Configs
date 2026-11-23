@@ -82,6 +82,9 @@ focus_follows_mouse yes
 
     # Kill focused window
     bindsym $mod+Shift+q kill
+    # Garuda-style aliases for closing the focused window.
+    bindsym $mod+q kill
+    bindsym $mod+BackSpace kill
 
     # Start your launcher
     bindsym $mod+d exec $menu
@@ -177,9 +180,9 @@ focus_follows_mouse yes
 # Layout stuff:
 #
     # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
+    # $mod+b or $mod+Shift+v splits horizontally; $mod+v splits vertically.
     bindsym $mod+b splith
+    bindsym $mod+Shift+v splith
     bindsym $mod+v splitv
 
     # Switch the current container between different layout styles
@@ -357,8 +360,10 @@ exec swayidle -w timeout 600 'swaylock -f -c 000000' timeout 900 'swaymsg "outpu
 
 # Power menu and lock bindings
 bindsym $mod+Shift+Escape exec ~/.config/waybar/scripts/power-menu.sh
+bindsym Ctrl+Alt+Delete exec ~/.config/waybar/scripts/power-menu.sh
 bindsym $mod+Ctrl+l exec $lock
 bindsym $mod+Shift+l exec $lock
+bindsym $mod+F1 exec $lock
 
 # Quick application shortcuts (shared with the Ubuntu ThinkPad)
     # File manager (Explorer-style)
