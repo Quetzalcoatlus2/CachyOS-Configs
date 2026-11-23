@@ -124,6 +124,29 @@ for f in settings.json bindings.json colorschemes/monokai-black.micro; do
 done
 ```
 
+## Clipboard history
+
+Sway records copied text and images in cliphist and shows the history in wofi.
+Ubuntu 22.04 has no cliphist package, so install the static 0.7.0 release into
+the private binary directory:
+
+```sh
+curl -fsSL -o "$HOME/.local/bin/cliphist" \
+    https://github.com/sentriz/cliphist/releases/download/v0.7.0/v0.7.0-linux-amd64
+chmod 0755 "$HOME/.local/bin/cliphist"
+```
+
+`wl-clipboard` and `xdg-utils` must be present; `wl-copy` uses them to restore
+images with the correct MIME type. The history database lives in
+`~/.cache/cliphist/db`; `.config/cliphist/config` raises the limit to 5000
+entries.
+
+| Shortcut | Action |
+| --- | --- |
+| Mod+Ctrl+V | Open the clipboard history and copy the selected entry |
+| Mod+Ctrl+X | Delete the selected entry from the history |
+| Mod+Ctrl+Shift+X | Clear the whole history |
+
 ## Networking
 
 The tree ships `system/etc/NetworkManager/dispatcher.d/99-wifi-noscan.sh`. On a

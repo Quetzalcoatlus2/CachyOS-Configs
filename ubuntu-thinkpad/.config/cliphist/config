@@ -1,0 +1,6 @@
+# Keep a long history of copied text and images. cliphist's default is 750.
+max-items 5000
+# Search further back before deciding a copied entry is a duplicate.
+max-dedupe-search 200
+# Show more of each entry in the wofi picker.
+preview-width 120

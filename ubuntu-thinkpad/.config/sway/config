@@ -23,6 +23,10 @@ focus_follows_mouse yes
 exec $HOME/.local/bin/foot --server
 # Automatically choose split direction when autotiling is installed.
 exec sh -c 'command -v autotiling >/dev/null 2>&1 && exec autotiling'
+# Record every copied text and image for the clipboard history picker. The
+# test keeps Sway quiet when cliphist has not been installed yet.
+exec sh -c '[ -x "$HOME/.local/bin/cliphist" ] && exec "$HOME/.local/bin/wl-paste" --type text --watch "$HOME/.local/bin/cliphist" store'
+exec sh -c '[ -x "$HOME/.local/bin/cliphist" ] && exec "$HOME/.local/bin/wl-paste" --type image --watch "$HOME/.local/bin/cliphist" store'
 exec $HOME/.local/bin/mako
 # Low-battery warnings only; the 100% alert is handled by battery-full-notify.sh
 # (skipped while docked to the monitor). flock keeps one instance across reloads.
@@ -162,6 +166,11 @@ bindsym Shift+Print exec sh -c 'mkdir -p "$HOME/Pictures/Screenshots"; file="$HO
 bindsym $mod+Shift+s exec sh -c 'region=$(slurp) && [ -n "$region" ] && grim -g "$region" - | $HOME/.local/bin/wl-copy -t image/png'
 bindsym $mod+Print exec sh -c 'mkdir -p "$HOME/Pictures/Screenshots"; file="$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png"; region=$(slurp) && [ -n "$region" ] && grim -g "$region" "$file" && $HOME/.local/bin/wl-copy -t image/png < "$file" && pinta "$file"'
 bindsym Ctrl+Print exec sh -c 'grim - | $HOME/.local/bin/wl-copy -t image/png'
+
+# Clipboard history (cliphist + wofi)
+bindsym $mod+Ctrl+v exec $HOME/.config/sway/scripts/clipboard-history.sh pick
+bindsym $mod+Ctrl+x exec $HOME/.config/sway/scripts/clipboard-history.sh delete
+bindsym $mod+Ctrl+Shift+x exec $HOME/.config/sway/scripts/clipboard-history.sh wipe
 
 
 bindsym $mod+Ctrl+l exec $lock
