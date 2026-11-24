@@ -102,6 +102,9 @@ focus_follows_mouse yes
     # Reload Waybar after changing its config
     bindsym $mod+Shift+w exec pkill -USR2 -x waybar
 
+    # Edit this Sway config. Garuda's Mod+Shift+I is network settings here.
+    bindsym $mod+Shift+p exec $term micro ~/.config/sway/config
+
     # Exit sway (logs you out of your Wayland session)
 #
 # Moving around:
@@ -163,6 +166,9 @@ focus_follows_mouse yes
     bindsym $mod+Ctrl+Shift+Left exec ~/.config/sway/scripts/move-container-workspace.sh prev
     # Jump back to the previous workspace
     bindsym $mod+Tab workspace back_and_forth
+    # Garuda-style overviews, built with wofi instead of swayr
+    bindsym $mod+Shift+Tab exec ~/.config/sway/scripts/activity-overview.sh windows
+    bindsym $mod+Ctrl+Tab exec ~/.config/sway/scripts/activity-overview.sh workspaces
     # Move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace number 1
     bindsym $mod+Shift+2 move container to workspace number 2
@@ -180,9 +186,8 @@ focus_follows_mouse yes
 # Layout stuff:
 #
     # You can "split" the current object of your focus with
-    # $mod+b or $mod+Shift+v splits horizontally; $mod+v splits vertically.
+    # $mod+b splits horizontally; $mod+v splits vertically.
     bindsym $mod+b splith
-    bindsym $mod+Shift+v splith
     bindsym $mod+v splitv
 
     # Switch the current container between different layout styles
@@ -363,7 +368,6 @@ bindsym $mod+Shift+Escape exec ~/.config/waybar/scripts/power-menu.sh
 bindsym Ctrl+Alt+Delete exec ~/.config/waybar/scripts/power-menu.sh
 bindsym $mod+Ctrl+l exec $lock
 bindsym $mod+Shift+l exec $lock
-bindsym $mod+F1 exec $lock
 
 # Quick application shortcuts (shared with the Ubuntu ThinkPad)
     # File manager (Explorer-style)

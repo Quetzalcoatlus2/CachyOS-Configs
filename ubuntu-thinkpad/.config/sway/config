@@ -52,6 +52,9 @@ bindsym $mod+Shift+c reload
 # Reload Waybar after changing its config
 bindsym $mod+Shift+w exec pkill -USR2 -x waybar
 
+# Edit this Sway config. Garuda's Mod+Shift+I is network settings here.
+bindsym $mod+Shift+p exec $term micro ~/.config/sway/config
+
 floating_modifier $mod normal
 
 bindsym $mod+$left focus left
@@ -110,6 +113,9 @@ bindsym $mod+Ctrl+Shift+Right exec ~/.config/sway/scripts/move-container-workspa
 bindsym $mod+Ctrl+Shift+Left exec ~/.config/sway/scripts/move-container-workspace.sh prev
 # Jump back to the previous workspace
 bindsym $mod+Tab workspace back_and_forth
+# Garuda-style overviews, built with wofi instead of swayr
+bindsym $mod+Shift+Tab exec ~/.config/sway/scripts/activity-overview.sh windows
+bindsym $mod+Ctrl+Tab exec ~/.config/sway/scripts/activity-overview.sh workspaces
 
 bindsym $mod+Shift+1 move container to workspace number 1
 bindsym $mod+Shift+2 move container to workspace number 2
@@ -123,7 +129,6 @@ bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 
 bindsym $mod+b splith
-bindsym $mod+Shift+v splith
 bindsym $mod+v splitv
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
@@ -179,7 +184,6 @@ bindsym $mod+Ctrl+Shift+x exec $HOME/.config/sway/scripts/clipboard-history.sh w
 
 bindsym $mod+Ctrl+l exec $lock
 bindsym $mod+Shift+l exec $lock
-bindsym $mod+F1 exec $lock
 bindsym $mod+Shift+Escape exec sh -c '$HOME/.config/waybar/scripts/power-menu.sh'
 bindsym Ctrl+Alt+Delete exec sh -c '$HOME/.config/waybar/scripts/power-menu.sh'
 

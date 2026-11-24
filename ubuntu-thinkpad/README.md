@@ -194,3 +194,18 @@ there. Moving a workspace transfers all its windows together. If a parent
 container is selected, the window-move shortcut moves that entire container.
 These global Ctrl+arrow bindings override application shortcuts using the same
 keys. Reload the configuration with Mod+Shift+C after changing it.
+
+## Overview and config shortcuts
+
+`Mod+Tab` still jumps to the previous workspace. The Garuda-style overviews use
+wofi, so swayr and nwg-drawer are not required.
+
+| Shortcut | Action |
+| --- | --- |
+| Mod+Shift+Tab | Pick any open window across workspaces |
+| Mod+Ctrl+Tab | Pick an existing workspace |
+| Mod+Shift+P | Edit the Sway config in Micro |
+
+The window picker shows each window's workspace and application; choosing a
+window on another workspace switches there. Mod+Shift+C reloads the edited
+config.
