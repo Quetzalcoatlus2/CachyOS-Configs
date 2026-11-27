@@ -60,20 +60,25 @@ case "${1:-windows}" in
                       workspace: (if ($ws.num // -1) > 0
                                   then ($ws.num | tostring)
                                   else $ws.name end),
+                      workspace_name: $ws.name,
+                      focused: (.focused // false),
                       app: (.app_id // .window_properties.class // "Window"),
                       title: (.name | gsub("[\\t\\n]"; " ")) }
                 ]
                 | sort_by(.workspace | tonumber? // 999)
                 | .[]
-                | [.id, .workspace, .app, .title] | @tsv
+                | [.id, .workspace, .workspace_name, (.focused | tostring),
+                   .app, .title] | @tsv
             '
         )
 
         labels=()
         ids=()
         for row in "${rows[@]}"; do
-            IFS=$'\t' read -r id workspace app title <<< "$row"
-            labels+=("$workspace  $app — $title")
+            IFS=$'\t' read -r id workspace workspace_name focused app title <<< "$row"
+            display="${workspace_name:-$workspace}  $app — $title"
+            [[ $focused == true ]] && display+="  (current)"
+            labels+=("$display")
             ids+=("$id")
         done
         if [[ ${#labels[@]} -eq 0 ]]; then
@@ -107,11 +112,10 @@ case "${1:-windows}" in
         targets=()
         for row in "${rows[@]}"; do
             IFS=$'\t' read -r num name focused output <<< "$row"
+            label=${name:-$num}
             if [[ $num =~ ^[0-9]+$ ]] && (( num > 0 )); then
-                label=$num
                 targets+=("number:$num")
             else
-                label=$name
                 targets+=("name:$name")
             fi
             [[ $focused == true ]] && label+="  (current)"

@@ -137,9 +137,11 @@ chmod 0755 "$HOME/.local/bin/cliphist"
 ```
 
 `wl-clipboard` and `xdg-utils` must be present; `wl-copy` uses them to restore
-images with the correct MIME type. The history database lives in
-`~/.cache/cliphist/db`; `.config/cliphist/config` raises the limit to 5000
-entries.
+images with the correct MIME type. The session launcher prepends
+`$HOME/.local/bin` to `PATH`, so Sway and Foot call `wl-copy` and `wl-paste` by
+name: a private build is used when present, otherwise the system package. The
+history database lives in `~/.cache/cliphist/db`;
+`.config/cliphist/config` raises the limit to 5000 entries.
 
 | Shortcut | Action |
 | --- | --- |

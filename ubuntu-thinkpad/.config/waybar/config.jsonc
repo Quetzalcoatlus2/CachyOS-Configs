@@ -178,9 +178,7 @@
     "max-volume": 100,
     "format-muted": "🔇 Muted",
     "format-icons": {
-      "default": ["🔈", "🔉", "🔊"],
-      "unused-pua-glyphs": [
-        "", "", ""]
+      "default": ["🔈", "🔉", "🔊"]
     },
     "tooltip": true,
     "tooltip-format": "Audio Output (PipeWire Sinks):\n•Target Device: {desc}\n•Master Volume: {volume}%\n\nControls:\n•Left-Click: Open pavucontrol mixer\n•Right-Click: Toggle master mute\n•Scroll Up/Down: Adjust volume by 2%",

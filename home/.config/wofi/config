@@ -1,1 +1,3 @@
 allow_images=true
+# Open above fullscreen windows (the default "top" layer stays behind them).
+layer=overlay
